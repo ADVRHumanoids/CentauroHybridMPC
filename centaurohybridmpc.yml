@@ -1,4 +1,4 @@
-name: kyonrlstepping
+name: centaurohybridmpc
 channels: 
   - defaults
   - pytorch
