@@ -1,6 +1,6 @@
 import numpy as np
 
-from centaurohybridmpc.gym.omni_vect_env.vec_envs import RobotVecEnv
+from omnicustomgym.gym.omni_vect_env.vec_envs import RobotVecEnv
 
 #from stable_baselines3 import PPO
 
@@ -10,10 +10,10 @@ env = RobotVecEnv(headless=False,
 
 # now we can import the task (not before, since Omni plugins are loaded 
 # upon environment initialization)
-from centaurohybridmpc.tasks.centauro_hybrid_stepping import CentauroHybridStepping
-from centauro_rhc.centaurorhc_cluster_client import CentauroClusterClient
+from centaurohybridmpc.tasks.centauro_hybrid_stepping import CentauroHybridMPC
+from kyon_rhc.kyonrhc_cluster_client import KyonRHClusterClient
 
-num_envs = 1
+num_envs = 1 # rt 10 
 sim_params = {}
 sim_params["use_gpu_pipeline"] = True
 sim_params["integration_dt"] = 1.0/100.0
@@ -31,9 +31,8 @@ else:
 
 device = sim_params["device"]
 
-task = CentauroHybridStepping(name="CentauroHybridMPC", 
-                        num_envs = num_envs, 
-                        robot_offset = np.array([0.0, 0.0, 2.0]), 
+task = CentauroHybridMPC(num_envs = num_envs, 
+                        cloning_offset = np.array([0.0, 0.0, 2.0]), 
                         device = device) # create task
 
 env.set_task(task, 
@@ -50,7 +49,7 @@ obs = env.reset()
 n_jnts = env._task._robot_n_dofs
 
 control_clust_dt = sim_params["integration_dt"] * 2
-cluster_client = CentauroClusterClient(cluster_size=num_envs, 
+cluster_client = KyonRHClusterClient(cluster_size=num_envs, 
                                     device=device, 
                                     cluster_dt=control_clust_dt, 
                                     control_dt=sim_params["integration_dt"])
