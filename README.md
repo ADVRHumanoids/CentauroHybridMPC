@@ -1,5 +1,9 @@
 ### CentauroHybridMPC package
 
+<p align="center">
+  <img src="centaurohybridmpc/docs/images/centauro_isaac.png" alt="drawing" width="400"/>
+</p>
+
 The preferred way of using CentauroHybridMPC package is to employ the provided [mamba](https://mamba.readthedocs.io/en/latest/user_guide/mamba.html) environment. 
 
 Installation instructions:
