@@ -29,3 +29,5 @@ External dependencies to be installed separately:
 ### Short-term ToDo list:
 
 - [x] Create package
+- [x] Test spawning Centauro in IsaacSim
+- [] Adapt Kyon's RHC controller to Centauro
