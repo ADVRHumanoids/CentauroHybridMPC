@@ -11,7 +11,7 @@ env = RobotVecEnv(headless=False,
 # now we can import the task (not before, since Omni plugins are loaded 
 # upon environment initialization)
 from centaurohybridmpc.tasks.centauro_hybrid_stepping import CentauroHybridMPC
-from kyon_rhc.kyonrhc_cluster_client import KyonRHClusterClient
+from centaurohybridmpc.controllers.centauro_rhc.centaurorhc_cluster_client import CentauroClusterClient
 
 num_envs = 1 # rt 10 
 sim_params = {}
@@ -49,7 +49,7 @@ obs = env.reset()
 n_jnts = env._task._robot_n_dofs
 
 control_clust_dt = sim_params["integration_dt"] * 2
-cluster_client = KyonRHClusterClient(cluster_size=num_envs, 
+cluster_client = CentauroClusterClient(cluster_size=num_envs, 
                                     device=device, 
                                     cluster_dt=control_clust_dt, 
                                     control_dt=sim_params["integration_dt"])
