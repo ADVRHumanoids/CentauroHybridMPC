@@ -107,7 +107,7 @@ class CentauroHybridStepping(BaseTask):
         srdf_path = descr_path + "/srdf"
         xacro_name = "centauro"
         xacro_path = srdf_path + "/" + xacro_name + ".srdf.xacro"
-        self._srdf_path = srdf_path + "/" + xacro_name + ".srdf"
+        self._srdf_path = self._descr_dump_path + "/" + xacro_name + ".srdf"
         
         legs = "true"
         big_wheel = "true"
@@ -151,7 +151,7 @@ class CentauroHybridStepping(BaseTask):
         urdf_path = descr_path + "/urdf"
         xacro_name = "centauro"
         xacro_path = urdf_path + "/" + xacro_name + ".urdf.xacro"
-        self._urdf_path = urdf_path + "/" + xacro_name + ".urdf"
+        self._urdf_path = self._descr_dump_path + "/" + xacro_name + ".urdf"
         
         legs = "true"
         big_wheel = "true"
@@ -188,6 +188,8 @@ class CentauroHybridStepping(BaseTask):
 
     def _generate_description(self):
         
+        self._descr_dump_path = "/tmp/" + f"{self.__class__.__name__}"
+
         print(f"[{self.__class__.__name__}]" + f"[{self.status}]" + ": generating URDF...")
         self._generate_urdf()
         print(f"[{self.__class__.__name__}]" + f"[{self.status}]" + ": done")
