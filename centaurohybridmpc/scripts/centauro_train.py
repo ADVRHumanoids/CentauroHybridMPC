@@ -10,10 +10,10 @@ env = RobotVecEnv(headless=False,
 
 # now we can import the task (not before, since Omni plugins are loaded 
 # upon environment initialization)
-from centaurohybridmpc.tasks.centauro_hybrid_stepping import CentauroHybridMPC
-from kyon_rhc.kyonrhc_cluster_client import KyonRHClusterClient
+from kyonrlstepping.tasks.kyon_rlstepping_task import KyonRlSteppingTask
+from kyonrlstepping.controllers.kyon_rhc.kyonrhc_cluster_client import KyonRHClusterClient
 
-num_envs = 1 # rt 10 
+num_envs = 3
 sim_params = {}
 sim_params["use_gpu_pipeline"] = True
 sim_params["integration_dt"] = 1.0/100.0
@@ -31,7 +31,7 @@ else:
 
 device = sim_params["device"]
 
-task = CentauroHybridMPC(num_envs = num_envs, 
+task = KyonRlSteppingTask(num_envs = num_envs, 
                         cloning_offset = np.array([0.0, 0.0, 2.0]), 
                         device = device) # create task
 

@@ -7,7 +7,11 @@ import math
 import quaternion
 
 class GaitManager:
-    def __init__(self, task_interface: TaskInterface, phase_manager: pymanager.PhaseManager, contact_map):
+
+    def __init__(self, 
+                task_interface: TaskInterface, 
+                phase_manager: pymanager.PhaseManager, 
+                contact_map):
 
         # contact_map is not necessary if contact name is the same as the timeline name
         self.task_interface = task_interface
@@ -30,7 +34,8 @@ class GaitManager:
             else:
                 phase_i.addPhase(phase_i.getRegisteredPhase(f'flight_{contact_name}_short'))
 
-    def cycle(self, cycle_list):
+    def cycle(self, 
+            cycle_list):
         # how do I know that the stance phase is called stance_{c} or flight_{c}?
         for flag_contact, contact_name in zip(cycle_list, self.contact_phases.keys()):
             phase_i = self.contact_phases[contact_name]
@@ -40,7 +45,8 @@ class GaitManager:
                 phase_i.addPhase(phase_i.getRegisteredPhase(f'flight_{contact_name}'))
 
 
-    def step(self, swing_contact):
+    def step(self, 
+            swing_contact):
         cycle_list = [True if contact_name != swing_contact else False for contact_name in self.contact_phases.keys()]
         self.cycle(cycle_list)
 
@@ -48,36 +54,33 @@ class GaitManager:
     def trot_jumped(self):
 
         #  diagonal 1 duration 4
-        self.contact_phases['ball_2'].addPhase(self.contact_phases['ball_2'].getRegisteredPhase(f'flight_ball_2'))
-        self.contact_phases['ball_3'].addPhase(self.contact_phases['ball_3'].getRegisteredPhase(f'flight_ball_3'))
+        self.contact_phases['contact_2'].addPhase(self.contact_phases['contact_2'].getRegisteredPhase(f'flight_contact_2'))
+        self.contact_phases['contact_3'].addPhase(self.contact_phases['contact_3'].getRegisteredPhase(f'flight_contact_3'))
 
         # diagonal 2 short stance 1 (3 times)
-        self.contact_phases['ball_1'].addPhase(self.contact_phases['ball_1'].getRegisteredPhase(f'stance_ball_1_short'))
-        self.contact_phases['ball_1'].addPhase(self.contact_phases['ball_1'].getRegisteredPhase(f'stance_ball_1_short'))
-        self.contact_phases['ball_1'].addPhase(self.contact_phases['ball_1'].getRegisteredPhase(f'stance_ball_1_short'))
-        self.contact_phases['ball_4'].addPhase(self.contact_phases['ball_4'].getRegisteredPhase(f'stance_ball_4_short'))
-        self.contact_phases['ball_4'].addPhase(self.contact_phases['ball_4'].getRegisteredPhase(f'stance_ball_4_short'))
-        self.contact_phases['ball_4'].addPhase(self.contact_phases['ball_4'].getRegisteredPhase(f'stance_ball_4_short'))
+        self.contact_phases['contact_1'].addPhase(self.contact_phases['contact_1'].getRegisteredPhase(f'stance_contact_1_short'))
+        self.contact_phases['contact_1'].addPhase(self.contact_phases['contact_1'].getRegisteredPhase(f'stance_contact_1_short'))
+        self.contact_phases['contact_1'].addPhase(self.contact_phases['contact_1'].getRegisteredPhase(f'stance_contact_1_short'))
+        self.contact_phases['contact_4'].addPhase(self.contact_phases['contact_4'].getRegisteredPhase(f'stance_contact_4_short'))
+        self.contact_phases['contact_4'].addPhase(self.contact_phases['contact_4'].getRegisteredPhase(f'stance_contact_4_short'))
+        self.contact_phases['contact_4'].addPhase(self.contact_phases['contact_4'].getRegisteredPhase(f'stance_contact_4_short'))
 
         #  diagonal 2 duration 4
-        self.contact_phases['ball_1'].addPhase(self.contact_phases['ball_1'].getRegisteredPhase(f'flight_ball_1'))
-        self.contact_phases['ball_4'].addPhase(self.contact_phases['ball_4'].getRegisteredPhase(f'flight_ball_4'))
+        self.contact_phases['contact_1'].addPhase(self.contact_phases['contact_1'].getRegisteredPhase(f'flight_contact_1'))
+        self.contact_phases['contact_4'].addPhase(self.contact_phases['contact_4'].getRegisteredPhase(f'flight_contact_4'))
 
         # diagonal 1 short stance 1 (3 times)
-        self.contact_phases['ball_2'].addPhase(self.contact_phases['ball_2'].getRegisteredPhase(f'stance_ball_2_short'))
-        self.contact_phases['ball_2'].addPhase(self.contact_phases['ball_2'].getRegisteredPhase(f'stance_ball_2_short'))
-        self.contact_phases['ball_2'].addPhase(self.contact_phases['ball_2'].getRegisteredPhase(f'stance_ball_2_short'))
-        self.contact_phases['ball_3'].addPhase(self.contact_phases['ball_3'].getRegisteredPhase(f'stance_ball_3_short'))
-        self.contact_phases['ball_3'].addPhase(self.contact_phases['ball_3'].getRegisteredPhase(f'stance_ball_3_short'))
-        self.contact_phases['ball_3'].addPhase(self.contact_phases['ball_3'].getRegisteredPhase(f'stance_ball_3_short'))
-
-
-        # self.contact_phases['ball_1'].addPhase(self.contact_phases['ball_1'].getRegisteredPhase(f'stance_ball_1'))
-        # self.contact_phases['ball_2'].addPhase(self.contact_phases['ball_2'].getRegisteredPhase(f'flight_ball_2'))
-        # self.contact_phases['ball_3'].addPhase(self.contact_phases['ball_3'].getRegisteredPhase(f'stance_ball_3'))
-        # self.contact_phases['ball_4'].addPhase(self.contact_phases['ball_4'].getRegisteredPhase(f'flight_ball_4'))
-
-
+        self.contact_phases['contact_2'].addPhase(self.contact_phases['contact_2'].getRegisteredPhase(f'stance_contact_2_short'))
+        self.contact_phases['contact_2'].addPhase(self.contact_phases['contact_2'].getRegisteredPhase(f'stance_contact_2_short'))
+        self.contact_phases['contact_2'].addPhase(self.contact_phases['contact_2'].getRegisteredPhase(f'stance_contact_2_short'))
+        self.contact_phases['contact_3'].addPhase(self.contact_phases['contact_3'].getRegisteredPhase(f'stance_contact_3_short'))
+        self.contact_phases['contact_3'].addPhase(self.contact_phases['contact_3'].getRegisteredPhase(f'stance_contact_3_short'))
+        self.contact_phases['contact_3'].addPhase(self.contact_phases['contact_3'].getRegisteredPhase(f'stance_contact_3_short'))
+        
+        # self.contact_phases['contact_1'].addPhase(self.contact_phases['contact_1'].getRegisteredPhase(f'stance_contact_1'))
+        # self.contact_phases['contact_2'].addPhase(self.contact_phases['contact_2'].getRegisteredPhase(f'flight_contact_2'))
+        # self.contact_phases['contact_3'].addPhase(self.contact_phases['contact_3'].getRegisteredPhase(f'stance_contact_3'))
+        # self.contact_phases['contact_4'].addPhase(self.contact_phases['contact_4'].getRegisteredPhase(f'flight_contact_4'))
 
     def trot(self):
         cycle_list_1 = [0, 1, 1, 0]
@@ -123,7 +126,7 @@ class GaitManager:
         # self.zmp_timeline.addPhase(self.zmp_timeline.getRegisteredPhase('zmp_phase'))
 
 
-class KyonCommands:
+class CentauroCommands:
     def __init__(self, gait_manager: GaitManager):
         self.gait_manager = gait_manager
         self.base_weight = 15.
@@ -137,9 +140,9 @@ class KyonCommands:
         self.base_orientation = self.gait_manager.task_interface.getTask('base_orientation')
 
     def run(self, solution):
-
+        
         # stand
-        if self.gait_manager.contact_phases['ball_1'].getEmptyNodes() > 0:
+        if self.gait_manager.contact_phases['contact_1'].getEmptyNodes() > 0:
             self.gait_manager.stand()
 
         # move it back in the middle

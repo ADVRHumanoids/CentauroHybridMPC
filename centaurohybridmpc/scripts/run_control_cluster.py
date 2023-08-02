@@ -1,26 +1,30 @@
-from kyon_rhc.kyonrhc import KyonRHC
-from kyon_rhc.kyonrhc_cluster_srvr import KyonRHClusterSrvr
+from centaurohybridmpc.controllers.centauro_rhc.centaurorhc import CentauroRHC
+from centaurohybridmpc.controllers.centauro_rhc.centaurorhc_cluster_srvr import CentauroRHClusterSrvr
+from centaurohybridmpc.controllers.centauro_rhc.utils.sysutils import PathsGetter
+centaurorhc_paths = PathsGetter
 
 def generate_controllers():
+
+    kyonrhc_config_path = centaurorhc_paths().CONFIGPATH
 
     # create controllers
     cluster_controllers = []
     for i in range(0, control_cluster_srvr.cluster_size):
 
-        cluster_controllers.append(KyonRHC(
+        cluster_controllers.append(CentauroRHC(
                                     controller_index = i,
                                     urdf_path=control_cluster_srvr._urdf_path, 
-                                    srdf_path=control_cluster_srvr._srdf_path, 
+                                    srdf_path=control_cluster_srvr._srdf_path,
+                                    config_path = kyonrhc_config_path, 
                                     pipes_manager = control_cluster_srvr.pipes_manager, 
                                     verbose = verbose, 
-                                    name = "KyonRHController" + str(i), 
                                     termination_flag = control_cluster_srvr.termination_flag))
     
     return cluster_controllers
 
 verbose = True
-control_cluster_srvr = KyonRHClusterSrvr(pipes_config_path = 
-            "/home/apatrizi/RL_ws/kyon/src/ControlClusterUtils/control_cluster_utils/config/pipes/pipes_config.yaml")
+
+control_cluster_srvr = CentauroRHClusterSrvr() # this blocks until connection with the client is established
 controllers = generate_controllers()
 
 for i in range(0, control_cluster_srvr.cluster_size):
@@ -29,7 +33,7 @@ for i in range(0, control_cluster_srvr.cluster_size):
 
     result = control_cluster_srvr.add_controller(controllers[i])
 
-control_cluster_srvr.start() 
+control_cluster_srvr.start() # spawns the controllers on separate processes
 
 try:
 

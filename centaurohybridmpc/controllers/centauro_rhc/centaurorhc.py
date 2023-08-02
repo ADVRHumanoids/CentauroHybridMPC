@@ -1,21 +1,16 @@
-from control_cluster_utils.controllers.rhc import RHController, RobotState
+from control_cluster_utils.controllers.rhc import RHController
 from control_cluster_utils.utilities.pipe_utils import NamedPipesHandler
 
-import time
-
-from kyon_rhc.horizon_imports import * 
+from centaurohybridmpc.controllers.centauro_rhc.horizon_imports import * 
+from centaurohybridmpc.utils.homing import RobotHomer
 
 import numpy as np
-
-import os
 
 import random
 
 import multiprocessing as mp
 
-class CentauroState(RobotState):
-
-    pass
+from centaurohybridmpc.controllers.centauro_rhc.centauro_commands import GaitManager, CentauroCommands
 
 class CentauroRHC(RHController):
 
@@ -28,7 +23,6 @@ class CentauroRHC(RHController):
             termination_flag: mp.Value,
             t_horizon:float = 3.0,
             n_nodes: int = 30,
-            name = "CentauroRHC", 
             enable_replay = False, 
             verbose = False):
 
@@ -42,57 +36,43 @@ class CentauroRHC(RHController):
                         config_path = config_path, 
                         pipes_manager = pipes_manager,
                         termination_flag = termination_flag,
-                        name = name, 
                         verbose=verbose)
 
-        self.n_dofs = self._get_ndofs()
+        self.n_dofs = self._get_ndofs() # after loading the URDF and creating the controller we
+        # know n_dofs -> we assign it (by default = None)
 
-        self.robot_state = CentauroState(self.n_dofs) # used for storing state coming FROM robot
+        self._init_states() # know that the n_dofs are known, we can call the parent method to init robot states and cmds
 
-        self.robot_cmds = CentauroState(self.n_dofs, 
-                                add_info_size=2) # used for storing internal state (i.e. from TO solution)
-        # to be sent TO the robot. 
-        # Additional solver info: [solution cost, solution time]
-
+        self._homer: RobotHomer = None
+    
     def _init_problem(self):
         
-        print(f"[{self.__class__.__name__}]" + f"[{self.status}]" + ": initializing RHC problem for controller " + self.name)
+        print(f"[{self.__class__.__name__}" + str(self.controller_index) + "]" + f"[{self.status}]" + ": initializing RHC problem")
 
         self.urdf = self.urdf.replace('continuous', 'revolute')
         self._kin_dyn = casadi_kin_dyn.CasadiKinDyn(self.urdf)
+
+        self._assign_server_side_jnt_names(self._get_robot_jnt_names())
 
         self._dt = self._t_horizon / self._n_nodes
         self._prb = Problem(self._n_nodes, receding=True, casadi_type=cs.SX)
         self._prb.setDt(self._dt)
 
-        q_init = {'hip_roll_1': 0.0,
-          'hip_pitch_1': 0.7,
-          'knee_pitch_1': -1.4,
-          'hip_roll_2': 0.0,
-          'hip_pitch_2': 0.7,
-          'knee_pitch_2': -1.4,
-          'hip_roll_3': 0.0,
-          'hip_pitch_3': -0.7,
-          'knee_pitch_3': 1.4,
-          'hip_roll_4': 0.0,
-          'hip_pitch_4': -0.7,
-          'knee_pitch_4': 1.4,
-          'wheel_joint_1': 0.0,
-          'wheel_joint_2': 0.0,
-          'wheel_joint_3': 0.0,
-          'wheel_joint_4': 0.0}
+        self._homer = RobotHomer(srdf_path=self.srdf_path, 
+                                jnt_names_prb=self._server_side_jnt_names)
+
         import numpy as np
         base_init = np.array([0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0])
 
-        FK = self._kin_dyn.fk('ball_1')
-        init = base_init.tolist() + list(q_init.values())
-  
+        init = base_init.tolist() + list(self._homer.get_homing())
+
+        FK = self._kin_dyn.fk('contact_1')
         init_pos_foot = FK(q=init)['ee_pos']
         base_init[2] = -init_pos_foot[2]
 
         self._model = FullModelInverseDynamics(problem=self._prb,
                                 kd=self._kin_dyn,
-                                q_init=q_init,
+                                q_init=self._homer.get_homing_map(),
                                 base_init=base_init)
         
         self._ti = TaskInterface(prb=self._prb, 
@@ -134,13 +114,14 @@ class CentauroRHC(RHController):
 
         stance_duration = 5
         flight_duration = 5
+
         for c in self._model.cmap.keys():
             # stance phase normal
             stance_phase = pyphase.Phase(stance_duration, f'stance_{c}')
             if self._ti.getTask(f'{c}_contact') is not None:
                 stance_phase.addItem(self._ti.getTask(f'{c}_contact'))
             else:
-                raise Exception(f"[{self.__class__.__name__}]" + f"[{self.exception}]" + ": task not found")
+                raise Exception(f"[{self.__class__.__name__}]" + f"[{self.exception}]" + f": task {c}_contact not found")
 
             c_phases[c].registerPhase(stance_phase)
 
@@ -152,7 +133,7 @@ class CentauroRHC(RHController):
             if self._ti.getTask(f'z_{c}') is not None:
                 flight_phase.addItemReference(self._ti.getTask(f'z_{c}'), ref_trj)
             else:
-                raise Exception('task not found')
+                raise Exception(f"[{self.__class__.__name__}]" + f"[{self.exception}]" + f": task {c}_contact not found")
             # flight_phase.addConstraint(prb.getConstraints(f'{c}_vert'), nodes=[0 ,flight_duration-1])  # nodes=[0, 1, 2]
             c_phases[c].registerPhase(flight_phase)
 
@@ -195,7 +176,7 @@ class CentauroRHC(RHController):
         self._ti.model.v.setInitialGuess(self._ti.model.v0)
 
         f0 = [0, 0, self._kin_dyn.mass() / 4 * 9.8]
-        for cname, cforces in self._ti.model.cmap.items():
+        for _, cforces in self._ti.model.cmap.items():
             for c in cforces:
                 c.setInitialGuess(f0)
 
@@ -204,16 +185,31 @@ class CentauroRHC(RHController):
         self._ti.bootstrap()
         self._ti.load_initial_guess()
 
-        xig = np.empty([self._prb.getState().getVars().shape[0], 1])
-
-        from kyon_rhc.kyon_commands import GaitManager, KyonCommands
         contact_phase_map = {c: f'{c}_timeline' for c in self._model.cmap.keys()}
+        
         self._gm = GaitManager(self._ti, self._pm, contact_phase_map)
 
-        self._jc = KyonCommands(self._gm)
+        self._jc = CentauroCommands(self._gm)
 
-        print(f"[{self.__class__.__name__}]" + f"[{self.status}]" + "Initialized RHC problem for controller " + self.name)
+        print(f"[{self.__class__.__name__}" + str(self.controller_index) + "]" +  f"[{self.status}]" + "Initialized RHC problem")
 
+    def _get_robot_jnt_names(self):
+
+        joints_names = self._kin_dyn.joint_names()
+
+        to_be_removed = ["universe", 
+                        "reference", 
+                        "world", 
+                        "floating", 
+                        "floating_base"]
+        
+        for name in to_be_removed:
+
+            if name in joints_names:
+                joints_names.remove(name)
+
+        return joints_names
+    
     def _zmp(self, 
             model):
         # formulation in forces
@@ -255,35 +251,19 @@ class CentauroRHC(RHController):
 
     def _get_cmd_jnt_q_from_sol(self):
 
-        return np.full((self.robot_cmds.n_dofs, 1), 1 + random.random(), dtype = np.float32)
+        return self._ti.solution['q'][7:, 0].astype(self.array_dtype)
     
     def _get_cmd_jnt_v_from_sol(self):
 
-        return np.full((self.robot_cmds.n_dofs, 1), 2 + random.random(), dtype = np.float32)
+        return self._ti.solution['v'][6:, 0].astype(self.array_dtype)
 
     def _get_cmd_jnt_eff_from_sol(self):
-
-        return np.full((self.robot_cmds.n_dofs, 1), 3 + random.random(), dtype = np.float32)
+        
+        return self._ti.eval_tau_on_sol()[6:, 0].astype(self.array_dtype)
     
     def _get_additional_slvr_info(self):
 
-        return np.full((2, 1), 78 + random.random(), dtype = np.float32)
-
-    def _send_solution(self):
-        
-        # writes commands from robot state
-        os.write(self.pipes_manager.pipes_fd["cmd_jnt_q"][self.controller_index], self.robot_cmds.jnt_state.q.tobytes())
-        os.write(self.pipes_manager.pipes_fd["cmd_jnt_v"][self.controller_index], self.robot_cmds.jnt_state.v.tobytes())
-        os.write(self.pipes_manager.pipes_fd["cmd_jnt_eff"][self.controller_index], self.robot_cmds.jnt_state.effort.tobytes())
-
-        # write additional info
-        os.write(self.pipes_manager.pipes_fd["rhc_info"][self.controller_index], self.robot_cmds.slvr_state.info.tobytes())
-
-    def _acquire_state(self):
-
-        # reads state from robot
-
-        pass
+        return np.full((2, 1), 78 + random.random(), dtype = self.array_dtype)
 
     def _solve(self):
         
@@ -304,13 +284,7 @@ class CentauroRHC(RHController):
         self._jc.run(self._ti.solution)
 
         self._ti.rti()
-        
+
         # self._pub_sol()
 
-        # get data from the solution
-        self.robot_cmds.jnt_state.q = self._get_cmd_jnt_q_from_sol()
-        self.robot_cmds.jnt_state.v = self._get_cmd_jnt_v_from_sol()
-        self.robot_cmds.jnt_state.effort = self._get_cmd_jnt_eff_from_sol()
-
-        self.robot_cmds.slvr_state.info = self._get_additional_slvr_info()
         # time.sleep(0.02)

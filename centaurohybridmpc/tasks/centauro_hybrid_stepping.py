@@ -1,9 +1,16 @@
 from omni_custom_gym.tasks.custom_task import CustomTask
 
+from control_cluster_utils.utilities.control_cluster_utils import RobotClusterCmd
+
 import numpy as np
+import torch
+
+from centaurohybridmpc.utils.xrdf_gen import get_xrdf_cmds_isaac
 
 class CentauroHybridMPC(CustomTask):
     def __init__(self, 
+                cluster_dt: float, 
+                integration_dt: float,
                 num_envs = 1,
                 device = "cuda", 
                 cloning_offset: np.array = np.array([0.0, 0.0, 0.0]),
@@ -13,34 +20,21 @@ class CentauroHybridMPC(CustomTask):
 
         # trigger __init__ of parent class
         CustomTask.__init__(self,
-                        name = self.__class__.__name__, 
-                        robot_name = "centauro",
-                        num_envs = num_envs,
-                        device = device, 
-                        cloning_offset = cloning_offset,
-                        replicate_physics = replicate_physics,
-                        offset = offset, 
-                        env_spacing = env_spacing)
+                    name = self.__class__.__name__, 
+                    robot_name = "centauro",
+                    num_envs = num_envs,
+                    device = device, 
+                    cloning_offset = cloning_offset,
+                    replicate_physics = replicate_physics,
+                    offset = offset, 
+                    env_spacing = env_spacing)
         
-        self.xrdf_cmd_vals = [True, True, True, False, False, False] # overrides base class default values
-
+        self.cluster_dt = cluster_dt
+        self.integration_dt = integration_dt
+        
     def _xrdf_cmds(self):
 
-        cmds = []
-
-        legs = "true" if self.xrdf_cmd_vals[0] else "false"
-        big_wheel = "true" if self.xrdf_cmd_vals[1] else "false"
-        upper_body ="true" if self.xrdf_cmd_vals[2] else "false"
-        velodyne = "true" if self.xrdf_cmd_vals[3] else "false"
-        realsense = "true" if self.xrdf_cmd_vals[4] else "false"
-        floating_joint = "true" if self.xrdf_cmd_vals[5] else "false"
-
-        cmds.append("legs:=" + legs)
-        cmds.append("big_wheel:=" + big_wheel)
-        cmds.append("upper_body:=" + upper_body)
-        cmds.append("velodyne:=" + velodyne)
-        cmds.append("realsense:=" + realsense)
-        cmds.append("floating_joint:=" + "false")
+        cmds = get_xrdf_cmds_isaac()
 
         return cmds
       
@@ -54,37 +48,34 @@ class CentauroHybridMPC(CustomTask):
         a = 1
     
     def reset(self, env_ids=None):
-        # if env_ids is None:
-        #     env_ids = torch.arange(self.num_envs, device=self._device)
-        # num_resets = len(env_ids)
 
-        # # randomize DOF positions
-        # dof_pos = torch.zeros((num_resets, self._cartpoles.num_dof), device=self._device)
-        # dof_pos[:, self._cart_dof_idx] = 1.0 * (1.0 - 2.0 * torch.rand(num_resets, device=self._device))
-        # dof_pos[:, self._pole_dof_idx] = 0.125 * math.pi * (1.0 - 2.0 * torch.rand(num_resets, device=self._device))
-
-        # # randomize DOF velocities
-        # dof_vel = torch.zeros((num_resets, self._cartpoles.num_dof), device=self._device)
-        # dof_vel[:, self._cart_dof_idx] = 0.5 * (1.0 - 2.0 * torch.rand(num_resets, device=self._device))
-        # dof_vel[:, self._pole_dof_idx] = 0.25 * math.pi * (1.0 - 2.0 * torch.rand(num_resets, device=self._device))
-
-        # # apply resets
-        # indices = env_ids.to(dtype=torch.int32)
-        # self._cartpoles.set_joint_positions(dof_pos, indices=indices)
-        # self._cartpoles.set_joint_velocities(dof_vel, indices=indices)
-
-        # # bookkeeping
-        # self.resets[env_ids] = 0
-
-        a = 1
-
-    def pre_physics_step(self, actions) -> None:
+        # self._jnt_imp_controller.set_refs(pos_ref=self._homer.get_homing())
         
-        a = 1
+        self._jnt_imp_controller.apply_refs()
+
+    def pre_physics_step(self, 
+            actions: RobotClusterCmd) -> None:
+        
+        no_gains_pos = torch.full((self.num_envs, self.robot_n_dofs), 
+                    300.0, 
+                    device = self.torch_device, 
+                    dtype=torch.float32)
+        
+        no_gains_vel = torch.full((self.num_envs, self.robot_n_dofs), 
+                    50, 
+                    device = self.torch_device, 
+                    dtype=torch.float32)
+
+        self._jnt_imp_controller.set_gains(pos_gains = no_gains_pos,
+                            vel_gains = no_gains_vel)
+        
+        self._jnt_imp_controller.set_refs(pos_ref = actions.jnt_cmd.q)
+                
+        self._jnt_imp_controller.apply_refs()
 
     def get_observations(self):
-
-        self._get_jnts_state() # updates joints states
+        
+        self._get_robots_state() # updates joints states
 
         return self.obs
 
@@ -105,4 +96,3 @@ class CentauroHybridMPC(CustomTask):
         # self.resets = resets
 
         return True
-
