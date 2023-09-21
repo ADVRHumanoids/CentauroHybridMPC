@@ -1,53 +1,60 @@
 from control_cluster_utils.controllers.rhc import RHController
-from control_cluster_utils.utilities.pipe_utils import NamedPipesHandler
+from control_cluster_utils.utilities.homing import RobotHomer
 
 from centaurohybridmpc.controllers.centauro_rhc.horizon_imports import * 
-from centaurohybridmpc.utils.homing import RobotHomer
+
+from centaurohybridmpc.controllers.centauro_rhc.centauro_taskref import CentauroRhcTaskRef
+from centaurohybridmpc.controllers.centauro_rhc.gait_manager import GaitManager
 
 import numpy as np
 
-import random
+import torch
 
 import multiprocessing as mp
-
-from centaurohybridmpc.controllers.centauro_rhc.centauro_commands import GaitManager, CentauroCommands
 
 class CentauroRHC(RHController):
 
     def __init__(self, 
             controller_index: int,
-            urdf_path: str,
             srdf_path: str,
+            urdf_path: str,
             config_path: str,
-            pipes_manager: NamedPipesHandler,
-            termination_flag: mp.Value,
+            cluster_size: int, # needed by shared mem manager
             t_horizon:float = 3.0,
             n_nodes: int = 30,
+            add_data_lenght: int = 2,
             enable_replay = False, 
-            verbose = False):
+            verbose = False, 
+            debug = False, 
+            array_dtype = torch.float32):
 
         self._enable_replay = enable_replay
         self._t_horizon = t_horizon
         self._n_nodes = n_nodes
 
+        self.config_path = config_path
+
+        self.urdf_path = urdf_path
+        # read urdf and srdf files
+        with open(self.urdf_path, 'r') as file:
+
+            self.urdf = file.read()
+
         super().__init__(controller_index = controller_index, 
-                        urdf_path = urdf_path, 
-                        srdf_path=  srdf_path, 
-                        config_path = config_path, 
-                        pipes_manager = pipes_manager,
-                        termination_flag = termination_flag,
-                        verbose=verbose)
+                        cluster_size = cluster_size,
+                        srdf_path = srdf_path,
+                        verbose = verbose, 
+                        debug = debug,
+                        array_dtype = array_dtype)
 
-        self.n_dofs = self._get_ndofs() # after loading the URDF and creating the controller we
-        # know n_dofs -> we assign it (by default = None)
+        self.add_data_lenght = add_data_lenght # length of the array holding additional info from the solver
 
-        self._init_states() # know that the n_dofs are known, we can call the parent method to init robot states and cmds
-
-        self._homer: RobotHomer = None
+        self._quat_remap = [1, 2, 3, 0] # mapping from robot quat. to Horizon's quaternion convention
     
     def _init_problem(self):
         
-        print(f"[{self.__class__.__name__}" + str(self.controller_index) + "]" + f"[{self.status}]" + ": initializing RHC problem")
+        print(f"[{self.__class__.__name__}" + str(self.controller_index) + "]" + \
+              f"[{self.journal.status}]" + ": initializing RHC problem")
 
         self.urdf = self.urdf.replace('continuous', 'revolute')
         self._kin_dyn = casadi_kin_dyn.CasadiKinDyn(self.urdf)
@@ -64,9 +71,9 @@ class CentauroRHC(RHController):
         import numpy as np
         base_init = np.array([0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0])
 
+        FK = self._kin_dyn.fk('contact_1')
         init = base_init.tolist() + list(self._homer.get_homing())
 
-        FK = self._kin_dyn.fk('contact_1')
         init_pos_foot = FK(q=init)['ee_pos']
         base_init[2] = -init_pos_foot[2]
 
@@ -76,7 +83,10 @@ class CentauroRHC(RHController):
                                 base_init=base_init)
         
         self._ti = TaskInterface(prb=self._prb, 
-                                model=self._model)
+                                model=self._model, 
+                                debug = self._debug, 
+                                verbose = self._verbose)
+        
         self._ti.setTaskFromYaml(self.config_path)
 
         com_height = self._ti.getTask('com_height')
@@ -114,7 +124,6 @@ class CentauroRHC(RHController):
 
         stance_duration = 5
         flight_duration = 5
-
         for c in self._model.cmap.keys():
             # stance phase normal
             stance_phase = pyphase.Phase(stance_duration, f'stance_{c}')
@@ -183,16 +192,31 @@ class CentauroRHC(RHController):
         self._ti.finalize()
 
         self._ti.bootstrap()
+        
+        self._ti.init_inv_dyn_for_res() # we initalize some objects for sol. postprocessing purposes
+        
         self._ti.load_initial_guess()
 
         contact_phase_map = {c: f'{c}_timeline' for c in self._model.cmap.keys()}
         
         self._gm = GaitManager(self._ti, self._pm, contact_phase_map)
 
-        self._jc = CentauroCommands(self._gm)
+        self.n_dofs = self._get_ndofs() # after loading the URDF and creating the controller we
+        # know n_dofs -> we assign it (by default = None)
 
-        print(f"[{self.__class__.__name__}" + str(self.controller_index) + "]" +  f"[{self.status}]" + "Initialized RHC problem")
+        self.n_contacts = len(self._model.cmap.keys())
+        
+        print(f"[{self.__class__.__name__}" + str(self.controller_index) + "]" +  f"[{self.journal.status}]" + "Initialized RHC problem")
 
+    def _init_rhc_task_cmds(self) -> CentauroRhcTaskRef:
+
+        return CentauroRhcTaskRef(gait_manager=self._gm, 
+                        n_contacts=len(self._model.cmap.keys()), 
+                        index=self.controller_index, 
+                        q_remapping=self._quat_remap, 
+                        dtype=self.array_dtype, 
+                        verbose=self._verbose)
+    
     def _get_robot_jnt_names(self):
 
         joints_names = self._kin_dyn.joint_names()
@@ -251,22 +275,32 @@ class CentauroRHC(RHController):
 
     def _get_cmd_jnt_q_from_sol(self):
 
-        return self._ti.solution['q'][7:, 0].astype(self.array_dtype)
+        return torch.tensor(self._ti.solution['q'][7:, 0], 
+                        dtype=self.array_dtype).reshape(1, 
+                                        self.robot_cmds.jnt_cmd.q.shape[1])
     
     def _get_cmd_jnt_v_from_sol(self):
 
-        return self._ti.solution['v'][6:, 0].astype(self.array_dtype)
+        return torch.tensor(self._ti.solution['v'][6:, 0], 
+                        dtype=self.array_dtype).reshape(1, 
+                                        self.robot_cmds.jnt_cmd.v.shape[1])
 
     def _get_cmd_jnt_eff_from_sol(self):
         
-        return self._ti.eval_tau_on_sol()[6:, 0].astype(self.array_dtype)
+        efforts_on_first_node = self._ti.eval_efforts_on_first_node()
+
+        return torch.tensor(efforts_on_first_node[6:, 0], 
+                        dtype=self.array_dtype).reshape(1, 
+                self.robot_cmds.jnt_cmd.eff.shape[1])
     
     def _get_additional_slvr_info(self):
 
-        return np.full((2, 1), 78 + random.random(), dtype = self.array_dtype)
+        return torch.tensor([self._ti.solution["opt_cost"], 
+                            self._ti.solution["n_iter2sol"]], 
+                        dtype=self.array_dtype)
 
-    def _solve(self):
-        
+    def _update_open_loop(self):
+
         # set initial state and initial guess
         shift_num = -1
 
@@ -276,15 +310,58 @@ class CentauroRHC(RHController):
             xig[:, -1 - i] = x_opt[:, -1]
 
         self._prb.getState().setInitialGuess(xig)
+        
         self._prb.setInitialState(x0=xig[:, 0])
+    
+    def _update_closed_loop(self):
 
-        # shift phases of phase manager
-        self._pm._shift_phases()
+        # set initial state and initial guess
+        shift_num = -1
 
-        self._jc.run(self._ti.solution)
+        x_opt =  self._ti.solution['x_opt']
+        xig = np.roll(x_opt, shift_num, axis=1)
+        for i in range(abs(shift_num)):
+            xig[:, -1 - i] = x_opt[:, -1]
 
-        self._ti.rti()
+        self._prb.getState().setInitialGuess(xig)
 
-        # self._pub_sol()
+        robot_state = torch.cat((self.robot_state.root_state.get_p(), 
+                        self.robot_state.root_state.get_q(), 
+                        self.robot_state.jnt_state.get_q(), 
+                        self.robot_state.root_state.get_v(), 
+                        self.robot_state.root_state.get_omega(), 
+                        self.robot_state.jnt_state.get_v()), 
+                        dim=1
+                        )
+        # robot_state = np.concatenate((xig[0:7, 0].reshape(1, len(xig[0:7, 0])), 
+        #                     self.robot_state.jnt_state.q, 
+        #                     xig[23:29, 0].reshape(1, len(xig[23:29, 0])), 
+        #                     self.robot_state.jnt_state.v), axis=1).T # only joint states from measurements
+
+        # print("state debug n." + str(self.controller_index) + "\n" + 
+        #     "solver: " + str(xig[:, 0]) + "\n" + 
+        #     "meas.: " + str(robot_state.flatten()) + "\n", 
+        #     "q cmd: " + str(self.robot_cmds.jnt_state.q))
+        
+        self._prb.setInitialState(x0=
+                        robot_state.numpy().T
+                        )
+        
+    def _solve(self):
+        
+        self._update_open_loop() # updates the TO ig and 
+        # initial conditions using data from the solution
+
+        # self._update_closed_loop() # updates the TO ig and 
+        # # initial conditions using robot measurements
+        
+        self._pm._shift_phases() # shifts phases of one dt
+        
+        self.rhc_task_refs.update() # updates rhc references
+        # with the latests available
+
+        # self._jc.run(self._ti.solution) # updatedthe high-level commands to the RHC
+        
+        self._ti.rti() # solves the problem
 
         # time.sleep(0.02)

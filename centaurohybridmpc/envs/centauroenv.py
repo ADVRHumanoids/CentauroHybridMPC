@@ -1,6 +1,6 @@
 from omni_custom_gym.gym.omni_vect_env.vec_envs import RobotVecEnv
 
-from kyonrlstepping.controllers.kyon_rhc.kyonrhc_cluster_client import KyonRHClusterClient
+from centaurohybridmpc.controllers.centauro_rhc.centaurorhc_cluster_client import CentauroRHClusterClient
 
 import torch 
 import numpy as np

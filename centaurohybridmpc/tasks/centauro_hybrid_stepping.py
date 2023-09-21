@@ -24,7 +24,7 @@ class CentauroHybridMPC(CustomTask):
         # trigger __init__ of parent class
         CustomTask.__init__(self,
                     name = self.__class__.__name__, 
-                    robot_name = "kyon",
+                    robot_name = "centauro",
                     num_envs = num_envs,
                     device = device, 
                     cloning_offset = cloning_offset,

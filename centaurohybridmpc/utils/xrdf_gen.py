@@ -2,19 +2,21 @@ def get_xrdf_cmds_isaac():
 
         cmds = []
         
-        xrdf_cmd_vals = [True, False, False, False, False]
+        xrdf_cmd_vals = [True, True, True, False, False, False]
 
-        wheels = "true" if xrdf_cmd_vals[0] else "false"
-        upper_body = "true" if xrdf_cmd_vals[1] else "false"
-        sensors = "true" if xrdf_cmd_vals[2] else "false"
-        floating_joint = "true" if xrdf_cmd_vals[3] else "false"
-        payload = "true" if xrdf_cmd_vals[4] else "false"
+        legs = "true" if xrdf_cmd_vals[0] else "false"
+        big_wheel = "true" if xrdf_cmd_vals[1] else "false"
+        upper_body ="true" if xrdf_cmd_vals[2] else "false"
+        velodyne = "true" if xrdf_cmd_vals[3] else "false"
+        realsense = "true" if xrdf_cmd_vals[4] else "false"
+        floating_joint = "true" if xrdf_cmd_vals[5] else "false"
 
-        cmds.append("wheels:=" + wheels)
+        cmds.append("legs:=" + legs)
+        cmds.append("big_wheel:=" + big_wheel)
         cmds.append("upper_body:=" + upper_body)
-        cmds.append("sensors:=" + sensors)
+        cmds.append("velodyne:=" + velodyne)
+        cmds.append("realsense:=" + realsense)
         cmds.append("floating_joint:=" + floating_joint)
-        cmds.append("payload:=" + payload)
 
         return cmds
 
@@ -22,19 +24,20 @@ def get_xrdf_cmds_horizon():
 
         cmds = []
         
-        xrdf_cmd_vals = [True, False, False, True, False] # horizon needs 
-        # the floating base
+        xrdf_cmd_vals = [True, True, True, False, False, True]
 
-        wheels = "true" if xrdf_cmd_vals[0] else "false"
-        upper_body = "true" if xrdf_cmd_vals[1] else "false"
-        sensors = "true" if xrdf_cmd_vals[2] else "false"
-        floating_joint = "true" if xrdf_cmd_vals[3] else "false"
-        payload = "true" if xrdf_cmd_vals[4] else "false"
+        legs = "true" if xrdf_cmd_vals[0] else "false"
+        big_wheel = "true" if xrdf_cmd_vals[1] else "false"
+        upper_body ="true" if xrdf_cmd_vals[2] else "false"
+        velodyne = "true" if xrdf_cmd_vals[3] else "false"
+        realsense = "true" if xrdf_cmd_vals[4] else "false"
+        floating_joint = "true" if xrdf_cmd_vals[5] else "false" # horizon needs a floating joint
 
-        cmds.append("wheels:=" + wheels)
+        cmds.append("legs:=" + legs)
+        cmds.append("big_wheel:=" + big_wheel)
         cmds.append("upper_body:=" + upper_body)
-        cmds.append("sensors:=" + sensors)
+        cmds.append("velodyne:=" + velodyne)
+        cmds.append("realsense:=" + realsense)
         cmds.append("floating_joint:=" + floating_joint)
-        cmds.append("payload:=" + payload)
 
         return cmds

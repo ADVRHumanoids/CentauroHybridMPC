@@ -24,7 +24,7 @@ class CentauroRHClusterSrvr(ControlClusterSrvr):
     
     def _generate_srdf(self):
         
-        print(f"[{self.__class__.__name__}]"  + f"[{self.status}]" + ": generating SRDF for Control Cluster server")
+        print(f"[{self.__class__.__name__}]"  + f"[{self.journal.status}]" + ": generating SRDF for Control Cluster server")
 
         # we generate the URDF where the Kyon description package is located
         import rospkg
@@ -44,15 +44,17 @@ class CentauroRHClusterSrvr(ControlClusterSrvr):
             xacro_cmd = ["xacro"] + [xacro_path] + cmds + ["-o"] + [self._srdf_path]
             xacro_gen = subprocess.check_call(xacro_cmd)
 
-            print(f"[{self.__class__.__name__}]"  + f"[{self.status}]" + ": generated SRDF for Control Cluster server")
+            print(f"[{self.__class__.__name__}]"  + f"[{self.journal.status}]" + ": generated SRDF for Control Cluster server")
 
         except:
 
-            raise Exception(f"[{self.__class__.__name__}]"  + f"[{self.status}]" + ": failed to generate Kyon\'s SRDF!!!.")
+            raise Exception(f"[{self.__class__.__name__}]"  + 
+                            f"[{self.journal.status}]" + 
+                            ": failed to generate Kyon\'s SRDF!!!.")
     
     def _generate_urdf(self):
         
-        print(f"[{self.__class__.__name__}]"  + f"[{self.status}]" + ": generating URDF for Control Cluster server")
+        print(f"[{self.__class__.__name__}]"  + f"[{self.journal.status}]" + ": generating URDF for Control Cluster server")
 
         # we generate the URDF where the Kyon description package is located
         import rospkg
@@ -73,7 +75,7 @@ class CentauroRHClusterSrvr(ControlClusterSrvr):
 
             xacro_gen = subprocess.check_call(xacro_cmd)
             
-            print(f"[{self.__class__.__name__}]"  + f"[{self.status}]" + ": generated URDF for Control Cluster server")
+            print(f"[{self.__class__.__name__}]"  + f"[{self.journal.status}]" + ": generated URDF for Control Cluster server")
 
         except:
 

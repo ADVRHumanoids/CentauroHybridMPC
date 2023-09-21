@@ -17,7 +17,7 @@ env = CentauroEnv(headless=False,
 # upon environment initialization)
 from centaurohybridmpc.tasks.centauro_hybrid_stepping import CentauroHybridMPC
 
-num_envs = 1 
+num_envs = 1
 sim_params = {}
 sim_params["use_gpu_pipeline"] = True
 sim_params["integration_dt"] = 1.0/100.0

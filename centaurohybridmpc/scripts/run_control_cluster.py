@@ -22,10 +22,11 @@ def generate_controllers():
                                     controller_index = i,
                                     urdf_path=control_cluster_srvr._urdf_path, 
                                     srdf_path=control_cluster_srvr._srdf_path,
+                                    cluster_size=control_cluster_srvr.cluster_size,
                                     config_path = kyonrhc_config_path, 
-                                    pipes_manager = control_cluster_srvr.pipes_manager, 
                                     verbose = verbose, 
-                                    termination_flag = control_cluster_srvr.termination_flag))
+                                    debug = debug,
+                                    array_dtype = dtype))
     
     return cluster_controllers
 
