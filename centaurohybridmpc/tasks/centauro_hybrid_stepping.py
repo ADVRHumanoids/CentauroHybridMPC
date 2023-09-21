@@ -1,11 +1,13 @@
 from omni_custom_gym.tasks.custom_task import CustomTask
 
-from control_cluster_utils.utilities.control_cluster_utils import RobotClusterCmd
+from control_cluster_utils.utilities.control_cluster_defs import RobotClusterCmd
 
 import numpy as np
 import torch
 
 from centaurohybridmpc.utils.xrdf_gen import get_xrdf_cmds_isaac
+
+import time 
 
 class CentauroHybridMPC(CustomTask):
     def __init__(self, 
@@ -16,18 +18,20 @@ class CentauroHybridMPC(CustomTask):
                 cloning_offset: np.array = np.array([0.0, 0.0, 0.0]),
                 replicate_physics: bool = True,
                 offset=None, 
-                env_spacing = 5.0) -> None:
+                env_spacing = 5.0, 
+                dtype = torch.float64) -> None:
 
         # trigger __init__ of parent class
         CustomTask.__init__(self,
                     name = self.__class__.__name__, 
-                    robot_name = "centauro",
+                    robot_name = "kyon",
                     num_envs = num_envs,
                     device = device, 
                     cloning_offset = cloning_offset,
                     replicate_physics = replicate_physics,
                     offset = offset, 
-                    env_spacing = env_spacing)
+                    env_spacing = env_spacing, 
+                    dtype = dtype)
         
         self.cluster_dt = cluster_dt
         self.integration_dt = integration_dt
@@ -49,29 +53,52 @@ class CentauroHybridMPC(CustomTask):
     
     def reset(self, env_ids=None):
 
-        # self._jnt_imp_controller.set_refs(pos_ref=self._homer.get_homing())
-        
-        self._jnt_imp_controller.apply_refs()
+        super().reset()
 
     def pre_physics_step(self, 
-            actions: RobotClusterCmd) -> None:
+            actions: RobotClusterCmd = None, 
+            is_first_control_step = False) -> None:
         
-        no_gains_pos = torch.full((self.num_envs, self.robot_n_dofs), 
-                    300.0, 
-                    device = self.torch_device, 
-                    dtype=torch.float32)
-        
-        no_gains_vel = torch.full((self.num_envs, self.robot_n_dofs), 
-                    50, 
-                    device = self.torch_device, 
-                    dtype=torch.float32)
+        if is_first_control_step:
 
-        self._jnt_imp_controller.set_gains(pos_gains = no_gains_pos,
-                            vel_gains = no_gains_vel)
+            no_gains_pos = torch.full((self.num_envs, self.robot_n_dofs), 
+                        100.0, 
+                        device = self.torch_device, 
+                        dtype=self.torch_dtype)
+            no_gains_vel = torch.full((self.num_envs, self.robot_n_dofs), 
+                        10, 
+                        device = self.torch_device, 
+                        dtype=self.torch_dtype)
+            self._jnt_imp_controller.set_gains(pos_gains = no_gains_pos,
+                                vel_gains = no_gains_vel)
+            
+            wheels_indxs = self._jnt_imp_controller.get_jnt_idxs_matching(name_pattern="wheel")
+            wheels_pos_gains = torch.full((self.num_envs, len(wheels_indxs)), 
+                                        0.0, 
+                                        device = self.torch_device, 
+                                        dtype=self.torch_dtype)
+            
+            wheels_vel_gains = torch.full((self.num_envs, len(wheels_indxs)), 
+                                        10.0, 
+                                        device = self.torch_device, 
+                                        dtype=self.torch_dtype)
+            
+            self._jnt_imp_controller.set_gains(pos_gains = wheels_pos_gains,
+                            vel_gains = wheels_vel_gains,
+                            jnt_indxs=wheels_indxs)
         
-        self._jnt_imp_controller.set_refs(pos_ref = actions.jnt_cmd.q)
-                
-        self._jnt_imp_controller.apply_refs()
+        if actions is not None:
+            
+            self._jnt_imp_controller.set_refs(pos_ref = actions.jnt_cmd.q, 
+                                            vel_ref = actions.jnt_cmd.v, 
+                                            eff_ref = actions.jnt_cmd.eff)
+                    
+            self._jnt_imp_controller.apply_refs()
+
+            # print("cmd debug" + "\n" + 
+            #         "q_cmd: " + str(actions.jnt_cmd.q) + "\n" + 
+            #         "v_cmd: " + str(actions.jnt_cmd.v) + "\n" + 
+            #         "eff_cmd: " + str(actions.jnt_cmd.eff))
 
     def get_observations(self):
         

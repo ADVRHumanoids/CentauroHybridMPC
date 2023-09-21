@@ -1,4 +1,8 @@
+import os
+script_name = os.path.splitext(os.path.basename(os.path.abspath(__file__)))[0]
+
 import numpy as np
+import torch
 
 from omni_custom_gym.gym.omni_vect_env.vec_envs import RobotVecEnv
 
@@ -33,15 +37,28 @@ device = sim_params["device"]
 
 control_clust_dt = sim_params["integration_dt"] * 2
 integration_dt = sim_params["integration_dt"]
+
+dtype = "float32" # Isaac requires data to be float32, so this should not be touched
+if dtype == "float64":
+    dtype_np = np.float64 
+    dtype_torch = torch.float64
+if dtype == "float32":
+    dtype_np = np.float32
+    dtype_torch = torch.float32
+
 task = CentauroHybridMPC(cluster_dt = control_clust_dt, 
                         integration_dt = integration_dt,
                         num_envs = num_envs, 
                         cloning_offset = np.array([0.0, 0.0, 2.0]), 
-                        device = device) # create task
+                        device = device, 
+                        dtype=dtype_torch) # create task
 
 env.set_task(task, 
         backend="torch", 
-        sim_params = sim_params) # add the task to the environment 
+        sim_params = sim_params, 
+        np_array_dtype = dtype_np, 
+        verbose=True, 
+        debug=True) # add the task to the environment 
 # (includes spawning robots and launching the cluster client for the controllers)
 
 # Run inference on the trained policy
@@ -56,12 +73,22 @@ rt_factor = 1.0
 real_time = 0.0
 sim_time = 0.0
 i = 0
-start_time = time.monotonic()
+start_time = time.perf_counter()
 start_time_loop = 0
+rt_factor_reset_n = 100 
+rt_factor_counter = 0
 
 while env._simulation_app.is_running():
     
-    start_time_loop = time.monotonic()
+    start_time_loop = time.perf_counter()
+
+    if ((i + 1) % rt_factor_reset_n) == 0:
+
+        rt_factor_counter = 0
+
+        start_time = time.perf_counter()
+
+        sim_time = 0
 
     # if (i >= rt_time_reset):
 
@@ -70,17 +97,17 @@ while env._simulation_app.is_running():
 
     # action, _states = model.predict(obs)
     
-
     # rhc_cmds = rhc_get_cmds_fromjoy() or from agent
 
     obs, rewards, dones, info = env.step(index=i) 
     
-    now = time.monotonic()
+    now = time.perf_counter()
     real_time = now - start_time
     sim_time += sim_params["integration_dt"]
     rt_factor = sim_time / real_time
     
     i+=1 # updating simulation iteration number
+    rt_factor_counter = rt_factor_counter + 1
 
     print("[main][info]: current RT factor-> " + str(rt_factor))
     print("[main][info]: current training RT factor-> " + str(rt_factor * num_envs))
@@ -89,5 +116,4 @@ while env._simulation_app.is_running():
     print("[main][info]: loop execution time-> " + str(now - start_time_loop))
 
 print("[main][info]: closing environment and simulation")
-env.cluster_client.close()
 env.close()

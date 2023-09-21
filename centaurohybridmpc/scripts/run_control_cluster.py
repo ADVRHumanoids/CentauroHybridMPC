@@ -1,7 +1,14 @@
+import os
+script_name = os.path.splitext(os.path.basename(os.path.abspath(__file__)))[0]
+
 from centaurohybridmpc.controllers.centauro_rhc.centaurorhc import CentauroRHC
 from centaurohybridmpc.controllers.centauro_rhc.centaurorhc_cluster_srvr import CentauroRHClusterSrvr
 from centaurohybridmpc.controllers.centauro_rhc.utils.sysutils import PathsGetter
 centaurorhc_paths = PathsGetter
+
+import torch
+
+from perf_sleep.pyperfsleep import PerfSleep
 
 def generate_controllers():
 
@@ -23,6 +30,12 @@ def generate_controllers():
     return cluster_controllers
 
 verbose = True
+debug = True
+
+perf_timer = PerfSleep()
+
+dtype = torch.float32 # this has to be the same wrt the cluster client, otherwise
+# messages are not read properly
 
 control_cluster_srvr = CentauroRHClusterSrvr() # this blocks until connection with the client is established
 controllers = generate_controllers()
@@ -39,12 +52,19 @@ try:
 
     while True:
         
+        nsecs = int(0.1 * 1e9)
+        perf_timer.clock_sleep(nsecs) # we don't want to drain all the CPU
+        # with a busy wait
+
         pass
 
 except KeyboardInterrupt:
 
     # This block will execute when Control-C is pressed
+    print(f"[{script_name}]" + "[info]: KeyboardInterrupt detected. Cleaning up...")
+
     control_cluster_srvr.terminate() # closes all processes
 
     import sys
     sys.exit()
+
