@@ -17,7 +17,7 @@ env = CentauroEnv(headless=False,
 # upon environment initialization)
 from centaurohybridmpc.tasks.centauro_hybrid_stepping import CentauroHybridMPC
 
-num_envs = 1
+num_envs = 9
 sim_params = {}
 sim_params["use_gpu_pipeline"] = True
 sim_params["integration_dt"] = 1.0/100.0
@@ -50,6 +50,7 @@ task = CentauroHybridMPC(cluster_dt = control_clust_dt,
                         integration_dt = integration_dt,
                         num_envs = num_envs, 
                         cloning_offset = np.array([0.0, 0.0, 2.0]), 
+                        use_flat_ground=False,
                         device = device, 
                         dtype=dtype_torch) # create task
 
