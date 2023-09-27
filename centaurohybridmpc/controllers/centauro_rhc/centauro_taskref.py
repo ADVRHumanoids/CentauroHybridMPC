@@ -18,10 +18,13 @@ class CentauroRhcTaskRef(RhcTaskRefs):
             dtype = torch.float32, 
             verbose=False):
         
+        self.robot_name = "centauro"
+
         super().__init__( 
                 n_contacts=n_contacts,
                 index=index,
                 q_remapping=q_remapping,
+                namespace=self.robot_name,
                 dtype=dtype, 
                 verbose=verbose)
 
@@ -34,9 +37,6 @@ class CentauroRhcTaskRef(RhcTaskRefs):
         self.base_orientation = self.gait_manager.task_interface.getTask('base_orientation')
 
     def update(self):
-        
-        print("#################")
-        print(self.gait_manager.contact_phases)
 
         # contact phases
         if self.phase_id.get_phase_id() < 0 and \

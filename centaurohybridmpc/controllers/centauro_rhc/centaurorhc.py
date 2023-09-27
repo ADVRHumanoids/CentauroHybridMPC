@@ -28,6 +28,8 @@ class CentauroRHC(RHController):
             debug = False, 
             array_dtype = torch.float32):
 
+        self.robot_name = "centauro"
+
         self._enable_replay = enable_replay
         self._t_horizon = t_horizon
         self._n_nodes = n_nodes
@@ -43,6 +45,7 @@ class CentauroRHC(RHController):
         super().__init__(controller_index = controller_index, 
                         cluster_size = cluster_size,
                         srdf_path = srdf_path,
+                        namespace = self.robot_name,
                         verbose = verbose, 
                         debug = debug,
                         array_dtype = array_dtype)
