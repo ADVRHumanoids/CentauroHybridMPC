@@ -10,9 +10,9 @@ import torch
 
 from perf_sleep.pyperfsleep import PerfSleep
 
-def generate_controllers():
+def generate_controllers(robot_name: str):
 
-    kyonrhc_config_path = centaurorhc_paths().CONFIGPATH
+    rhc_config_path = centaurorhc_paths().CONFIGPATH
 
     # create controllers
     cluster_controllers = []
@@ -23,7 +23,8 @@ def generate_controllers():
                                     urdf_path=control_cluster_srvr._urdf_path, 
                                     srdf_path=control_cluster_srvr._srdf_path,
                                     cluster_size=control_cluster_srvr.cluster_size,
-                                    config_path = kyonrhc_config_path, 
+                                    robot_name=robot_name,
+                                    config_path = rhc_config_path, 
                                     verbose = verbose, 
                                     debug = debug,
                                     array_dtype = dtype))
@@ -38,8 +39,9 @@ perf_timer = PerfSleep()
 dtype = torch.float32 # this has to be the same wrt the cluster client, otherwise
 # messages are not read properly
 
-control_cluster_srvr = CentauroRHClusterSrvr() # this blocks until connection with the client is established
-controllers = generate_controllers()
+robot_name = "centauro0"
+control_cluster_srvr = CentauroRHClusterSrvr(robot_name) # this blocks until connection with the client is established
+controllers = generate_controllers(robot_name)
 
 for i in range(0, control_cluster_srvr.cluster_size):
     

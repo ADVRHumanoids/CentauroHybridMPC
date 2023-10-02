@@ -20,6 +20,7 @@ class CentauroRHC(RHController):
             urdf_path: str,
             config_path: str,
             cluster_size: int, # needed by shared mem manager
+            robot_name: str = "centauro",
             t_horizon:float = 3.0,
             n_nodes: int = 30,
             add_data_lenght: int = 2,
@@ -28,7 +29,7 @@ class CentauroRHC(RHController):
             debug = False, 
             array_dtype = torch.float32):
 
-        self.robot_name = "centauro"
+        self.robot_name = robot_name
 
         self._enable_replay = enable_replay
         self._t_horizon = t_horizon
@@ -218,7 +219,8 @@ class CentauroRHC(RHController):
                         index=self.controller_index, 
                         q_remapping=self._quat_remap, 
                         dtype=self.array_dtype, 
-                        verbose=self._verbose)
+                        verbose=self._verbose, 
+                        namespace=self.robot_name)
     
     def _get_robot_jnt_names(self):
 

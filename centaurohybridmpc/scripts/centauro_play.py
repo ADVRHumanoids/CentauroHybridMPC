@@ -4,8 +4,6 @@ script_name = os.path.splitext(os.path.basename(os.path.abspath(__file__)))[0]
 import numpy as np
 import torch
 
-from omni_custom_gym.gym.omni_vect_env.vec_envs import RobotVecEnv
-
 #from stable_baselines3 import PPO
 from centaurohybridmpc.envs.centauroenv import CentauroEnv
 
@@ -17,7 +15,7 @@ env = CentauroEnv(headless=False,
 # upon environment initialization)
 from centaurohybridmpc.tasks.centauro_hybrid_stepping import CentauroHybridMPC
 
-num_envs = 9
+num_envs = 1
 sim_params = {}
 sim_params["use_gpu_pipeline"] = True
 sim_params["integration_dt"] = 1.0/100.0
@@ -45,12 +43,20 @@ if dtype == "float64":
 if dtype == "float32":
     dtype_np = np.float32
     dtype_torch = torch.float32
+# this has to be the same wrt the cluster server, otherwise
+# messages are not read/written properly
 
 task = CentauroHybridMPC(cluster_dt = control_clust_dt, 
                         integration_dt = integration_dt,
                         num_envs = num_envs, 
                         cloning_offset = np.array([0.0, 0.0, 2.0]), 
-                        use_flat_ground=False,
+                        env_spacing=6,
+                        spawning_radius=1.0,
+                        use_flat_ground=True, 
+                        default_jnt_stiffness=400.0, 
+                        default_jnt_damping=30.0, 
+                        robot_names = ["centauro0"],
+                        robot_pkg_names = ["centauro"],
                         device = device, 
                         dtype=dtype_torch) # create task
 
@@ -117,4 +123,5 @@ while env._simulation_app.is_running():
     print("[main][info]: loop execution time-> " + str(now - start_time_loop))
 
 print("[main][info]: closing environment and simulation")
+
 env.close()

@@ -13,6 +13,6 @@ if __name__ == "__main__":
                             window_length=window_length, 
                             window_buffer_factor=window_buffer_factor, 
                             verbose=True, 
-                            namespace="centauro")
+                            namespace="centauro0")
 
     main_window.run()
