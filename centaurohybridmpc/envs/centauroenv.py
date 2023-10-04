@@ -28,9 +28,7 @@ class CentauroEnv(RobotVecEnv):
         # now the task and the simulation is guaranteed to be initialized
         # -> we have the data to initialize the cluster client
         for i in range(len(self.robot_names)):
-            
-            print("UUUUU")
-            print(task.robot_dof_names)
+
             self.cluster_clients[self.robot_names[i]] = CentauroRHClusterClient(
                             cluster_size=task.num_envs, 
                             device=task.torch_device, 
@@ -110,11 +108,13 @@ class CentauroEnv(RobotVecEnv):
                                     vel_gains = wheels_vel_gains,
                                     jnt_indxs=wheels_indxs)
                     
-                self.task.pre_physics_step(self.cluster_clients[self.robot_names[i]].controllers_cmds)
+                self.task.pre_physics_step(robot_name = self.robot_names[i],
+                                actions = self.cluster_clients[self.robot_names[i]].controllers_cmds)
                 
             else:
 
-                self.task.pre_physics_step(None)
+                self.task.pre_physics_step(robot_name = self.robot_names[i],
+                                actions = None)
             
         self._world.step(render=self._render)
         

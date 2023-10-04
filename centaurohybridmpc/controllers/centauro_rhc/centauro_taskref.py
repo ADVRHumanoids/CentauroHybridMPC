@@ -1,4 +1,4 @@
-from kyonrlstepping.controllers.kyon_rhc.gait_manager import GaitManager
+from centaurohybridmpc.controllers.centauro_rhc.gait_manager import GaitManager
 
 from control_cluster_utils.utilities.rhc_defs import RhcTaskRefs
 
