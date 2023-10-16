@@ -1,6 +1,6 @@
 from centaurohybridmpc.controllers.centauro_rhc.gait_manager import GaitManager
 
-from control_cluster_utils.utilities.rhc_defs import RhcTaskRefs
+from control_cluster_bridge.utilities.rhc_defs import RhcTaskRefs
 
 import torch
 
