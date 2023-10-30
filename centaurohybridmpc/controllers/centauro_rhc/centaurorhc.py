@@ -360,7 +360,7 @@ class CentauroRHC(RHController):
         # self._update_closed_loop() # updates the TO ig and 
         # # initial conditions using robot measurements
         
-        self._pm._shift_phases() # shifts phases of one dt
+        self._pm.shift() # shifts phases of one dt
         
         self.rhc_task_refs.update() # updates rhc references
         # with the latests available
