@@ -48,3 +48,4 @@ dependencies:
     - scipy
     - urdf-parser-py
     - multiprocess
+    - pynput
