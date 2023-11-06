@@ -370,3 +370,5 @@ class CentauroRHC(RHController):
         self._ti.rti() # solves the problem
 
         # time.sleep(0.02)
+
+        return True
