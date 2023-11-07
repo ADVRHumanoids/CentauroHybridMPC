@@ -15,6 +15,10 @@ env = CentauroEnv(headless=False,
 # upon environment initialization)
 from centaurohybridmpc.tasks.centauro_hybrid_stepping import CentauroHybridMPC
 
+from omni_robo_gym.utils.shared_sim_info import SharedSimInfo
+
+print_sim_info = False
+
 num_envs = 1
 sim_params = {}
 sim_params["use_gpu_pipeline"] = True
@@ -85,10 +89,14 @@ start_time_loop = 0
 rt_factor_reset_n = 100 
 rt_factor_counter = 0
 
+shared_sim_info = SharedSimInfo() # sim. info to be broadcasted
+shared_sim_info.start(gpu_pipeline_active=sim_params["use_gpu_pipeline"], 
+                    integration_dt=integration_dt,
+                    rendering_dt=sim_params["rendering_dt"], 
+                    cluster_dt=control_clust_dt)
+
 while env._simulation_app.is_running():
     
-    start_time_loop = time.perf_counter()
-
     if ((i + 1) % rt_factor_reset_n) == 0:
 
         rt_factor_counter = 0
@@ -97,31 +105,33 @@ while env._simulation_app.is_running():
 
         sim_time = 0
 
-    # if (i >= rt_time_reset):
-
-    #     real_time = 0.0
-    #     sim_time = 0.0
-
-    # action, _states = model.predict(obs)
-    
-    # rhc_cmds = rhc_get_cmds_fromjoy() or from agent
+    start_time_step = time.perf_counter()
 
     obs, rewards, dones, info = env.step(index=i) 
     
     now = time.perf_counter()
+
     real_time = now - start_time
     sim_time += sim_params["integration_dt"]
     rt_factor = sim_time / real_time
     
+    shared_sim_info.update(sim_rt_factor=rt_factor, 
+                    cumulative_rt_factor=rt_factor * num_envs, 
+                    time_for_sim_stepping=now - start_time_step)
+    
     i+=1 # updating simulation iteration number
     rt_factor_counter = rt_factor_counter + 1
 
-    print("[main][info]: current RT factor-> " + str(rt_factor))
-    print("[main][info]: current training RT factor-> " + str(rt_factor * num_envs))
-    print("[main][info]: real_time-> " + str(real_time))
-    print("[main][info]: sim_time-> " + str(sim_time))
-    print("[main][info]: loop execution time-> " + str(now - start_time_loop))
+    if print_sim_info:
+
+        print("[main][info]: current RT factor-> " + str(rt_factor))
+        print("[main][info]: current training RT factor-> " + str(rt_factor * num_envs))
+        print("[main][info]: real_time-> " + str(real_time))
+        print("[main][info]: sim_time-> " + str(sim_time))
+        print("[main][info]: loop execution time-> " + str(now - start_time_step))
 
 print("[main][info]: closing environment and simulation")
+
+shared_sim_info.terminate()
 
 env.close()
