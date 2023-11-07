@@ -282,7 +282,7 @@ class CentauroRHC(RHController):
 
         return torch.tensor(self._ti.solution['q'][7:, 0], 
                         dtype=self.array_dtype).reshape(1, 
-                                        self.robot_cmds.jnt_cmd.q.shape[1])
+                                        self.robot_cmds.jnt_cmd.q.shape[1]).fmod(2 * torch.pi)
     
     def _get_cmd_jnt_v_from_sol(self):
 
