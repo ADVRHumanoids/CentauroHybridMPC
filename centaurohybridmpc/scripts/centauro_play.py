@@ -53,7 +53,7 @@ if dtype == "float32":
 task = CentauroHybridMPC(cluster_dt = control_clust_dt, 
                         integration_dt = integration_dt,
                         num_envs = num_envs, 
-                        cloning_offset = np.array([0.0, 0.0, 2.0]), 
+                        cloning_offset = np.array([0.0, 0.0, 2.0] * num_envs), 
                         env_spacing=6,
                         spawning_radius=1.0,
                         use_flat_ground=True, 
