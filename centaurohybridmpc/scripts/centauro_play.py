@@ -19,17 +19,18 @@ from omni_robo_gym.utils.shared_sim_info import SharedSimInfo
 
 print_sim_info = False
 
-num_envs = 1
+num_envs = 3 # 9, 3, 5
 sim_params = {}
-sim_params["use_gpu_pipeline"] = True
+sim_params["use_gpu_pipeline"] = False
 sim_params["integration_dt"] = 1.0/100.0
-sim_params["rendering_dt"] = 1.0/50.0
+sim_params["rendering_dt"] = 1.0/25.0
 sim_params["substeps"] = 1
 sim_params["gravity"] = np.array([0.0, 0.0, -9.81])
-sim_params["enable_scene_query_support"] = True
+sim_params["enable_scene_query_support"] = False
+sim_params["use_fabric"] = True # Enable/disable reading of physics buffers directly. Default is True.
 sim_params["replicate_physics"] = True
-sim_params["use_flatcache"] = True
-sim_params["disable_contact_processing"] = False
+sim_params["enable_stabilization"] = True
+sim_params["disable_contact_processing"] = True
 if sim_params["use_gpu_pipeline"]:
     sim_params["device"] = "cuda"
 else:
@@ -50,17 +51,40 @@ if dtype == "float32":
 # this has to be the same wrt the cluster server, otherwise
 # messages are not read/written properly
 
+# create task
+robot_names = ["centauro0"] # robot names
+robot_pkg_names = ["centauro"] # robot type
+
+contact_prims = {} # contact sensors to be added
+contact_prims["centauro0"] = ["wheel_1", "wheel_2", "wheel_3", "wheel_4"] # foot contact sensors
+
+contact_offsets = {}
+contact_offsets["centauro0"] = {}
+for i in range(0, len(contact_prims["centauro0"])):
+    
+    contact_offsets["centauro0"][contact_prims["centauro0"][i]] = \
+        np.array([0.0, 0.0, 0.0])
+    
+sensor_radii = {}
+sensor_radii["centauro0"] = {}
+for i in range(0, len(contact_prims["centauro0"])):
+    
+    sensor_radii["centauro0"][contact_prims["centauro0"][i]] = 0.124
+
 task = CentauroHybridMPC(cluster_dt = control_clust_dt, 
                         integration_dt = integration_dt,
                         num_envs = num_envs, 
-                        cloning_offset = np.array([0.0, 0.0, 2.0] * num_envs), 
+                        cloning_offset = np.array([[0.0, 0.0, 1.3]] * num_envs), 
                         env_spacing=6,
                         spawning_radius=1.0,
                         use_flat_ground=True, 
                         default_jnt_stiffness=400.0, 
                         default_jnt_damping=30.0, 
-                        robot_names = ["centauro0"],
-                        robot_pkg_names = ["centauro"],
+                        robot_names = robot_names,
+                        robot_pkg_names = robot_pkg_names,
+                        contact_prims = contact_prims,
+                        contact_offsets = contact_offsets,
+                        sensor_radii = sensor_radii,
                         device = device, 
                         dtype=dtype_torch) # create task
 

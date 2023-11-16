@@ -372,3 +372,7 @@ class CentauroRHC(RHController):
         # time.sleep(0.02)
 
         return True
+
+    def reset(self):
+
+        a = 1

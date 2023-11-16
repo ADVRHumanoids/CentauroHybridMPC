@@ -28,13 +28,25 @@ class CentauroEnv(RobotVecEnv):
         # now the task and the simulation is guaranteed to be initialized
         # -> we have the data to initialize the cluster client
         for i in range(len(self.robot_names)):
+            
+            if self.robot_names[i] in task.omni_contact_sensors:
+
+                n_contact_sensors = task.omni_contact_sensors[self.robot_names[i]].n_sensors
+                contact_names = task.omni_contact_sensors[self.robot_names[i]].contact_prims
+            
+            else:
+                
+                n_contact_sensors = -1
+                contact_names = None
 
             self.cluster_clients[self.robot_names[i]] = CentauroRHClusterClient(
                             cluster_size=task.num_envs, 
                             device=task.torch_device, 
                             cluster_dt=task.cluster_dt, 
                             control_dt=task.integration_dt, 
-                            jnt_names = task.robot_dof_names[self.robot_names[i]], 
+                            jnt_names = task.robot_dof_names[self.robot_names[i]],
+                            n_contact_sensors = n_contact_sensors,
+                            contact_linknames = contact_names, 
                             np_array_dtype = np_array_dtype, 
                             verbose = verbose, 
                             debug = debug, 
@@ -63,7 +75,7 @@ class CentauroEnv(RobotVecEnv):
             if self.cluster_clients[self.robot_names[i]].is_cluster_instant(index):
                 
                 # assign last robot state observation to the cluster client
-                self.update_cluster_state(self.robot_names[i])
+                self.update_cluster_state(self.robot_names[i], index)
 
                 # the control cluster may run at a different rate wrt the simulation
 
@@ -145,7 +157,8 @@ class CentauroEnv(RobotVecEnv):
         return observations
     
     def update_cluster_state(self, 
-                        robot_name: str):
+                        robot_name: str, 
+                        step_index: int = -1):
 
         self.cluster_clients[robot_name].robot_states.root_state.p[:, :] = torch.sub(self.task.root_p[robot_name], 
                                                                 self.task.root_abs_offsets[robot_name]) # we only get the relative position
@@ -156,6 +169,31 @@ class CentauroEnv(RobotVecEnv):
 
         self.cluster_clients[robot_name].robot_states.jnt_state.q[:, :] = self.task.jnts_q[robot_name]
         self.cluster_clients[robot_name].robot_states.jnt_state.v[:, :] = self.task.jnts_v[robot_name]
+
+        # contact state
+
+        # for each contact link
+        
+        for i in range(0, self.cluster_clients[robot_name].n_contact_sensors):
+            
+            contact_link = self.cluster_clients[robot_name].contact_linknames[i]
+            
+            if not self.gpu_pipeline_enabled:
+
+                # assigning measured net contact forces
+                self.cluster_clients[robot_name].contact_states.contact_state.get(contact_link)[:, :] = \
+                    self.task.omni_contact_sensors[robot_name].get(dt = self.task.integration_dt, 
+                                                            contact_link = contact_link,
+                                                            clone = False)
+
+            else:
+                
+                if ((step_index + 1) % 100) == 0:
+
+                    warning = f"[{self.__class__.__name__}]" + f"[{self.journal.warning}]: " + \
+                        f"Contact state from link {contact_link} cannot be retrieved in IsaacSim if using use_gpu_pipeline is set to True!"
+
+                    print(warning)
 
     def init_jnt_cmd_to_safe_vals(self):
         
