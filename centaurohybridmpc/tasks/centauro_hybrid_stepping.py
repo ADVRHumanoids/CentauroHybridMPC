@@ -43,6 +43,7 @@ class CentauroHybridMPC(CustomTask):
         # trigger __init__ of parent class
         CustomTask.__init__(self,
                     name = self.__class__.__name__, 
+                    integration_dt = integration_dt,
                     robot_names = robot_names,
                     robot_pkg_names = robot_pkg_names,
                     num_envs = num_envs,
@@ -61,7 +62,6 @@ class CentauroHybridMPC(CustomTask):
                     dtype = dtype)
         
         self.cluster_dt = cluster_dt
-        self.integration_dt = integration_dt
         
     def _xrdf_cmds(self):
         
