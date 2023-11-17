@@ -104,7 +104,7 @@ class CentauroHybridMPC(CustomTask):
 
     def get_observations(self):
         
-        self._get_robots_state() # updates joints states
+        self._get_robots_state(self.integration_dt) # updates joints states
 
         return self.obs
 
