@@ -26,6 +26,7 @@ class CentauroHybridMPC(CustomTask):
                 contact_prims = None,
                 contact_offsets = None,
                 sensor_radii = None,
+                use_diff_velocities = True,
                 dtype = torch.float64) -> None:
 
         if cloning_offset is None:
@@ -62,7 +63,8 @@ class CentauroHybridMPC(CustomTask):
                     dtype = dtype)
         
         self.cluster_dt = cluster_dt
-        
+        self.use_diff_velocities = use_diff_velocities
+
     def _xrdf_cmds(self):
         
         n_robots = len(self.robot_names)
@@ -104,7 +106,15 @@ class CentauroHybridMPC(CustomTask):
 
     def get_observations(self):
         
-        self._get_robots_state(self.integration_dt) # updates joints states
+        if self.use_diff_velocities:
+
+            self._get_robots_state(self.integration_dt) # updates robot states
+            # but velocities are obtained via num. differentiation
+        
+        else:
+
+            self._get_robots_state() # velocities directly from simulator (can 
+            # introduce relevant artifacts, making them unrealistic)
 
         return self.obs
 
