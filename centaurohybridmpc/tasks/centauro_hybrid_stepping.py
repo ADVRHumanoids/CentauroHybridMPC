@@ -97,7 +97,7 @@ class CentauroHybridMPC(CustomTask):
                                         vel_ref = actions.jnt_cmd.v, 
                                         eff_ref = actions.jnt_cmd.eff)
                     
-            self.jnt_imp_controllers[robot_name].apply_refs()
+            self.jnt_imp_controllers[robot_name].apply_cmds()
 
             # print("cmd debug" + "\n" + 
             #         "q_cmd: " + str(actions.jnt_cmd.q) + "\n" + 
