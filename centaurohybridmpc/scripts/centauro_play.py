@@ -22,8 +22,8 @@ print_sim_info = False
 num_envs = 3 # 9, 3, 5
 sim_params = {}
 sim_params["use_gpu_pipeline"] = False
-sim_params["integration_dt"] = 1.0/100.0
-sim_params["rendering_dt"] = sim_params["integration_dt"]
+sim_params["physics_dt"] = 1.0/100.0
+sim_params["rendering_dt"] = sim_params["physics_dt"]
 sim_params["substeps"] = 1
 sim_params["gravity"] = np.array([0.0, 0.0, -9.81])
 sim_params["enable_scene_query_support"] = False
@@ -38,8 +38,8 @@ else:
 
 device = sim_params["device"]
 
-control_clust_dt = sim_params["integration_dt"] * 2
-integration_dt = sim_params["integration_dt"]
+control_clust_dt = sim_params["physics_dt"] * 2
+integration_dt = sim_params["physics_dt"]
 
 dtype = "float32" # Isaac requires data to be float32, so this should not be touched
 if dtype == "float64":
@@ -136,7 +136,7 @@ while env._simulation_app.is_running():
     now = time.perf_counter()
 
     real_time = now - start_time
-    sim_time += sim_params["integration_dt"]
+    sim_time += sim_params["physics_dt"]
     rt_factor = sim_time / real_time
     
     shared_sim_info.update(sim_rt_factor=rt_factor, 
