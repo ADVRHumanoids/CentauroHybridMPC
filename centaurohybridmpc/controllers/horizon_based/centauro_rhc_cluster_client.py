@@ -1,7 +1,7 @@
 from lrhc_control.controllers.rhc.hybrid_quad_client import HybridQuadrupedClusterClient
 
 from centaurohybridmpc.controllers.horizon_based.centauro_rhc import CentauroRhc
-from centaurohybridmpc.utils.xrdf_gen import get_xrdf_cmds_horizon
+from lrhc_control.utils.hybrid_quad_xrdf_gen import get_xrdf_cmds_horizon
 
 from typing import List
 
@@ -42,8 +42,7 @@ class CentauroRHCLusterClient(HybridQuadrupedClusterClient):
 
     def _xrdf_cmds(self):
         cmds = get_xrdf_cmds_horizon(robot_pkg_name = self.robot_pkg_name,
-                            robot_pkg_pref_path= self.robot_pkg_pref_path,
-                            with_wheels = self._with_wheels)
+                            robot_pkg_pref_path= self.robot_pkg_pref_path)
         return cmds
 
     def _generate_controller(self,

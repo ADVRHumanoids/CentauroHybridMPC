@@ -12,7 +12,7 @@ if __name__ == '__main__':
     
     # generating description files for Kyon
     
-    robot_type = "kyon"
+    robot_type = "centauro"
     kyon_urdf_gen = CentauroUrdfGen(descr_path=args.dpath, 
             robotname=robot_type,
             big_wheels=True,
