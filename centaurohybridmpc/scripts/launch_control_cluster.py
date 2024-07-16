@@ -25,7 +25,7 @@ if __name__ == "__main__":
     parser.add_argument('--cloop', action=argparse.BooleanOptionalAction, default=False, help='whether use RHC controllers in closed loop mode')
     parser.add_argument('--verbose', action='store_true', help='run in verbose mode')
     parser.add_argument('--enable_debug', action='store_true', help='enable debug mode for cluster client and all controllers')
-    parser.add_argument('--with_wheels', action='store_true', help='use wheels')
+    parser.add_argument('--with_wheels', action=argparse.BooleanOptionalAction, default=False, help='use wheels')
 
     parser.add_argument('--force_cores', action='store_true', help='whether to force RHC controller affinity')
     parser.add_argument('--i_cores_only', action='store_true', help='whether use isolated cores only for RHC controllers')

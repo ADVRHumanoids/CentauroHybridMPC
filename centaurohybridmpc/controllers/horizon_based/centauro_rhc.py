@@ -24,7 +24,7 @@ class CentauroRhc(HybridQuadRhc):
             robot_name: str, # used for shared memory namespaces
             codegen_dir: str,
             with_wheels: bool = False, 
-            n_nodes: float = 31,
+            n_nodes: float = 41,
             dt: float = 0.05,
             injection_node: int = 10,
             max_solver_iter = 1, # defaults to rt-iteration
@@ -109,12 +109,27 @@ class CentauroRhc(HybridQuadRhc):
         self._init_robot_homer()
 
         init = self._base_init.tolist() + list(self._homer.get_homing())
-        FK = self._kin_dyn.fk('ball_1') # just to get robot reference height
+        FK = self._kin_dyn.fk('wheel_1') # just to get robot reference height
         wheel_radius = 0.124 # hardcoded!!!!
         init_pos_foot = FK(q=init)['ee_pos']
         self._base_init[2] = -init_pos_foot[2]  # override init
-        if 'wheel_joint_1' in self._kin_dyn.joint_names():
+        if 'j_wheel_1' in self._kin_dyn.joint_names():
             self._base_init[2] += wheel_radius
+
+        self._wheel_names = [f'j_wheel_{i + 1}' for i in range(4)]
+        wheels_map = dict(zip(self._wheel_names, 4 * [0.]))
+        ankle_yaws = [f'ankle_yaw_{i + 1}' for i in range(4)]
+        ankle_yaws_map = dict(zip(ankle_yaws, [np.pi/4, -np.pi/4, -np.pi/4, np.pi/4]))
+        arm_joints = [f'j_arm1_{i + 1}' for i in range(6)] + [f'j_arm2_{i + 1}' for i in range(6)]
+        arm_joints_map = dict(zip(arm_joints, [0.75, 0.1, 0.2, -2.2, 0., -1.3, 0.75, 0.1, -0.2, -2.2, 0.0, -1.3]))
+        torso_map = {'torso_yaw': 0.}
+        head_map = {'d435_head_joint': 0.0, 'velodyne_joint': 0.0}
+        fixed_joint_map = dict()
+        fixed_joint_map.update(wheels_map)
+        fixed_joint_map.update(ankle_yaws_map)
+        fixed_joint_map.update(arm_joints_map)
+        fixed_joint_map.update(torso_map)
+        fixed_joint_map.update(head_map)
 
         self._model = FullModelInverseDynamics(problem=self._prb,
                                 kd=self._kin_dyn,
@@ -152,6 +167,10 @@ class CentauroRhc(HybridQuadRhc):
                 c.setInitialGuess(f0)
         # setting ref for force reg.
         force_ref = self._ti.getTask('joint_regularization')
+        print(force_ref)
+        print(force_ref.getRef())
+        print(force_ref.opt_reference_list)
+        exit()
         force_ref.setRef(index=2, # force
                     ref=np.atleast_2d(np.array(f0)).T)
         force_ref.setRef(index=3, # force
@@ -196,9 +215,9 @@ class CentauroRhc(HybridQuadRhc):
             # stance phase normal
             stance_phase = c_timelines[c].createPhase(stance_duration, f'stance_{c}')
             stance_phase_short = c_timelines[c].createPhase(short_stance_duration, f'stance_{c}_short')
-            if self._ti.getTask(f'{c}_contact') is not None:
-                stance_phase.addItem(self._ti.getTask(f'{c}_contact'))
-                stance_phase_short.addItem(self._ti.getTask(f'{c}_contact'))
+            if self._ti.getTask(f'{c}') is not None:
+                stance_phase.addItem(self._ti.getTask(f'{c}'))
+                stance_phase_short.addItem(self._ti.getTask(f'{c}'))
             else:
                 raise Exception('task not found')
 
@@ -210,7 +229,7 @@ class CentauroRhc(HybridQuadRhc):
             ref_trj[2, :] = np.atleast_2d(self._tg.from_derivatives(flight_duration, init_z_foot, init_z_foot, 0.2, [None, 0, None]))
             if self._ti.getTask(f'z_{c}') is not None:
                 flight_phase.addItemReference(self._ti.getTask(f'z_{c}'), ref_trj, nodes=list(range(0, flight_duration)))
-                flight_phase.addItem(self._ti.getTask(f'{c}_contact'), nodes=list(range(flight_duration, flight_duration+post_landing_stance)))
+                flight_phase.addItem(self._ti.getTask(f'{c}'), nodes=list(range(flight_duration, flight_duration+post_landing_stance)))
             else:
                 raise Exception('task not found')
             cstr = self._prb.createConstraint(f'{c}_vert', ee_vel[0:2], [])
@@ -229,8 +248,8 @@ class CentauroRhc(HybridQuadRhc):
         black_list_indices = list()
         white_list = []
 
-        if 'wheel_joint_1' in self._model.kd.joint_names():
-            black_list = ['wheel_joint_1', 'wheel_joint_2', 'wheel_joint_3', 'wheel_joint_4']
+        if self._wheel_names[0] in self._model.kd.joint_names():
+            black_list = self._wheel_names
         else:
             black_list = []
 
