@@ -1,12 +1,11 @@
-from lrhc_control.controllers.rhc.lrhc_cluster_client import LRhcClusterClient
 from lrhc_control.controllers.rhc.hybrid_quad_client import HybridQuadrupedClusterClient
 
-from kyonrlstepping.controllers.horizon_based.kyon_rhc import KyonRhc
-from kyonrlstepping.utils.xrdf_gen import get_xrdf_cmds_horizon
+from centaurohybridmpc.controllers.horizon_based.centauro_rhc import CentauroRhc
+from centaurohybridmpc.utils.xrdf_gen import get_xrdf_cmds_horizon
 
 from typing import List
 
-class KyonRHCLusterClient(HybridQuadrupedClusterClient):
+class CentauroRHCLusterClient(HybridQuadrupedClusterClient):
     
     def __init__(self, 
             namespace: str, 
@@ -27,7 +26,7 @@ class KyonRHCLusterClient(HybridQuadrupedClusterClient):
         self._with_wheels = with_wheels
 
         super().__init__(namespace = namespace, 
-            robot_pkg_name="kyon",
+            robot_pkg_name="centauro",
             robot_pkg_pref_path=robot_pkg_pref_path,
             cluster_size=cluster_size,
             isolated_cores_only = isolated_cores_only,
@@ -52,7 +51,7 @@ class KyonRHCLusterClient(HybridQuadrupedClusterClient):
         
         codegen_dir=self._process_codegen_dir(idx=idx)
 
-        controller = KyonRhc(
+        controller = CentauroRhc(
                 urdf_path=self._urdf_path, 
                 srdf_path=self._srdf_path,
                 robot_name=self._namespace,

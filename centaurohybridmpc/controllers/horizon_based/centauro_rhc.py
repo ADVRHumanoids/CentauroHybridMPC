@@ -12,11 +12,11 @@ import shutil
 
 import time
 
-from kyonrlstepping.controllers.horizon_based.kyon_rhc_task_refs import KyonRHCRefs
-from kyonrlstepping.controllers.horizon_based.utils.sysutils import PathsGetter
+from centaurohybridmpc.controllers.horizon_based.centauro_rhc_task_refs import CentauroRHCRefs
+from centaurohybridmpc.controllers.horizon_based.utils.sysutils import PathsGetter
 from scipy.spatial.transform import Rotation
 
-class KyonRhc(HybridQuadRhc):
+class CentauroRhc(HybridQuadRhc):
 
     def __init__(self, 
             srdf_path: str,
@@ -71,7 +71,7 @@ class KyonRhc(HybridQuadRhc):
 
     def _init_rhc_task_cmds(self):
         
-        rhc_refs = KyonRHCRefs(gait_manager=self._gm,
+        rhc_refs = CentauroRHCRefs(gait_manager=self._gm,
                     robot_index=self.controller_index,
                     namespace=self.namespace,
                     safe=False, 
@@ -110,11 +110,11 @@ class KyonRhc(HybridQuadRhc):
 
         init = self._base_init.tolist() + list(self._homer.get_homing())
         FK = self._kin_dyn.fk('ball_1') # just to get robot reference height
-        kyon_wheel_radius = 0.124 # hardcoded!!!!
+        wheel_radius = 0.124 # hardcoded!!!!
         init_pos_foot = FK(q=init)['ee_pos']
         self._base_init[2] = -init_pos_foot[2]  # override init
         if 'wheel_joint_1' in self._kin_dyn.joint_names():
-            self._base_init[2] += kyon_wheel_radius
+            self._base_init[2] += wheel_radius
 
         self._model = FullModelInverseDynamics(problem=self._prb,
                                 kd=self._kin_dyn,

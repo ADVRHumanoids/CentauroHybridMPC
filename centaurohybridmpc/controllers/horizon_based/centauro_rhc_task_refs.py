@@ -3,7 +3,7 @@ from lrhc_control.controllers.rhc.horizon_based.utils.math_utils import hor2w_fr
 
 import numpy as np
 
-class KyonRHCRefs(HybridQuadRhcRefs):
+class CentauroRHCRefs(HybridQuadRhcRefs):
     # only overrides parent tasks getter and setter methods 
     def _get_tasks(self):
         # overrides parent

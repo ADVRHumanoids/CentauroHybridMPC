@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 from rhcviz.RHCViz import RHCViz
-from kyonrlstepping.utils.kyon_urdf_gen import KyonUrdfGen
+from centaurohybridmpc.utils.centauro_urdf_gen import CentauroUrdfGen
 
 import argparse
 
@@ -13,6 +13,7 @@ if __name__ == '__main__':
     # generating description files for Kyon
     
     robot_type = "kyon"
-    kyon_urdf_gen = KyonUrdfGen(descr_path = args.dpath, 
-            robotname=robot_type, 
+    kyon_urdf_gen = CentauroUrdfGen(descr_path=args.dpath, 
+            robotname=robot_type,
+            big_wheels=True,
             name=robot_type+"Urdf")
