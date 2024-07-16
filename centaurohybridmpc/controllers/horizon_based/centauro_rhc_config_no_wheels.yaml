@@ -161,7 +161,7 @@ contact_3:
   type: Contact
   subtask: [interaction_contact_3, zero_velocity_contact_3]
 
-contact_34:
+contact_4:
   type: Contact
   subtask: [interaction_contact_4, zero_velocity_contact_4]
 

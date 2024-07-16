@@ -167,10 +167,6 @@ class CentauroRhc(HybridQuadRhc):
                 c.setInitialGuess(f0)
         # setting ref for force reg.
         force_ref = self._ti.getTask('joint_regularization')
-        print(force_ref)
-        print(force_ref.getRef())
-        print(force_ref.opt_reference_list)
-        exit()
         force_ref.setRef(index=2, # force
                     ref=np.atleast_2d(np.array(f0)).T)
         force_ref.setRef(index=3, # force

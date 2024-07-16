@@ -10,8 +10,8 @@ import argparse
 if __name__ == '__main__':
 
     parser = argparse.ArgumentParser(description="Multi Robot Visualizer")
-    parser.add_argument('--ns', type=str, help='Namespace to be used for cluster shared memory',default="kyon0")
-    parser.add_argument('--dpath', type=str,default="/root/ibrido_ws/src/iit-kyon-ros-pkg/kyon_urdf")
+    parser.add_argument('--ns', type=str, help='Namespace to be used for cluster shared memory',default="centauro0")
+    parser.add_argument('--dpath', type=str,default="/root/ibrido_ws/src/iit-centauro-ros-pkg/centauro_urdf")
     parser.add_argument('--nodes_perc', type=int, default=30)
     parser.add_argument('--comment', type=str, help='Any useful comment associated with this run',default="")
     parser.add_argument('--big_wheels', action=argparse.BooleanOptionalAction, default=True, help='use big wheels')
@@ -20,10 +20,10 @@ if __name__ == '__main__':
 
     syspaths = PathsGetter()
         
-    urdf_generator = CentauroUrdfGen(robotname="kyon", 
+    urdf_generator = CentauroUrdfGen(robotname="centauro", 
                 big_wheels=args.big_wheels,
                 descr_path=args.dpath,
-                name="kyonUrdf")
+                name="centauroUrdf")
     
     rhcviz = RHCViz(urdf_file_path=urdf_generator.urdf_path, 
         rviz_config_path=syspaths.DEFAULT_RVIZ_CONFIG_PATH,
