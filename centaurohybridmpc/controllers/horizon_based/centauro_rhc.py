@@ -94,10 +94,25 @@ class CentauroRhc(HybridQuadRhc):
 
         # overrides parent
 
+        self._wheel_names = [f'j_wheel_{i + 1}' for i in range(4)]
+        wheels_map = dict(zip(self._wheel_names, 4 * [0.]))
+        ankle_yaws = [f'ankle_yaw_{i + 1}' for i in range(4)]
+        ankle_yaws_map = dict(zip(ankle_yaws, [np.pi/4, -np.pi/4, -np.pi/4, np.pi/4]))
+        arm_joints = [f'j_arm1_{i + 1}' for i in range(6)] + [f'j_arm2_{i + 1}' for i in range(6)]
+        arm_joints_map = dict(zip(arm_joints, [0.75, 0.1, 0.2, -2.2, 0., -1.3, 0.75, 0.1, -0.2, -2.2, 0.0, -1.3]))
+        torso_map = {'torso_yaw': 0.}
+        head_map = {'d435_head_joint': 0.0, 'velodyne_joint': 0.0}
+        fixed_joint_map = dict()
+        fixed_joint_map.update(wheels_map)
+        fixed_joint_map.update(ankle_yaws_map)
+        fixed_joint_map.update(arm_joints_map)
+        fixed_joint_map.update(torso_map)
+        fixed_joint_map.update(head_map)
+
         self.urdf = self.urdf.replace('continuous', 'revolute') # continous joint is parametrized
         # in So2, so will add 
 
-        self._kin_dyn = casadi_kin_dyn.CasadiKinDyn(self.urdf)
+        self._kin_dyn = casadi_kin_dyn.CasadiKinDyn(self.urdf,fixed_joints=fixed_joint_map)
 
         self._assign_controller_side_jnt_names(jnt_names=self._get_robot_jnt_names())
 
@@ -115,21 +130,6 @@ class CentauroRhc(HybridQuadRhc):
         self._base_init[2] = -init_pos_foot[2]  # override init
         if 'j_wheel_1' in self._kin_dyn.joint_names():
             self._base_init[2] += wheel_radius
-
-        self._wheel_names = [f'j_wheel_{i + 1}' for i in range(4)]
-        wheels_map = dict(zip(self._wheel_names, 4 * [0.]))
-        ankle_yaws = [f'ankle_yaw_{i + 1}' for i in range(4)]
-        ankle_yaws_map = dict(zip(ankle_yaws, [np.pi/4, -np.pi/4, -np.pi/4, np.pi/4]))
-        arm_joints = [f'j_arm1_{i + 1}' for i in range(6)] + [f'j_arm2_{i + 1}' for i in range(6)]
-        arm_joints_map = dict(zip(arm_joints, [0.75, 0.1, 0.2, -2.2, 0., -1.3, 0.75, 0.1, -0.2, -2.2, 0.0, -1.3]))
-        torso_map = {'torso_yaw': 0.}
-        head_map = {'d435_head_joint': 0.0, 'velodyne_joint': 0.0}
-        fixed_joint_map = dict()
-        fixed_joint_map.update(wheels_map)
-        fixed_joint_map.update(ankle_yaws_map)
-        fixed_joint_map.update(arm_joints_map)
-        fixed_joint_map.update(torso_map)
-        fixed_joint_map.update(head_map)
 
         self._model = FullModelInverseDynamics(problem=self._prb,
                                 kd=self._kin_dyn,
