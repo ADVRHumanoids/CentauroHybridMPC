@@ -57,7 +57,7 @@ class CentauroRHCLusterClient(HybridQuadrupedClusterClient):
                 codegen_dir=codegen_dir,
                 with_wheels=self._with_wheels,
                 n_nodes=31, 
-                dt=0.03,
+                dt=0.05,
                 injection_node=5,
                 max_solver_iter = 1,
                 open_loop = self._open_loop,
