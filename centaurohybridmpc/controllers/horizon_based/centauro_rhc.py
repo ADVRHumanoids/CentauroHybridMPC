@@ -93,36 +93,45 @@ class CentauroRhc(HybridQuadRhc):
     def _init_problem(self):
 
         # overrides parent
-
-        self._wheel_names = [f'j_wheel_{i + 1}' for i in range(4)]
-        wheels_map = dict(zip(self._wheel_names, 4 * [0.]))
-        ankle_yaws = [f'ankle_yaw_{i + 1}' for i in range(4)]
-        ankle_yaws_map = dict(zip(ankle_yaws, [np.pi/4, -np.pi/4, -np.pi/4, np.pi/4]))
-        arm_joints = [f'j_arm1_{i + 1}' for i in range(6)] + [f'j_arm2_{i + 1}' for i in range(6)]
-        arm_joints_map = dict(zip(arm_joints, [0.75, 0.1, 0.2, -2.2, 0., -1.3, 0.75, 0.1, -0.2, -2.2, 0.0, -1.3]))
-        torso_map = {'torso_yaw': 0.}
-        head_map = {'d435_head_joint': 0.0, 'velodyne_joint': 0.0}
-        fixed_joint_map = dict()
-        fixed_joint_map.update(wheels_map)
-        fixed_joint_map.update(ankle_yaws_map)
-        fixed_joint_map.update(arm_joints_map)
-        fixed_joint_map.update(torso_map)
-        fixed_joint_map.update(head_map)
-
-        self.urdf = self.urdf.replace('continuous', 'revolute') # continous joint is parametrized
-        # in So2, so will add 
-
-        self._kin_dyn = casadi_kin_dyn.CasadiKinDyn(self.urdf,fixed_joints=fixed_joint_map)
-
-        self._assign_controller_side_jnt_names(jnt_names=self._get_robot_jnt_names())
-
         self._prb = Problem(self._n_intervals, 
                         receding=True, 
                         casadi_type=cs.SX)
         self._prb.setDt(self._dt)
 
-        self._init_robot_homer()
+        # self._wheel_names = [f'j_wheel_{i + 1}' for i in range(4)]
+        # wheels_map = dict(zip(self._wheel_names, 4 * [0.]))
+        # ankle_yaws = [f'ankle_yaw_{i + 1}' for i in range(4)]
+        # ankle_yaws_map = dict(zip(ankle_yaws, [np.pi/4, -np.pi/4, -np.pi/4, np.pi/4]))
+        # arm_joints = [f'j_arm1_{i + 1}' for i in range(6)] + [f'j_arm2_{i + 1}' for i in range(6)]
+        # arm_joints_map = dict(zip(arm_joints, [0.75, 0.1, 0.2, -2.2, 0., -1.3, 0.75, 0.1, -0.2, -2.2, 0.0, -1.3]))
+        # torso_map = {'torso_yaw': 0.}
+        # head_map = {'d435_head_joint': 0.0, 'velodyne_joint': 0.0}
 
+        # init fixed map to zero -> homing from SRDF will be used
+        self._wheel_names = [f'j_wheel_{i + 1}' for i in range(4)]
+        ankle_yaws = [f'ankle_yaw_{i + 1}' for i in range(4)]
+        arm_joints = [f'j_arm1_{i + 1}' for i in range(6)] + [f'j_arm2_{i + 1}' for i in range(6)]
+        head_jnts= ['d435_head_joint', 'velodyne_joint']
+        fixed_joints = self._wheel_names+ankle_yaws+arm_joints+head_jnts
+        fixed_jnt_vals = len(fixed_joints)*[0.] # default to 0
+        fixed_joint_map=dict(zip(fixed_joints, fixed_jnt_vals))
+
+        self.urdf = self.urdf.replace('continuous', 'revolute') # continous joint is parametrized
+        # in So2, so will add 
+
+        self._kin_dyn = casadi_kin_dyn.CasadiKinDyn(self.urdf,fixed_joints=fixed_joint_map) # used for getting joint names in
+        # child class-> will be overritten
+        self._assign_controller_side_jnt_names(jnt_names=self._get_robot_jnt_names())
+
+        self._init_robot_homer()
+        
+        fixed_jnts_homing=self._homer.get_homing_vals(jnt_names=fixed_joints)# ordered as fixed_joints
+        # update fixed joints map from homing:
+        for i in range(len(fixed_joints)):
+            jnt_name=fixed_joints[i]
+            fixed_joint_map[jnt_name]=fixed_jnts_homing[i]
+        self._kin_dyn = casadi_kin_dyn.CasadiKinDyn(self.urdf,fixed_joints=fixed_joint_map)
+        
         init = self._base_init.tolist() + list(self._homer.get_homing())
         FK = self._kin_dyn.fk('wheel_1') # just to get robot reference height
         wheel_radius = 0.124 # hardcoded!!!!
