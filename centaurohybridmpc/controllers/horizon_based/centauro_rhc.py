@@ -111,8 +111,9 @@ class CentauroRhc(HybridQuadRhc):
         self._wheel_names = [f'j_wheel_{i + 1}' for i in range(4)]
         ankle_yaws = [f'ankle_yaw_{i + 1}' for i in range(4)]
         arm_joints = [f'j_arm1_{i + 1}' for i in range(6)] + [f'j_arm2_{i + 1}' for i in range(6)]
+        torso_jnts=["torso_yaw"]
         head_jnts= ['d435_head_joint', 'velodyne_joint']
-        fixed_joints = self._wheel_names+ankle_yaws+arm_joints+head_jnts
+        fixed_joints = self._wheel_names+ankle_yaws+arm_joints+torso_jnts+head_jnts
         fixed_jnt_vals = len(fixed_joints)*[0.] # default to 0
         fixed_joint_map=dict(zip(fixed_joints, fixed_jnt_vals))
 
