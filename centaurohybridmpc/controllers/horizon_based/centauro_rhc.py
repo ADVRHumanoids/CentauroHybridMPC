@@ -25,7 +25,7 @@ class CentauroRhc(HybridQuadRhc):
             codegen_dir: str,
             with_wheels: bool = False, 
             n_nodes: float = 41,
-            dt: float = 0.05,
+            dt: float = 0.03,
             injection_node: int = 10,
             max_solver_iter = 1, # defaults to rt-iteration
             open_loop: bool = True,
@@ -135,11 +135,11 @@ class CentauroRhc(HybridQuadRhc):
         
         init = self._base_init.tolist() + list(self._homer.get_homing())
         FK = self._kin_dyn.fk('wheel_1') # just to get robot reference height
-        wheel_radius = 0.124 # hardcoded!!!!
+        self._wheel_radius = 0.124 # hardcoded!!!!
         init_pos_foot = FK(q=init)['ee_pos']
-        self._base_init[2] = -init_pos_foot[2]  # override init
-        if 'j_wheel_1' in self._kin_dyn.joint_names():
-            self._base_init[2] += wheel_radius
+        self._base_init[2] = -init_pos_foot[2]  # override init      
+        self._base_init[2] += self._wheel_radius # even if in fixed joints, 
+        # in the real robot the wheel is there
 
         self._model = FullModelInverseDynamics(problem=self._prb,
                                 kd=self._kin_dyn,
@@ -214,9 +214,10 @@ class CentauroRhc(HybridQuadRhc):
             c_timelines[c] = self._pm.createTimeline(f'{c}_timeline')
 
         short_stance_duration = 1
-        stance_duration = 8
+        stance_duration = 15
         flight_duration = 8
         post_landing_stance = 3
+        step_height=0.1
         for c in self._model.cmap.keys():
             # stance phase normal
             stance_phase = c_timelines[c].createPhase(stance_duration, f'stance_{c}')
@@ -232,7 +233,7 @@ class CentauroRhc(HybridQuadRhc):
             init_z_foot = self._model.kd.fk(c)(q=self._model.q0)['ee_pos'].elements()[2]
             ee_vel = self._model.kd.frameVelocity(c, self._model.kd_frame)(q=self._model.q, qdot=self._model.v)['ee_vel_linear']
             ref_trj = np.zeros(shape=[7, flight_duration])
-            ref_trj[2, :] = np.atleast_2d(self._tg.from_derivatives(flight_duration, init_z_foot, init_z_foot, 0.2, [None, 0, None]))
+            ref_trj[2, :] = np.atleast_2d(self._tg.from_derivatives(flight_duration, init_z_foot, init_z_foot, step_height, [None, 0, None]))
             if self._ti.getTask(f'z_{c}') is not None:
                 flight_phase.addItemReference(self._ti.getTask(f'z_{c}'), ref_trj, nodes=list(range(0, flight_duration)))
                 flight_phase.addItem(self._ti.getTask(f'{c}'), nodes=list(range(flight_duration, flight_duration+post_landing_stance)))

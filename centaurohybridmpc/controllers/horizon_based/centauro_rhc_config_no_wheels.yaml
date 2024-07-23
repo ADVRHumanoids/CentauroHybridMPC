@@ -50,9 +50,9 @@ costs:
 #     - &w_ball_xy 10.
 
 .define:
-    - &w_com 50.
-    - &w_base_ori 50.
-    - &w_base_xy 10.
+    - &w_com 40.
+    - &w_base_ori 40.
+    - &w_base_xy 40.
     - &w_contact_z 100.
     - &w_postural 5.
     - &w_postural_ub 10.
