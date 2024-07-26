@@ -137,9 +137,9 @@ class CentauroRhc(HybridQuadRhc):
         FK = self._kin_dyn.fk('wheel_1') # just to get robot reference height
         self._wheel_radius = 0.124 # hardcoded!!!!
         init_pos_foot = FK(q=init)['ee_pos']
-        self._base_init[2] = -init_pos_foot[2]  # override init      
+        self._base_init[2] = -init_pos_foot[2]  # override init     
         self._base_init[2] += self._wheel_radius # even if in fixed joints, 
-        # in the real robot the wheel is there
+        # in the real robot the wheel is there. This way the feet z in homing is at height
 
         self._model = FullModelInverseDynamics(problem=self._prb,
                                 kd=self._kin_dyn,
