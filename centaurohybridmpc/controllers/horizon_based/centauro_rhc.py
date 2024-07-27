@@ -24,7 +24,7 @@ class CentauroRhc(HybridQuadRhc):
             robot_name: str, # used for shared memory namespaces
             codegen_dir: str,
             with_wheels: bool = False, 
-            n_nodes: float = 41,
+            n_nodes: float = 31,
             dt: float = 0.03,
             injection_node: int = 10,
             max_solver_iter = 1, # defaults to rt-iteration
@@ -140,9 +140,9 @@ class CentauroRhc(HybridQuadRhc):
         FK = self._kin_dyn.fk('wheel_1') # just to get robot reference height
         self._wheel_radius = 0.124 # hardcoded!!!!
         init_pos_foot = FK(q=init)['ee_pos']
-        self._base_init[2] = -init_pos_foot[2]  # override init      
+        self._base_init[2] = -init_pos_foot[2]  # override init     
         self._base_init[2] += self._wheel_radius # even if in fixed joints, 
-        # in the real robot the wheel is there
+        # in the real robot the wheel is there. This way the feet z in homing is at height
 
         self._model = FullModelInverseDynamics(problem=self._prb,
                                 kd=self._kin_dyn,
@@ -244,6 +244,10 @@ class CentauroRhc(HybridQuadRhc):
                 raise Exception('task not found')
             cstr = self._prb.createConstraint(f'{c}_vert', ee_vel[0:2], [])
             flight_phase.addConstraint(cstr, nodes=[0, flight_duration-1])
+
+            c_ori = self._model.kd.fk(c)(q=self._model.q)['ee_rot'][2, :]
+            cost_ori = self._prb.createResidual(f'{c}_ori', 15. * (c_ori.T - np.array([0, 0, 1])))
+            flight_phase.addCost(cost_ori)
 
         for c in self._model.cmap.keys():
             # stance = c_timelines[c].getRegisteredPhase(f'stance_{c}_short')
