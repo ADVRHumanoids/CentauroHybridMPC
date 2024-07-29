@@ -136,13 +136,13 @@ class CentauroRhc(HybridQuadRhc):
         self._kin_dyn = casadi_kin_dyn.CasadiKinDyn(self.urdf,fixed_joints=fixed_joint_map)
         
         init = self._base_init.tolist() + list(self._homer.get_homing())
-        FK = self._kin_dyn.fk('wheel_1') # just to get robot reference height
+        FK = self._kin_dyn.fk('contact_1') # just to get robot reference height
         self._wheel_radius = 0.124 # hardcoded!!!!
-        init_pos_foot = FK(q=init)['ee_pos']
-        self._base_init[2] = -init_pos_foot[2]  # override init     
-        self._base_init[2] += self._wheel_radius # even if in fixed joints, 
+        ground_level = FK(q=init)['ee_pos']
+        self._base_init[2] = -ground_level[2]  # override init     
+        # self._base_init[2] += self._wheel_radius # even if in fixed joints, 
         # in the real robot the wheel is there. This way the feet z in homing is at height
-
+        
         self._model = FullModelInverseDynamics(problem=self._prb,
                                 kd=self._kin_dyn,
                                 q_init=self._homer.get_homing_map(),
