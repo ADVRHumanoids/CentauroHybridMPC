@@ -29,6 +29,7 @@ class CentauroRhc(HybridQuadRhc):
             injection_node: int = 10,
             max_solver_iter = 1, # defaults to rt-iteration
             open_loop: bool = True,
+            close_loop_all: bool = False,
             dtype = np.float32, 
             verbose = False, 
             debug = False,
@@ -38,8 +39,6 @@ class CentauroRhc(HybridQuadRhc):
 
         paths = PathsGetter()
         config_path = paths.RHCCONFIGPATH_WHEELS if with_wheels else paths.RHCCONFIGPATH_NO_WHEELS
-
-        close_loop_all=False # do not close the loop on the whole meas state 
         
         super().__init__(srdf_path=srdf_path,
             urdf_path=urdf_path,
@@ -376,20 +375,24 @@ class CentauroRhc(HybridQuadRhc):
         self._set_ig()
 
         # sets state on node 0 from measurements
-        robot_state = self._assemble_meas_robot_state(x_opt=self._ti.solution['x_opt'])
+        robot_state = self._assemble_meas_robot_state(x_opt=self._ti.solution['x_opt'],
+                                        close_all=self._close_loop_all)
         # robot_state = self._assemble_meas_robot_state()
 
         self._prb.setInitialState(x0=
                         robot_state)
     
     def _assemble_meas_robot_state(self,
-                            x_opt = None):
+                        x_opt = None,
+                        close_all: bool=False):
 
         # overrides parent
         q_jnts = self.robot_state.jnts_state.get(data_type="q", robot_idxs=self.controller_index).reshape(-1, 1)
         v_jnts = self.robot_state.jnts_state.get(data_type="v", robot_idxs=self.controller_index).reshape(-1, 1)
         q_root = self.robot_state.root_state.get(data_type="q", robot_idxs=self.controller_index).reshape(-1, 1)
         p = self.robot_state.root_state.get(data_type="p", robot_idxs=self.controller_index).reshape(-1, 1)
+        if not close_all: # use internal MPC for the base
+            p[0:3,:]=self._ti.solution['q'][0:3, 1] # base pos is open loop
         v_root = self.robot_state.root_state.get(data_type="v", robot_idxs=self.controller_index).reshape(-1, 1)
         omega = self.robot_state.root_state.get(data_type="omega", robot_idxs=self.controller_index).reshape(-1, 1)
         
