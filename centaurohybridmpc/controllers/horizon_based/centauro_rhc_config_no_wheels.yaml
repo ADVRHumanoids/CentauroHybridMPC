@@ -36,31 +36,16 @@ costs:
   - joint_posture
 #  - joint_posture_ub
 
-# .define:
-#     - &w_com 50.
-#     - &w_base_ori 50.
-#     - &w_base_xy 10.
-#     - &w_contact_z 100.
-#     - &w_postural 5.
-#     - &w_postural_ub 10.
-#     - &w_v 1e-2
-#     - &w_a 5e-2
-#     - &w_f 1e-2
-#     - &w_ball_ori 20.
-#     - &w_ball_xy 10.
-
 .define:
-    - &w_com 40.
-    - &w_base_ori 40.
-    - &w_base_xy 40.
-    - &w_contact_z 100.
-    - &w_postural 5.
-    - &w_postural_ub 10.
-    - &w_v 1e-2
-    - &w_a 5e-2
-    - &w_f 3e-2
-    - &w_ball_ori 20.
-    - &w_ball_xy 10.
+    - &w_com 5.
+    - &w_base_ori 100.
+    - &w_base_xy 10.
+    - &w_contact_z 10.
+    - &w_postural 0.2
+    - &w_postural_ub 1.0
+    - &w_v 1e-3
+    - &w_a 1e-3
+    - &w_f 1e-3
 
 base_lin_vel:
   type: Cartesian
@@ -116,7 +101,7 @@ zero_velocity_contact_4:
 interaction_contact_1:
   type: VertexForce
   frame: contact_1
-  fn_min: 5.0
+  fn_min: 10.0
   enable_fc: false
   friction_coeff: 1.0
   vertex_frames:
@@ -125,7 +110,7 @@ interaction_contact_1:
 interaction_contact_2:
   type: VertexForce
   frame: contact_2
-  fn_min: 5.0
+  fn_min: 10.0
   enable_fc: false
   friction_coeff: 1.0
   vertex_frames:
@@ -134,7 +119,7 @@ interaction_contact_2:
 interaction_contact_3:
   type: VertexForce
   frame: contact_3
-  fn_min: 5.0
+  fn_min: 10.0
   enable_fc: false
   friction_coeff: 1.0
   vertex_frames:
@@ -143,7 +128,7 @@ interaction_contact_3:
 interaction_contact_4:
   type: VertexForce
   frame: contact_4
-  fn_min: 5.0
+  fn_min: 10.0
   enable_fc: false
   friction_coeff: 1.0
   vertex_frames:

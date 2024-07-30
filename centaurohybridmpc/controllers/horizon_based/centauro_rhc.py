@@ -245,7 +245,7 @@ class CentauroRhc(HybridQuadRhc):
             flight_phase.addConstraint(cstr, nodes=[0, flight_duration-1])
 
             c_ori = self._model.kd.fk(c)(q=self._model.q)['ee_rot'][2, :]
-            cost_ori = self._prb.createResidual(f'{c}_ori', 15. * (c_ori.T - np.array([0, 0, 1])))
+            cost_ori = self._prb.createResidual(f'{c}_ori', 5. * (c_ori.T - np.array([0, 0, 1])))
             flight_phase.addCost(cost_ori)
 
         for c in self._model.cmap.keys():
