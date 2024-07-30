@@ -38,9 +38,9 @@ costs:
 
 #open loop
 .define:
-  - &w_com 5.
-  - &w_base_ori 100.
-  - &w_base_xy 10.
+  - &w_com 2.
+  - &w_base_ori 50.
+  - &w_base_xy 5.
   - &w_contact_z 10.
   - &w_postural 0.2
   - &w_postural_ub 1.0
@@ -48,17 +48,17 @@ costs:
   - &w_a 1e-3
   - &w_f 1e-3
 
-# # close loop
+#close loop
 # .define:
-#     - &w_com 5.
-#     - &w_base_ori 100.
-#     - &w_base_xy 10.
-#     - &w_contact_z 10.
-#     - &w_postural 0.2
-#     - &w_postural_ub 1.0
-#     - &w_v 1e-3
-#     - &w_a 1e-3
-#     - &w_f 1e-2
+#   - &w_com 2.
+#   - &w_base_ori 50.
+#   - &w_base_xy 5.
+#   - &w_contact_z 10.
+#   - &w_postural 0.2
+#   - &w_postural_ub 1.0
+#   - &w_v 1e-3
+#   - &w_a 1e-3
+#   - &w_f 1e-3
 
 base_lin_vel:
   type: Cartesian
