@@ -57,10 +57,14 @@ class CentauroRhc(HybridQuadRhc):
             refs_in_hor_frame=refs_in_hor_frame,
             timeout_ms=timeout_ms)
         
-        # self._fail_idx_thresh = 5e3
-        self._fail_idx_thresh=1e3
         self._fail_idx_scale=1e-4
-
+        self._fail_idx_thresh_open_loop=1e3
+        self._fail_idx_thresh_close_loop=1e5
+        if open_loop:
+            self._fail_idx_thresh=self._fail_idx_thresh_open_loop
+        else:
+            self._fail_idx_thresh=self._fail_idx_thresh_close_loop
+        
     def _quaternion_multiply(self, 
                     q1, q2):
         x1, y1, z1, w1 = q1

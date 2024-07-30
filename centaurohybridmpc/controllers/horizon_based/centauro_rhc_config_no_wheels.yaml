@@ -36,16 +36,29 @@ costs:
   - joint_posture
 #  - joint_posture_ub
 
+#open loop
 .define:
-    - &w_com 5.
-    - &w_base_ori 100.
-    - &w_base_xy 10.
-    - &w_contact_z 10.
-    - &w_postural 0.2
-    - &w_postural_ub 1.0
-    - &w_v 1e-3
-    - &w_a 1e-3
-    - &w_f 1e-3
+  - &w_com 5.
+  - &w_base_ori 100.
+  - &w_base_xy 10.
+  - &w_contact_z 10.
+  - &w_postural 0.2
+  - &w_postural_ub 1.0
+  - &w_v 1e-3
+  - &w_a 1e-3
+  - &w_f 1e-3
+
+# # close loop
+# .define:
+#     - &w_com 5.
+#     - &w_base_ori 100.
+#     - &w_base_xy 10.
+#     - &w_contact_z 10.
+#     - &w_postural 0.2
+#     - &w_postural_ub 1.0
+#     - &w_v 1e-3
+#     - &w_a 1e-3
+#     - &w_f 1e-2
 
 base_lin_vel:
   type: Cartesian
@@ -177,6 +190,7 @@ joint_regularization:
     acceleration: *w_a # 0.01
     force: *w_f # todo <----- how to do? if there are more forces...
 
+# flight phase traj tracking
 z_contact_1:
   type: Cartesian
   distal_link: contact_1
