@@ -127,7 +127,9 @@ class CentauroRhc(HybridQuadRhc):
             jnt_name=fixed_joints[i]
             fixed_joint_map[jnt_name]=fixed_jnts_homing[i]
         self._kin_dyn = casadi_kin_dyn.CasadiKinDyn(self.urdf,fixed_joints=fixed_joint_map)
-        
+
+        self._f0 = [0, 0, self._kin_dyn.mass() / 4 * 9.8]
+
         init = self._base_init.tolist() + list(self._homer.get_homing())
         FK = self._kin_dyn.fk('contact_1') # just to get robot reference height
         self._wheel_radius = 0.124 # hardcoded!!!!
@@ -161,25 +163,25 @@ class CentauroRhc(HybridQuadRhc):
         self._create_whitelist()
         self._init_contact_timelines()
         self._add_zmp()
-        
+
         self._ti.model.q.setBounds(self._ti.model.q0, self._ti.model.q0, nodes=0)
         self._ti.model.v.setBounds(self._ti.model.v0, self._ti.model.v0, nodes=0)
         self._ti.model.q.setInitialGuess(self._ti.model.q0)
         self._ti.model.v.setInitialGuess(self._ti.model.v0)
-        f0 = [0, 0, self._kin_dyn.mass() / 4 * 9.8]
         for _, cforces in self._ti.model.cmap.items():
+            n_contact_f=len(cforces)
             for c in cforces:
-                c.setInitialGuess(f0)
+                c.setInitialGuess(np.array(self._f0)/n_contact_f)
         # setting ref for force reg.
         force_ref = self._ti.getTask('joint_regularization')
         force_ref.setRef(index=2, # force
-                    ref=np.atleast_2d(np.array(f0)).T)
+                    ref=np.atleast_2d(np.array(self._f0)).T)
         force_ref.setRef(index=3, # force
-                    ref=np.atleast_2d(np.array(f0)).T)
+                    ref=np.atleast_2d(np.array(self._f0)).T)
         force_ref.setRef(index=4, # force
-                    ref=np.atleast_2d(np.array(f0)).T)
+                    ref=np.atleast_2d(np.array(self._f0)).T)
         force_ref.setRef(index=5, # force
-                    ref=np.atleast_2d(np.array(f0)).T)
+                    ref=np.atleast_2d(np.array(self._f0)).T)
 
         vel_lims = self._model.kd.velocityLimits()
         import horizon.utils as utils
@@ -208,21 +210,28 @@ class CentauroRhc(HybridQuadRhc):
             self._c_timelines[c] = self._pm.createTimeline(f'{c}_timeline')
 
         short_stance_duration = 1
-        stance_duration = 15
         flight_duration = 8
         post_landing_stance = 3
         step_height=0.1
         for c in self._model.cmap.keys():
-            # stance phase normal
-            stance_phase = self._c_timelines[c].createPhase(stance_duration, f'stance_{c}')
+            # stance phases
             stance_phase_short = self._c_timelines[c].createPhase(short_stance_duration, f'stance_{c}_short')
             if self._ti.getTask(f'{c}') is not None:
-                stance_phase.addItem(self._ti.getTask(f'{c}'))
                 stance_phase_short.addItem(self._ti.getTask(f'{c}'))
+                # i=0
+                # for force in self._ti.model.cmap[c]:
+                #     force_reg=self._prb.createResidual(f'{c}_force_reg_f{i}', 1e-3 * (force - np.array(self._f0)))
+                #     stance_phase_short.addCost(force_reg)
+                #     print("IIIIIIIIIIIIIIII")
+                #     i+=1
             else:
-                raise Exception('task not found')
+                Journal.log(self.__class__.__name__,
+                    "_init_contact_timelines",
+                    f"contact task {c} not found",
+                    LogType.EXCEP,
+                    throw_when_excep=True)
 
-            # flight phase normal
+            # flight phases
             flight_phase = self._c_timelines[c].createPhase(flight_duration+post_landing_stance, f'flight_{c}')
             init_z_foot = self._model.kd.fk(c)(q=self._model.q0)['ee_pos'].elements()[2]
             ee_vel = self._model.kd.frameVelocity(c, self._model.kd_frame)(q=self._model.q, qdot=self._model.v)['ee_vel_linear']
