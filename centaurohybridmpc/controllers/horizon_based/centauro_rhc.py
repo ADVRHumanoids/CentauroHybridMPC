@@ -14,7 +14,6 @@ import time
 
 from centaurohybridmpc.controllers.horizon_based.centauro_rhc_task_refs import CentauroRHCRefs
 from centaurohybridmpc.controllers.horizon_based.utils.sysutils import PathsGetter
-from scipy.spatial.transform import Rotation
 
 class CentauroRhc(HybridQuadRhc):
 
@@ -57,23 +56,13 @@ class CentauroRhc(HybridQuadRhc):
             refs_in_hor_frame=refs_in_hor_frame,
             timeout_ms=timeout_ms)
         
-        self._fail_idx_scale=1e-4
+        self._fail_idx_scale=1e-6
         self._fail_idx_thresh_open_loop=1e3
         self._fail_idx_thresh_close_loop=1e5
         if open_loop:
             self._fail_idx_thresh=self._fail_idx_thresh_open_loop
         else:
             self._fail_idx_thresh=self._fail_idx_thresh_close_loop
-        
-    def _quaternion_multiply(self, 
-                    q1, q2):
-        x1, y1, z1, w1 = q1
-        x2, y2, z2, w2 = q2
-        w = w1 * w2 - x1 * x2 - y1 * y2 - z1 * z2
-        x = w1 * x2 + x1 * w2 + y1 * z2 - z1 * y2
-        y = w1 * y2 - x1 * z2 + y1 * w2 + z1 * x2
-        z = w1 * z2 + x1 * y2 - y1 * x2 + z1 * w2
-        return np.array([x, y, z, w])
 
     def _init_rhc_task_cmds(self):
         
@@ -172,7 +161,7 @@ class CentauroRhc(HybridQuadRhc):
         self._create_whitelist()
         self._init_contact_timelines()
         self._add_zmp()
-
+        
         self._ti.model.q.setBounds(self._ti.model.q0, self._ti.model.q0, nodes=0)
         self._ti.model.v.setBounds(self._ti.model.v0, self._ti.model.v0, nodes=0)
         self._ti.model.q.setInitialGuess(self._ti.model.q0)
@@ -215,9 +204,8 @@ class CentauroRhc(HybridQuadRhc):
     
     def _init_contact_timelines(self):
         
-        c_timelines = dict()
         for c in self._model.cmap.keys():
-            c_timelines[c] = self._pm.createTimeline(f'{c}_timeline')
+            self._c_timelines[c] = self._pm.createTimeline(f'{c}_timeline')
 
         short_stance_duration = 1
         stance_duration = 15
@@ -226,8 +214,8 @@ class CentauroRhc(HybridQuadRhc):
         step_height=0.1
         for c in self._model.cmap.keys():
             # stance phase normal
-            stance_phase = c_timelines[c].createPhase(stance_duration, f'stance_{c}')
-            stance_phase_short = c_timelines[c].createPhase(short_stance_duration, f'stance_{c}_short')
+            stance_phase = self._c_timelines[c].createPhase(stance_duration, f'stance_{c}')
+            stance_phase_short = self._c_timelines[c].createPhase(short_stance_duration, f'stance_{c}_short')
             if self._ti.getTask(f'{c}') is not None:
                 stance_phase.addItem(self._ti.getTask(f'{c}'))
                 stance_phase_short.addItem(self._ti.getTask(f'{c}'))
@@ -235,7 +223,7 @@ class CentauroRhc(HybridQuadRhc):
                 raise Exception('task not found')
 
             # flight phase normal
-            flight_phase = c_timelines[c].createPhase(flight_duration+post_landing_stance, f'flight_{c}')
+            flight_phase = self._c_timelines[c].createPhase(flight_duration+post_landing_stance, f'flight_{c}')
             init_z_foot = self._model.kd.fk(c)(q=self._model.q0)['ee_pos'].elements()[2]
             ee_vel = self._model.kd.frameVelocity(c, self._model.kd_frame)(q=self._model.q, qdot=self._model.v)['ee_vel_linear']
             ref_trj = np.zeros(shape=[7, flight_duration])
@@ -252,11 +240,7 @@ class CentauroRhc(HybridQuadRhc):
             cost_ori = self._prb.createResidual(f'{c}_ori', 5. * (c_ori.T - np.array([0, 0, 1])))
             flight_phase.addCost(cost_ori)
 
-        for c in self._model.cmap.keys():
-            # stance = c_timelines[c].getRegisteredPhase(f'stance_{c}_short')
-            stance = c_timelines[c].getRegisteredPhase(f'stance_{c}_short')
-            while c_timelines[c].getEmptyNodes() > 0:
-                c_timelines[c].addPhase(stance)
+        self._reset_contact_timeline()
 
     def _create_whitelist(self):
 
@@ -337,83 +321,3 @@ class CentauroRhc(HybridQuadRhc):
 
         f = cs.Function('zmp', input_list, [zmp])
         return f
-
-    def _set_ig(self):
-
-        shift_num = -1 # shift data by one node
-
-        x_opt = self._ti.solution['x_opt']
-        u_opt = self._ti.solution['u_opt']
-
-        # building ig for state
-        xig = np.roll(x_opt, 
-                shift_num, axis=1) # rolling state sol.
-        for i in range(abs(shift_num)):
-            # state on last node is copied to the elements
-            # which are "lost" during the shift operation
-            xig[:, -1 - i] = x_opt[:, -1]
-        # building ig for inputs
-        uig = np.roll(u_opt, 
-                shift_num, axis=1) # rolling state sol.
-        for i in range(abs(shift_num)):
-            # state on last node is copied to the elements
-            # which are "lost" during the shift operation
-            uig[:, -1 - i] = u_opt[:, -1]
-
-        # assigning ig
-        self._prb.getState().setInitialGuess(xig)
-        self._prb.getInput().setInitialGuess(uig)
-
-        return xig, uig
-
-    def _update_open_loop(self):
-
-        xig, _ = self._set_ig()
-
-        # open loop update:
-        self._prb.setInitialState(x0=xig[:, 0]) # (xig has been shifted, so node 0
-        # is node 1 in the last opt solution)
-    
-    def _update_closed_loop(self):
-
-        self._set_ig()
-
-        # sets state on node 0 from measurements
-        robot_state = self._assemble_meas_robot_state(x_opt=self._ti.solution['x_opt'],
-                                        close_all=self._close_loop_all)
-        # robot_state = self._assemble_meas_robot_state()
-
-        self._prb.setInitialState(x0=
-                        robot_state)
-    
-    def _assemble_meas_robot_state(self,
-                        x_opt = None,
-                        close_all: bool=False):
-
-        # overrides parent
-        q_jnts = self.robot_state.jnts_state.get(data_type="q", robot_idxs=self.controller_index).reshape(-1, 1)
-        v_jnts = self.robot_state.jnts_state.get(data_type="v", robot_idxs=self.controller_index).reshape(-1, 1)
-        q_root = self.robot_state.root_state.get(data_type="q", robot_idxs=self.controller_index).reshape(-1, 1)
-        p = self.robot_state.root_state.get(data_type="p", robot_idxs=self.controller_index).reshape(-1, 1)
-        if not close_all: # use internal MPC for the base
-            p[0:3,:]=self._ti.solution['q'][0:3, 1:2] # base pos is open loop
-        v_root = self.robot_state.root_state.get(data_type="v", robot_idxs=self.controller_index).reshape(-1, 1)
-        omega = self.robot_state.root_state.get(data_type="omega", robot_idxs=self.controller_index).reshape(-1, 1)
-        
-        # we need twist in local base frame, but measured one is global
-        if x_opt is not None:
-            # CHECKING q_root for sign consistency!
-            # numerical problem: two quaternions can represent the same rotation
-            # if difference between the base q in the state x on first node and the sensed q_root < 0, change sign
-            state_quat_conjugate = np.copy(x_opt[3:7, 0])
-            state_quat_conjugate[:3] *= -1.0
-            # normalize the quaternion
-            state_quat_conjugate = state_quat_conjugate / np.linalg.norm(x_opt[3:7, 0])
-            diff_quat = self._quaternion_multiply(q_root, state_quat_conjugate)
-            if diff_quat[3] < 0:
-                q_root[:] = -q_root
-
-        r_base = Rotation.from_quat(q_root.flatten()).as_matrix()
-
-        return np.concatenate((p, q_root, q_jnts, r_base.T @ v_root, r_base.T @ omega, v_jnts),
-                axis=0)
