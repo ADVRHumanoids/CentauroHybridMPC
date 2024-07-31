@@ -233,7 +233,7 @@ class CentauroRhc(HybridQuadRhc):
                 f_reg_short_phase_empty = self._f_reg_timelines[c].createPhase(flight_duration, f'freg_{c}_empty')
                 i=0
                 for force in self._ti.model.cmap[c]:
-                    force_reg=self._prb.createResidual(f'{c}_force_reg_f{i}', 1e-3 * (force - np.array(self._f0)), 
+                    force_reg=self._prb.createResidual(f'{c}_force_reg_f{i}', 5e-4 * (force - np.array(self._f0)), 
                                         nodes=list(range(0,self._n_nodes-1)))
                     f_reg_short_phase.addCost(force_reg, nodes=[0])
                     i+=1
