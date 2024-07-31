@@ -64,6 +64,8 @@ class CentauroRhc(HybridQuadRhc):
         else:
             self._fail_idx_thresh=self._fail_idx_thresh_close_loop
 
+        self._add_f_reg_timeline=False
+
     def _init_rhc_task_cmds(self):
         
         rhc_refs = CentauroRHCRefs(gait_manager=self._gm,
@@ -227,14 +229,15 @@ class CentauroRhc(HybridQuadRhc):
                     throw_when_excep=True)
 
             # f reg phase
-            f_reg_short_phase = self._f_reg_timelines[c].createPhase(short_stance_duration, f'freg_{c}_short')
-            f_reg_short_phase_empty = self._f_reg_timelines[c].createPhase(flight_duration, f'freg_{c}_empty')
-            i=0
-            for force in self._ti.model.cmap[c]:
-                force_reg=self._prb.createResidual(f'{c}_force_reg_f{i}', 1e-3 * (force - np.array(self._f0)), 
-                                    nodes=list(range(0,self._n_nodes-1)))
-                f_reg_short_phase.addCost(force_reg, nodes=[0])
-                i+=1
+            if self._add_f_reg_timeline:
+                f_reg_short_phase = self._f_reg_timelines[c].createPhase(short_stance_duration, f'freg_{c}_short')
+                f_reg_short_phase_empty = self._f_reg_timelines[c].createPhase(flight_duration, f'freg_{c}_empty')
+                i=0
+                for force in self._ti.model.cmap[c]:
+                    force_reg=self._prb.createResidual(f'{c}_force_reg_f{i}', 1e-3 * (force - np.array(self._f0)), 
+                                        nodes=list(range(0,self._n_nodes-1)))
+                    f_reg_short_phase.addCost(force_reg, nodes=[0])
+                    i+=1
 
             # flight phases
             flight_phase = self._c_timelines[c].createPhase(flight_duration+post_landing_stance, f'flight_{c}')

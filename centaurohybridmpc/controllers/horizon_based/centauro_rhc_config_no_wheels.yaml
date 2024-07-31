@@ -188,7 +188,7 @@ joint_regularization:
   weight:
     velocity: *w_v
     acceleration: *w_a # 0.01
-    # force: *w_f # todo <----- how to do? if there are more forces...
+    force: *w_f # todo <----- how to do? if there are more forces...
 
 # flight phase traj tracking
 z_contact_1:
