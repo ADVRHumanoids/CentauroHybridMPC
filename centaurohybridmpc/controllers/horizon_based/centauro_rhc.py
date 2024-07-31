@@ -173,15 +173,15 @@ class CentauroRhc(HybridQuadRhc):
             for c in cforces:
                 c.setInitialGuess(np.array(self._f0)/n_contact_f)
         # setting ref for force reg.
-        force_ref = self._ti.getTask('joint_regularization')
-        force_ref.setRef(index=2, # force
-                    ref=np.atleast_2d(np.array(self._f0)).T)
-        force_ref.setRef(index=3, # force
-                    ref=np.atleast_2d(np.array(self._f0)).T)
-        force_ref.setRef(index=4, # force
-                    ref=np.atleast_2d(np.array(self._f0)).T)
-        force_ref.setRef(index=5, # force
-                    ref=np.atleast_2d(np.array(self._f0)).T)
+        # force_ref = self._ti.getTask('joint_regularization')
+        # force_ref.setRef(index=2, # force
+        #             ref=np.atleast_2d(np.array(self._f0)).T)
+        # force_ref.setRef(index=3, # force
+        #             ref=np.atleast_2d(np.array(self._f0)).T)
+        # force_ref.setRef(index=4, # force
+        #             ref=np.atleast_2d(np.array(self._f0)).T)
+        # force_ref.setRef(index=5, # force
+        #             ref=np.atleast_2d(np.array(self._f0)).T)
 
         vel_lims = self._model.kd.velocityLimits()
         import horizon.utils as utils
@@ -208,6 +208,7 @@ class CentauroRhc(HybridQuadRhc):
         
         for c in self._model.cmap.keys():
             self._c_timelines[c] = self._pm.createTimeline(f'{c}_timeline')
+            self._f_reg_timelines[c] = self._pm.createTimeline(f'{c}_timeline_f_reg')
 
         short_stance_duration = 1
         flight_duration = 8
@@ -218,18 +219,22 @@ class CentauroRhc(HybridQuadRhc):
             stance_phase_short = self._c_timelines[c].createPhase(short_stance_duration, f'stance_{c}_short')
             if self._ti.getTask(f'{c}') is not None:
                 stance_phase_short.addItem(self._ti.getTask(f'{c}'))
-                # i=0
-                # for force in self._ti.model.cmap[c]:
-                #     force_reg=self._prb.createResidual(f'{c}_force_reg_f{i}', 1e-3 * (force - np.array(self._f0)))
-                #     stance_phase_short.addCost(force_reg)
-                #     print("IIIIIIIIIIIIIIII")
-                #     i+=1
             else:
                 Journal.log(self.__class__.__name__,
                     "_init_contact_timelines",
                     f"contact task {c} not found",
                     LogType.EXCEP,
                     throw_when_excep=True)
+
+            # f reg phase
+            f_reg_short_phase = self._f_reg_timelines[c].createPhase(short_stance_duration, f'freg_{c}_short')
+            f_reg_short_phase_empty = self._f_reg_timelines[c].createPhase(flight_duration, f'freg_{c}_empty')
+            i=0
+            for force in self._ti.model.cmap[c]:
+                force_reg=self._prb.createResidual(f'{c}_force_reg_f{i}', 1e-3 * (force - np.array(self._f0)), 
+                                    nodes=list(range(0,self._n_nodes-1)))
+                f_reg_short_phase.addCost(force_reg, nodes=[0])
+                i+=1
 
             # flight phases
             flight_phase = self._c_timelines[c].createPhase(flight_duration+post_landing_stance, f'flight_{c}')
