@@ -39,6 +39,8 @@ class CentauroRhc(HybridQuadRhc):
         paths = PathsGetter()
         config_path = paths.RHCCONFIGPATH_WHEELS if with_wheels else paths.RHCCONFIGPATH_NO_WHEELS
         
+        self._add_f_reg_timeline=False
+
         super().__init__(srdf_path=srdf_path,
             urdf_path=urdf_path,
             config_path=config_path,
@@ -63,8 +65,6 @@ class CentauroRhc(HybridQuadRhc):
             self._fail_idx_thresh=self._fail_idx_thresh_open_loop
         else:
             self._fail_idx_thresh=self._fail_idx_thresh_close_loop
-
-        self._add_f_reg_timeline=False
 
     def _init_rhc_task_cmds(self):
         
