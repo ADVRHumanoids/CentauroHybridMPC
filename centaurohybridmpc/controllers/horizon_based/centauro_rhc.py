@@ -58,9 +58,9 @@ class CentauroRhc(HybridQuadRhc):
             refs_in_hor_frame=refs_in_hor_frame,
             timeout_ms=timeout_ms)
         
-        self._fail_idx_scale=1e-6
-        self._fail_idx_thresh_open_loop=1e2
-        self._fail_idx_thresh_close_loop=1e5
+        self._fail_idx_scale=1e-9
+        self._fail_idx_thresh_open_loop=1e1
+        self._fail_idx_thresh_close_loop=1e1
         if open_loop:
             self._fail_idx_thresh=self._fail_idx_thresh_open_loop
         else:
@@ -256,19 +256,23 @@ class CentauroRhc(HybridQuadRhc):
             cost_ori = self._prb.createResidual(f'{c}_ori', 5. * (c_ori.T - np.array([0, 0, 1])))
             flight_phase.addCost(cost_ori)
 
-        self._reset_contact_timeline()
+        self._reset_contact_timelines()
 
-    def _reset_contact_timeline(self):
+    def _reset_contact_timelines(self):
         for c in self._model.cmap.keys():
             # fill timeline with stances
-            stance = self._c_timelines[c].getRegisteredPhase(f'stance_{c}_short')
-            while self._c_timelines[c].getEmptyNodes() > 0:
-                self._c_timelines[c].addPhase(stance)
+            contact_timeline=self._c_timelines[c]
+            contact_timeline.clear() # remove phases
+            stance = contact_timeline.getRegisteredPhase(f'stance_{c}_short')
+            while contact_timeline.getEmptyNodes() > 0:
+                contact_timeline.addPhase(stance)
             # f reg
             if self._add_f_reg_timeline:
-                f_stance = self._f_reg_timelines[c].getRegisteredPhase(f'freg_{c}_short')
+                freg_tline=self._f_reg_timelines[c]
+                freg_tline.clear()
+                f_stance = freg_tline.getRegisteredPhase(f'freg_{c}_short')
                 for i in range(self._n_nodes-1): # not defined on last node
-                    self._f_reg_timelines[c].addPhase(f_stance)
+                    freg_tline.addPhase(f_stance)
 
     def _create_whitelist(self):
 
