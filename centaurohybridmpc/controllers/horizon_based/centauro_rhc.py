@@ -191,6 +191,26 @@ class CentauroRhc(HybridQuadRhc):
         self._prb.createResidual('max_vel', 1e1 * utils.utils.barrier(vel_lims[7:] - self._model.v[7:]))
         self._prb.createResidual('min_vel', 1e1 * utils.utils.barrier1(-1 * vel_lims[7:] - self._model.v[7:]))
 
+        if not self._open_loop:
+            print("#################")
+            prb_state=self._prb.getState()
+            print(self._prb.getVars())
+            q=prb_state[0]
+            v=prb_state[1]
+            # cat_prb_state=cs.vertcat([q,v])
+            # print(cat_prb_state)
+            
+            state_dim=prb_state.getBounds()[0].shape[0]
+            meas_state=self._prb.createParameter(name="measured_state",
+                dim=state_dim, nodes=0)     
+            
+            # methods = [method_name for method_name in dir(q) if callable(getattr(q, method_name)) and not method_name.startswith('__')]
+            # print(methods)
+
+            exit()
+            self._prb.createResidual('meas_state_attractor', 5e-4 * (state_on_first_node - meas_state), 
+                        nodes=[0])
+
         self._ti.finalize()
         self._ti.bootstrap()
         self._ti.init_inv_dyn_for_res() # we initialize some objects for sol. postprocessing purposes
