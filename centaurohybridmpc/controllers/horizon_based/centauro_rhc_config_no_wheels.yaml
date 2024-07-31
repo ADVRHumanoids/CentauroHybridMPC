@@ -46,7 +46,7 @@ costs:
   - &w_postural_ub 1.0
   - &w_v 1e-3
   - &w_a 1e-3
-  - &w_f 1e-3
+  - &w_f 5e-4
 
 #close loop
 # .define:
@@ -64,7 +64,7 @@ base_lin_vel:
   type: Cartesian
   distal_link: base_link
   indices: [0, 1]
-  nodes: ${range(1, N)}
+  nodes: ${range(3, N+1)}
   cartesian_type: velocity
   weight: *w_base_xy
 
@@ -72,14 +72,14 @@ base_height:
   type: Cartesian
   distal_link: base_link
   indices: [2]
-  nodes: ${range(1, N)}
+  nodes: ${range(3, N+1)}
   weight: *w_com
 
 base_omega:
   type: Cartesian
   distal_link: base_link
   indices: [3, 4, 5]
-  nodes: ${range(1, N)}
+  nodes: ${range(3, N+1)}
   cartesian_type: velocity
   weight: *w_base_ori
 
@@ -170,7 +170,7 @@ joint_posture:
             4,  5,  6,  7,
             8,  9, 10, 11,
            12, 13, 14, 15]
-  nodes: all
+  nodes: ${range(3, N+1)}
 
 joint_posture_ub:
   type: Postural
@@ -180,7 +180,7 @@ joint_posture_ub:
              23, 24, 25, 26, 27, 28,
              29, 30
             ]
-  nodes: all
+  nodes: ${range(3, N+1)}
 # todo: wrong, as the order COUNTS. If I add the contacts after the joint regularization, they wont get considered.
 joint_regularization:
   type: Regularization

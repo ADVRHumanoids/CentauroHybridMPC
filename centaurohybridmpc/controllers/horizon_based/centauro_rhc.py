@@ -208,16 +208,13 @@ class CentauroRhc(HybridQuadRhc):
     
     def _init_contact_timelines(self):
         
-        for c in self._model.cmap.keys():
-            self._c_timelines[c] = self._pm.createTimeline(f'{c}_timeline')
-            self._f_reg_timelines[c] = self._pm.createTimeline(f'{c}_timeline_f_reg')
-
         short_stance_duration = 1
-        flight_duration = 8
-        post_landing_stance = 3
+        flight_duration = 15
+        post_landing_stance = 8
         step_height=0.1
         for c in self._model.cmap.keys():
             # stance phases
+            self._c_timelines[c] = self._pm.createTimeline(f'{c}_timeline')
             stance_phase_short = self._c_timelines[c].createPhase(short_stance_duration, f'stance_{c}_short')
             if self._ti.getTask(f'{c}') is not None:
                 stance_phase_short.addItem(self._ti.getTask(f'{c}'))
@@ -230,6 +227,7 @@ class CentauroRhc(HybridQuadRhc):
 
             # f reg phase
             if self._add_f_reg_timeline:
+                self._f_reg_timelines[c] = self._pm.createTimeline(f'{c}_timeline_f_reg')
                 f_reg_short_phase = self._f_reg_timelines[c].createPhase(short_stance_duration, f'freg_{c}_short')
                 f_reg_short_phase_empty = self._f_reg_timelines[c].createPhase(flight_duration, f'freg_{c}_empty')
                 i=0
