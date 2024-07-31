@@ -175,15 +175,16 @@ class CentauroRhc(HybridQuadRhc):
             for c in cforces:
                 c.setInitialGuess(np.array(self._f0)/n_contact_f)
         # setting ref for force reg.
-        # force_ref = self._ti.getTask('joint_regularization')
-        # force_ref.setRef(index=2, # force
-        #             ref=np.atleast_2d(np.array(self._f0)).T)
-        # force_ref.setRef(index=3, # force
-        #             ref=np.atleast_2d(np.array(self._f0)).T)
-        # force_ref.setRef(index=4, # force
-        #             ref=np.atleast_2d(np.array(self._f0)).T)
-        # force_ref.setRef(index=5, # force
-        #             ref=np.atleast_2d(np.array(self._f0)).T)
+        if not self._add_f_reg_timeline:
+            force_ref = self._ti.getTask('force_regularization')
+            force_ref.setRef(index=0, # force
+                        ref=np.atleast_2d(np.array(self._f0)).T)
+            force_ref.setRef(index=1, # force
+                        ref=np.atleast_2d(np.array(self._f0)).T)
+            force_ref.setRef(index=2, # force
+                        ref=np.atleast_2d(np.array(self._f0)).T)
+            force_ref.setRef(index=3, # force
+                        ref=np.atleast_2d(np.array(self._f0)).T)
 
         vel_lims = self._model.kd.velocityLimits()
         import horizon.utils as utils

@@ -34,7 +34,7 @@ costs:
   - base_height
   - joint_regularization
   - joint_posture
-#  - joint_posture_ub
+  - force_regularization
 
 #open loop
 .define:
@@ -49,16 +49,15 @@ costs:
   - &w_f 5e-4
 
 #close loop
-# .define:
-#   - &w_com 2.
-#   - &w_base_ori 50.
-#   - &w_base_xy 5.
-#   - &w_contact_z 10.
-#   - &w_postural 0.2
-#   - &w_postural_ub 1.0
-#   - &w_v 1e-3
-#   - &w_a 1e-3
-#   - &w_f 1e-3
+  # - &w_com 2.
+  # - &w_base_ori 50.
+  # - &w_base_xy 5.
+  # - &w_contact_z 10.
+  # - &w_postural 0.2
+  # - &w_postural_ub 1.0
+  # - &w_v 1e-3
+  # - &w_a 1e-3
+  # - &w_f 5e-4
 
 base_lin_vel:
   type: Cartesian
@@ -184,10 +183,15 @@ joint_posture_ub:
 # todo: wrong, as the order COUNTS. If I add the contacts after the joint regularization, they wont get considered.
 joint_regularization:
   type: Regularization
-  nodes: all
+  nodes: ${range(0, N+1)}
   weight:
     velocity: *w_v
     acceleration: *w_a # 0.01
+
+force_regularization:
+  type: Regularization
+  nodes: ${range(0, N+1)}
+  weight:
     force: *w_f # todo <----- how to do? if there are more forces...
 
 # flight phase traj tracking
