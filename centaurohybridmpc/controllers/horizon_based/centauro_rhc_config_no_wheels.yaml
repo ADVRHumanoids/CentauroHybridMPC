@@ -39,7 +39,7 @@ costs:
 #open loop
 .define:
   - &w_com 2.
-  - &w_base_ori 50.
+  - &w_base_ori 100.
   - &w_base_xy 5.
   - &w_contact_z 10.
   - &w_postural 0.2

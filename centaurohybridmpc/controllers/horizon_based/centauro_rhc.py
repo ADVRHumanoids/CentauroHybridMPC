@@ -164,7 +164,7 @@ class CentauroRhc(HybridQuadRhc):
 
         self._create_whitelist()
         self._init_contact_timelines()
-        self._add_zmp()
+        # self._add_zmp()
 
         self._ti.model.q.setBounds(self._ti.model.q0, self._ti.model.q0, nodes=0)
         self._ti.model.v.setBounds(self._ti.model.v0, self._ti.model.v0, nodes=0)
@@ -194,7 +194,7 @@ class CentauroRhc(HybridQuadRhc):
         if not self._open_loop:
             print("#################")
             prb_state=self._prb.getState()
-            print(self._prb.getVars())
+            print(self._prb.getState().getVars())
             q=prb_state[0]
             v=prb_state[1]
             # cat_prb_state=cs.vertcat([q,v])
@@ -231,8 +231,8 @@ class CentauroRhc(HybridQuadRhc):
         
         short_stance_duration = 1
         flight_duration = 15
-        post_landing_stance = 8
-        step_height=0.1
+        post_landing_stance = 10
+        step_height=0.08
         for c in self._model.cmap.keys():
             # stance phases
             self._c_timelines[c] = self._pm.createTimeline(f'{c}_timeline')
