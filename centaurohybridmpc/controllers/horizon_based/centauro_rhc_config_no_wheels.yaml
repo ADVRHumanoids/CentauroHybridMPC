@@ -41,7 +41,7 @@ costs:
   - &w_com 5.
   - &w_base_ori 2.
   - &w_base_xy 2.
-  - &w_contact_z 5.
+  - &w_contact_z 10.
   - &w_postural 0.5
   - &w_postural_ub 1.0
   - &w_v 3e-3
