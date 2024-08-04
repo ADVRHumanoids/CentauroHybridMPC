@@ -60,7 +60,7 @@ class CentauroRhc(HybridQuadRhc):
         
         self._fail_idx_scale=1e-9
         self._fail_idx_thresh_open_loop=1e0
-        self._fail_idx_thresh_close_loop=1e0
+        self._fail_idx_thresh_close_loop=1e2
         if open_loop:
             self._fail_idx_thresh=self._fail_idx_thresh_open_loop
         else:
@@ -88,7 +88,11 @@ class CentauroRhc(HybridQuadRhc):
         return rhc_refs
     
     def _init_problem(self):
-
+        
+        vel_bounds_weight=1.0
+        meas_state_attractor_weight=0.1
+        self._phase_force_reg=1e-3
+        self._yaw_vertical_weight=2.0
         # overrides parent
         self._prb = Problem(self._n_intervals, 
                         receding=True, 
@@ -188,27 +192,18 @@ class CentauroRhc(HybridQuadRhc):
 
         vel_lims = self._model.kd.velocityLimits()
         import horizon.utils as utils
-        self._prb.createResidual('max_vel', 1e1 * utils.utils.barrier(vel_lims[7:] - self._model.v[7:]))
-        self._prb.createResidual('min_vel', 1e1 * utils.utils.barrier1(-1 * vel_lims[7:] - self._model.v[7:]))
+        self._prb.createResidual('vel_lb_barrier', vel_bounds_weight*utils.utils.barrier(vel_lims[7:] - self._model.v[7:]))
+        self._prb.createResidual('vel_ub_barrier', vel_bounds_weight*utils.utils.barrier1(-1 * vel_lims[7:] - self._model.v[7:]))
 
         if not self._open_loop:
-            print("#################")
+            # we create a residual cost to be used as an attractor to the measured state on the first node
+            # hard constraints injecting meas. states are pure EVIL!
             prb_state=self._prb.getState()
-            print(self._prb.getState().getVars())
-            q=prb_state[0]
-            v=prb_state[1]
-            # cat_prb_state=cs.vertcat([q,v])
-            # print(cat_prb_state)
-            
+            full_state=prb_state.getVars()
             state_dim=prb_state.getBounds()[0].shape[0]
             meas_state=self._prb.createParameter(name="measured_state",
                 dim=state_dim, nodes=0)     
-            
-            # methods = [method_name for method_name in dir(q) if callable(getattr(q, method_name)) and not method_name.startswith('__')]
-            # print(methods)
-
-            exit()
-            self._prb.createResidual('meas_state_attractor', 5e-4 * (state_on_first_node - meas_state), 
+            self._prb.createResidual('meas_state_attractor', meas_state_attractor_weight * (full_state - meas_state), 
                         nodes=[0])
 
         self._ti.finalize()
@@ -230,8 +225,8 @@ class CentauroRhc(HybridQuadRhc):
     def _init_contact_timelines(self):
         
         short_stance_duration = 1
-        flight_duration = 15
-        post_landing_stance = 10
+        flight_duration = 10
+        post_landing_stance = 15
         step_height=0.08
         for c in self._model.cmap.keys():
             # stance phases
@@ -253,7 +248,7 @@ class CentauroRhc(HybridQuadRhc):
                 f_reg_short_phase_empty = self._f_reg_timelines[c].createPhase(flight_duration, f'freg_{c}_empty')
                 i=0
                 for force in self._ti.model.cmap[c]:
-                    force_reg=self._prb.createResidual(f'{c}_force_reg_f{i}', 5e-4 * (force - np.array(self._f0)), 
+                    force_reg=self._prb.createResidual(f'{c}_force_reg_f{i}', self._phase_force_reg * (force - np.array(self._f0)), 
                                         nodes=list(range(0,self._n_nodes-1)))
                     f_reg_short_phase.addCost(force_reg, nodes=[0])
                     i+=1
@@ -273,8 +268,8 @@ class CentauroRhc(HybridQuadRhc):
             flight_phase.addConstraint(cstr, nodes=[0, flight_duration-1])
 
             c_ori = self._model.kd.fk(c)(q=self._model.q)['ee_rot'][2, :]
-            cost_ori = self._prb.createResidual(f'{c}_ori', 5. * (c_ori.T - np.array([0, 0, 1])))
-            flight_phase.addCost(cost_ori)
+            cost_ori = self._prb.createResidual(f'{c}_ori', self._yaw_vertical_weight * (c_ori.T - np.array([0, 0, 1])))
+            flight_phase.addCost(cost_ori, nodes=list(range(0, flight_duration)))
 
         self._reset_contact_timelines()
 

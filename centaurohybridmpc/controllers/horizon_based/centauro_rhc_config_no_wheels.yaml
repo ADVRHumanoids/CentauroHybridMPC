@@ -38,32 +38,33 @@ costs:
 
 #open loop
 .define:
-  - &w_com 2.
-  - &w_base_ori 100.
-  - &w_base_xy 5.
-  - &w_contact_z 10.
-  - &w_postural 0.2
+  - &w_com 5.
+  - &w_base_ori 2.
+  - &w_base_xy 2.
+  - &w_contact_z 5.
+  - &w_postural 0.5
   - &w_postural_ub 1.0
-  - &w_v 1e-3
-  - &w_a 1e-3
-  - &w_f 5e-4
+  - &w_v 3e-3
+  - &w_a 5e-3
+  - &w_f 5e-3
 
 #close loop
+.define:
   # - &w_com 2.
-  # - &w_base_ori 50.
+  # - &w_base_ori 100.
   # - &w_base_xy 5.
   # - &w_contact_z 10.
   # - &w_postural 0.2
   # - &w_postural_ub 1.0
   # - &w_v 1e-3
   # - &w_a 1e-3
-  # - &w_f 5e-4
+  # - &w_f 1e-3
 
 base_lin_vel:
   type: Cartesian
   distal_link: base_link
   indices: [0, 1]
-  nodes: ${range(3, N+1)}
+  nodes: ${range(0, N+1)}
   cartesian_type: velocity
   weight: *w_base_xy
 
@@ -71,14 +72,14 @@ base_height:
   type: Cartesian
   distal_link: base_link
   indices: [2]
-  nodes: ${range(3, N+1)}
+  nodes: ${range(0, N+1)}
   weight: *w_com
 
 base_omega:
   type: Cartesian
   distal_link: base_link
   indices: [3, 4, 5]
-  nodes: ${range(3, N+1)}
+  nodes: ${range(0, N+1)}
   cartesian_type: velocity
   weight: *w_base_ori
 
@@ -113,7 +114,7 @@ zero_velocity_contact_4:
 interaction_contact_1:
   type: VertexForce
   frame: contact_1
-  fn_min: 10.0
+  fn_min: 100.0
   enable_fc: false
   friction_coeff: 1.0
   vertex_frames:
@@ -122,7 +123,7 @@ interaction_contact_1:
 interaction_contact_2:
   type: VertexForce
   frame: contact_2
-  fn_min: 10.0
+  fn_min: 100.0
   enable_fc: false
   friction_coeff: 1.0
   vertex_frames:
@@ -131,7 +132,7 @@ interaction_contact_2:
 interaction_contact_3:
   type: VertexForce
   frame: contact_3
-  fn_min: 10.0
+  fn_min: 100.0
   enable_fc: false
   friction_coeff: 1.0
   vertex_frames:
@@ -140,7 +141,7 @@ interaction_contact_3:
 interaction_contact_4:
   type: VertexForce
   frame: contact_4
-  fn_min: 10.0
+  fn_min: 100.0
   enable_fc: false
   friction_coeff: 1.0
   vertex_frames:
