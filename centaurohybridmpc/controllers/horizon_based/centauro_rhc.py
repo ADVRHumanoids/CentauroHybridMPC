@@ -90,7 +90,7 @@ class CentauroRhc(HybridQuadRhc):
     def _init_problem(self):
         
         vel_bounds_weight=1.0
-        meas_state_attractor_weight=0.1
+        meas_state_attractor_weight=100.0
         self._phase_force_reg=1e-3
         self._yaw_vertical_weight=2.0
         # overrides parent
@@ -195,16 +195,16 @@ class CentauroRhc(HybridQuadRhc):
         self._prb.createResidual('vel_lb_barrier', vel_bounds_weight*utils.utils.barrier(vel_lims[7:] - self._model.v[7:]))
         self._prb.createResidual('vel_ub_barrier', vel_bounds_weight*utils.utils.barrier1(-1 * vel_lims[7:] - self._model.v[7:]))
 
-        if not self._open_loop:
-            # we create a residual cost to be used as an attractor to the measured state on the first node
-            # hard constraints injecting meas. states are pure EVIL!
-            prb_state=self._prb.getState()
-            full_state=prb_state.getVars()
-            state_dim=prb_state.getBounds()[0].shape[0]
-            meas_state=self._prb.createParameter(name="measured_state",
-                dim=state_dim, nodes=0)     
-            self._prb.createResidual('meas_state_attractor', meas_state_attractor_weight * (full_state - meas_state), 
-                        nodes=[0])
+        # if not self._open_loop:
+        #     # we create a residual cost to be used as an attractor to the measured state on the first node
+        #     # hard constraints injecting meas. states are pure EVIL!
+        #     prb_state=self._prb.getState()
+        #     full_state=prb_state.getVars()
+        #     state_dim=prb_state.getBounds()[0].shape[0]
+        #     meas_state=self._prb.createParameter(name="measured_state",
+        #         dim=state_dim, nodes=0)     
+        #     self._prb.createResidual('meas_state_attractor', meas_state_attractor_weight * (full_state - meas_state), 
+        #                 nodes=[0])
 
         self._ti.finalize()
         self._ti.bootstrap()

@@ -32,8 +32,9 @@ costs:
   - base_lin_vel
   - base_omega
   - base_height
-  - joint_regularization
   - joint_posture
+  - joint_v_regularization
+  - joint_a_regularization
   - force_regularization
 
 #open loop
@@ -49,22 +50,22 @@ costs:
   - &w_f 5e-3
 
 #close loop
-.define:
-  # - &w_com 2.
-  # - &w_base_ori 100.
-  # - &w_base_xy 5.
-  # - &w_contact_z 10.
-  # - &w_postural 0.2
-  # - &w_postural_ub 1.0
-  # - &w_v 1e-3
-  # - &w_a 1e-3
-  # - &w_f 1e-3
+# .define:
+#   - &w_com 5.
+#   - &w_base_ori 2.
+#   - &w_base_xy 2.
+#   - &w_contact_z 10.
+#   - &w_postural 0.5
+#   - &w_postural_ub 1.0
+#   - &w_v 3e-3
+#   - &w_a 5e-3
+#   - &w_f 5e-3
 
 base_lin_vel:
   type: Cartesian
   distal_link: base_link
   indices: [0, 1]
-  nodes: ${range(0, N+1)}
+  nodes: ${range(1, N+1)}
   cartesian_type: velocity
   weight: *w_base_xy
 
@@ -72,14 +73,14 @@ base_height:
   type: Cartesian
   distal_link: base_link
   indices: [2]
-  nodes: ${range(0, N+1)}
+  nodes: ${range(1, N+1)}
   weight: *w_com
 
 base_omega:
   type: Cartesian
   distal_link: base_link
   indices: [3, 4, 5]
-  nodes: ${range(0, N+1)}
+  nodes: ${range(1, N+1)}
   cartesian_type: velocity
   weight: *w_base_ori
 
@@ -108,6 +109,54 @@ zero_velocity_contact_4:
   distal_link: contact_4
   indices: [0, 1, 2]
   cartesian_type: velocity
+
+# zero_velocity_contact_1:
+#   type: Cartesian
+#   distal_link: contact_1
+#   indices: [0, 1]
+#   cartesian_type: velocity
+
+# zero_velocity_contact_2:
+#   type: Cartesian
+#   distal_link: contact_2
+#   indices: [0, 1]
+#   cartesian_type: velocity
+
+# zero_velocity_contact_3:
+#   type: Cartesian
+#   distal_link: contact_3
+#   indices: [0, 1]
+#   cartesian_type: velocity
+
+# zero_velocity_contact_4:
+#   type: Cartesian
+#   distal_link: contact_4
+#   indices: [0, 1]
+#   cartesian_type: velocity
+
+# zero_pos_contact_1:
+#   type: Cartesian
+#   distal_link: contact_1
+#   indices: [2]
+#   cartesian_type: position
+
+# zero_pos_contact_2:
+#   type: Cartesian
+#   distal_link: contact_2
+#   indices: [2]
+#   cartesian_type: position
+
+# zero_pos_contact_3:
+#   type: Cartesian
+#   distal_link: contact_3
+#   indices: [2]
+#   cartesian_type: position
+
+# zero_pos_contact_4:
+#   type: Cartesian
+#   distal_link: contact_4
+#   indices: [2]
+#   cartesian_type: position
 
 # ==================================
 
@@ -170,7 +219,7 @@ joint_posture:
             4,  5,  6,  7,
             8,  9, 10, 11,
            12, 13, 14, 15]
-  nodes: ${range(3, N+1)}
+  nodes: ${range(5, N+1)}
 
 joint_posture_ub:
   type: Postural
@@ -180,13 +229,18 @@ joint_posture_ub:
              23, 24, 25, 26, 27, 28,
              29, 30
             ]
-  nodes: ${range(3, N+1)}
+  nodes: ${range(5, N+1)}
 # todo: wrong, as the order COUNTS. If I add the contacts after the joint regularization, they wont get considered.
-joint_regularization:
+joint_v_regularization:
+  type: Regularization
+  nodes: ${range(1, N+1)}
+  weight:
+    velocity: *w_v
+
+joint_a_regularization:
   type: Regularization
   nodes: ${range(0, N+1)}
   weight:
-    velocity: *w_v
     acceleration: *w_a # 0.01
 
 force_regularization:
