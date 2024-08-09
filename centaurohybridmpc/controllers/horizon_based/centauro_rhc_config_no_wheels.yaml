@@ -35,7 +35,7 @@ costs:
   - joint_posture
   - joint_v_regularization
   - joint_a_regularization
-  - force_regularization
+  # - force_regularization
 
 #open loop
 .define:
@@ -245,7 +245,6 @@ joint_a_regularization:
 
 force_regularization:
   type: Regularization
-  nodes: ${range(0, N+1)}
   weight:
     force: *w_f # todo <----- how to do? if there are more forces...
 

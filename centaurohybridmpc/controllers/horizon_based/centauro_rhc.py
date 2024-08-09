@@ -39,7 +39,7 @@ class CentauroRhc(HybridQuadRhc):
         paths = PathsGetter()
         config_path = paths.RHCCONFIGPATH_WHEELS if with_wheels else paths.RHCCONFIGPATH_NO_WHEELS
         
-        self._add_f_reg_timeline=False
+        self._add_f_reg_timeline=True
 
         super().__init__(srdf_path=srdf_path,
             urdf_path=urdf_path,
@@ -59,8 +59,8 @@ class CentauroRhc(HybridQuadRhc):
             timeout_ms=timeout_ms)
         
         self._fail_idx_scale=1e-9
-        self._fail_idx_thresh_open_loop=1e0
-        self._fail_idx_thresh_close_loop=1e2
+        self._fail_idx_thresh_open_loop=1e-1
+        self._fail_idx_thresh_close_loop=1e-1
         if open_loop:
             self._fail_idx_thresh=self._fail_idx_thresh_open_loop
         else:
@@ -91,7 +91,7 @@ class CentauroRhc(HybridQuadRhc):
         
         vel_bounds_weight=1.0
         meas_state_attractor_weight=100.0
-        self._phase_force_reg=1e-3
+        self._phase_force_reg=1e-2
         self._yaw_vertical_weight=2.0
         # overrides parent
         self._prb = Problem(self._n_intervals, 
@@ -226,7 +226,9 @@ class CentauroRhc(HybridQuadRhc):
         
         short_stance_duration = 1
         flight_duration = 10
-        post_landing_stance = 15
+        post_landing_stance = 5
+        if post_landing_stance<2:
+            post_landing_stance=2
         step_height=0.08
         for c in self._model.cmap.keys():
             # stance phases
@@ -240,18 +242,25 @@ class CentauroRhc(HybridQuadRhc):
                     f"contact task {c} not found",
                     LogType.EXCEP,
                     throw_when_excep=True)
-
-            # f reg phase
             if self._add_f_reg_timeline:
-                self._f_reg_timelines[c] = self._pm.createTimeline(f'{c}_timeline_f_reg')
-                f_reg_short_phase = self._f_reg_timelines[c].createPhase(short_stance_duration, f'freg_{c}_short')
-                f_reg_short_phase_empty = self._f_reg_timelines[c].createPhase(flight_duration, f'freg_{c}_empty')
+                f_reg_short_phase = self._c_timelines[c].createPhase(short_stance_duration, f'freg_{c}_short')
                 i=0
                 for force in self._ti.model.cmap[c]:
                     force_reg=self._prb.createResidual(f'{c}_force_reg_f{i}', self._phase_force_reg * (force - np.array(self._f0)), 
-                                        nodes=list(range(0,self._n_nodes-1)))
-                    f_reg_short_phase.addCost(force_reg, nodes=[0])
+                        nodes=[])
+                    stance_phase_short.addCost(force_reg, nodes=list(range(0, short_stance_duration)))
                     i+=1
+            # f reg phase
+            # if self._add_f_reg_timeline:
+            #     self._f_reg_timelines[c] = self._pm.createTimeline(f'{c}_timeline_f_reg')
+            #     f_reg_short_phase = self._f_reg_timelines[c].createPhase(short_stance_duration, f'freg_{c}_short')
+            #     f_reg_short_phase_empty = self._f_reg_timelines[c].createPhase(flight_duration, f'freg_{c}_empty')
+            #     i=0
+            #     for force in self._ti.model.cmap[c]:
+            #         force_reg=self._prb.createResidual(f'{c}_force_reg_f{i}', self._phase_force_reg * (force - np.array(self._f0)), 
+            #                             nodes=list(range(0,self._n_nodes-1)))
+            #         f_reg_short_phase.addCost(force_reg, nodes=list(range(0, short_stance_duration)))
+            #         i+=1
 
             # flight phases
             flight_phase = self._c_timelines[c].createPhase(flight_duration+post_landing_stance, f'flight_{c}')
@@ -262,6 +271,11 @@ class CentauroRhc(HybridQuadRhc):
             if self._ti.getTask(f'z_{c}') is not None:
                 flight_phase.addItemReference(self._ti.getTask(f'z_{c}'), ref_trj, nodes=list(range(0, flight_duration)))
                 flight_phase.addItem(self._ti.getTask(f'{c}'), nodes=list(range(flight_duration, flight_duration+post_landing_stance)))
+                i=0
+                for force in self._ti.model.cmap[c]:
+                    force_reg=self._prb.getCosts(f'{c}_force_reg_f{i}')
+                    flight_phase.addCost(force_reg, nodes=list(range(flight_duration, flight_duration+post_landing_stance)))
+                    i+=1
             else:
                 raise Exception('task not found')
             cstr = self._prb.createConstraint(f'{c}_vert', ee_vel[0:2], [])
@@ -269,7 +283,7 @@ class CentauroRhc(HybridQuadRhc):
 
             c_ori = self._model.kd.fk(c)(q=self._model.q)['ee_rot'][2, :]
             cost_ori = self._prb.createResidual(f'{c}_ori', self._yaw_vertical_weight * (c_ori.T - np.array([0, 0, 1])))
-            flight_phase.addCost(cost_ori, nodes=list(range(0, flight_duration)))
+            # flight_phase.addCost(cost_ori, nodes=list(range(0, flight_duration+post_landing_stance)))
 
         self._reset_contact_timelines()
 
@@ -282,12 +296,12 @@ class CentauroRhc(HybridQuadRhc):
             while contact_timeline.getEmptyNodes() > 0:
                 contact_timeline.addPhase(stance)
             # f reg
-            if self._add_f_reg_timeline:
-                freg_tline=self._f_reg_timelines[c]
-                freg_tline.clear()
-                f_stance = freg_tline.getRegisteredPhase(f'freg_{c}_short')
-                for i in range(self._n_nodes-1): # not defined on last node
-                    freg_tline.addPhase(f_stance)
+            # if self._add_f_reg_timeline:
+            #     freg_tline=self._f_reg_timelines[c]
+            #     freg_tline.clear()
+            #     f_stance = freg_tline.getRegisteredPhase(f'freg_{c}_short')
+            #     for i in range(self._n_nodes-1): # not defined on last node
+            #         freg_tline.addPhase(f_stance)
 
     def _create_whitelist(self):
 
