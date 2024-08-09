@@ -5,13 +5,7 @@ import numpy as np
 
 class CentauroRHCRefs(HybridQuadRhcRefs):
     # only overrides parent tasks getter and setter methods 
-    def _get_tasks(self):
-        # overrides parent
-        # cartesian tasks are in LOCAL_WORLD_ALIGNED (frame centered at distal link, oriented as WORLD)
-        self.base_lin_vel = self.gait_manager.task_interface.getTask('base_lin_vel')
-        self.base_omega = self.gait_manager.task_interface.getTask('base_omega')
-        self.base_height = self.gait_manager.task_interface.getTask('base_height')
-
+    
     def _apply_refs_to_tasks(self, q_base = None):
         # overrides parent
         if q_base is not None: # rhc refs are assumed to be specified in the so called "horizontal" 

@@ -39,8 +39,6 @@ class CentauroRhc(HybridQuadRhc):
         paths = PathsGetter()
         config_path = paths.RHCCONFIGPATH_WHEELS if with_wheels else paths.RHCCONFIGPATH_NO_WHEELS
         
-        self._add_f_reg_timeline=True
-
         super().__init__(srdf_path=srdf_path,
             urdf_path=urdf_path,
             config_path=config_path,
@@ -177,18 +175,7 @@ class CentauroRhc(HybridQuadRhc):
         for _, cforces in self._ti.model.cmap.items():
             n_contact_f=len(cforces)
             for c in cforces:
-                c.setInitialGuess(np.array(self._f0)/n_contact_f)
-        # setting ref for force reg.
-        if not self._add_f_reg_timeline:
-            force_ref = self._ti.getTask('force_regularization')
-            force_ref.setRef(index=0, # force
-                        ref=np.atleast_2d(np.array(self._f0)).T)
-            force_ref.setRef(index=1, # force
-                        ref=np.atleast_2d(np.array(self._f0)).T)
-            force_ref.setRef(index=2, # force
-                        ref=np.atleast_2d(np.array(self._f0)).T)
-            force_ref.setRef(index=3, # force
-                        ref=np.atleast_2d(np.array(self._f0)).T)
+                c.setInitialGuess(np.array(self._f0)/n_contact_f)        
 
         vel_lims = self._model.kd.velocityLimits()
         import horizon.utils as utils
@@ -231,6 +218,7 @@ class CentauroRhc(HybridQuadRhc):
             post_landing_stance=2
         step_height=0.08
         for c in self._model.cmap.keys():
+
             # stance phases
             self._c_timelines[c] = self._pm.createTimeline(f'{c}_timeline')
             stance_phase_short = self._c_timelines[c].createPhase(short_stance_duration, f'stance_{c}_short')
@@ -242,25 +230,16 @@ class CentauroRhc(HybridQuadRhc):
                     f"contact task {c} not found",
                     LogType.EXCEP,
                     throw_when_excep=True)
-            if self._add_f_reg_timeline:
-                f_reg_short_phase = self._c_timelines[c].createPhase(short_stance_duration, f'freg_{c}_short')
-                i=0
-                for force in self._ti.model.cmap[c]:
-                    force_reg=self._prb.createResidual(f'{c}_force_reg_f{i}', self._phase_force_reg * (force - np.array(self._f0)), 
-                        nodes=[])
-                    stance_phase_short.addCost(force_reg, nodes=list(range(0, short_stance_duration)))
-                    i+=1
-            # f reg phase
-            # if self._add_f_reg_timeline:
-            #     self._f_reg_timelines[c] = self._pm.createTimeline(f'{c}_timeline_f_reg')
-            #     f_reg_short_phase = self._f_reg_timelines[c].createPhase(short_stance_duration, f'freg_{c}_short')
-            #     f_reg_short_phase_empty = self._f_reg_timelines[c].createPhase(flight_duration, f'freg_{c}_empty')
-            #     i=0
-            #     for force in self._ti.model.cmap[c]:
-            #         force_reg=self._prb.createResidual(f'{c}_force_reg_f{i}', self._phase_force_reg * (force - np.array(self._f0)), 
-            #                             nodes=list(range(0,self._n_nodes-1)))
-            #         f_reg_short_phase.addCost(force_reg, nodes=list(range(0, short_stance_duration)))
-            #         i+=1
+            i=0
+            n_forces=len(self._ti.model.cmap[c])
+            for force in self._ti.model.cmap[c]:
+                f_ref=self._prb.createParameter(name=f"{c}_force_reg_f{i}_ref",
+                    dim=3) 
+                force_reg=self._prb.createResidual(f'{c}_force_reg_f{i}', self._phase_force_reg * (force - f_ref), 
+                    nodes=[])
+                f_ref.assign(np.atleast_2d(np.array(self._f0)).T/n_forces)    
+                stance_phase_short.addCost(force_reg, nodes=list(range(0, short_stance_duration)))
+                i+=1
 
             # flight phases
             flight_phase = self._c_timelines[c].createPhase(flight_duration+post_landing_stance, f'flight_{c}')
