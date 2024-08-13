@@ -158,7 +158,8 @@ class CentauroRhc(HybridQuadRhc):
 
         # setting initial base pos ref
         base_pos = self._ti.getTask('base_height')
-        base_pos.setRef(np.atleast_2d(self._base_init).T)
+        if base_pos is not None:
+            base_pos.setRef(np.atleast_2d(self._base_init).T)
 
         self._tg = trajectoryGenerator.TrajectoryGenerator()
 

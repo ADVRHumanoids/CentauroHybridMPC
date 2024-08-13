@@ -35,7 +35,7 @@ costs:
   - vz_contact_4
   - base_lin_vel
   - base_omega
-  - base_height
+  # - base_height
   - joint_posture
   - joint_v_regularization
   - joint_a_regularization
@@ -69,17 +69,17 @@ costs:
 base_lin_vel:
   type: Cartesian
   distal_link: base_link
-  indices: [0, 1]
+  indices: [0, 1, 2]
   nodes: ${range(1, N+1)}
   cartesian_type: velocity
   weight: *w_base_xy
 
-base_height:
-  type: Cartesian
-  distal_link: base_link
-  indices: [2]
-  nodes: ${range(1, N+1)}
-  weight: *w_com
+# base_height:
+#   type: Cartesian
+#   distal_link: base_link
+#   indices: [2]
+#   nodes: ${range(1, N+1)}
+#   weight: *w_com
 
 base_omega:
   type: Cartesian
