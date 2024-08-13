@@ -245,10 +245,9 @@ class CentauroRhc(HybridQuadRhc):
             flight_phase = self._c_timelines[c].createPhase(flight_duration+post_landing_stance, f'flight_{c}')
             init_z_foot = self._model.kd.fk(c)(q=self._model.q0)['ee_pos'].elements()[2]
             ee_vel = self._model.kd.frameVelocity(c, self._model.kd_frame)(q=self._model.q, qdot=self._model.v)['ee_vel_linear']
-            ref_trj = np.zeros(shape=[7, flight_duration])
-            ref_trj[2, :] = np.atleast_2d(self._tg.from_derivatives(flight_duration, init_z_foot, init_z_foot, step_height, [None, 0, None]))
-            if self._ti.getTask(f'z_{c}') is not None:
-                flight_phase.addItemReference(self._ti.getTask(f'z_{c}'), ref_trj, nodes=list(range(0, flight_duration)))
+
+            # post landing contact + force reg
+            if self._ti.getTask(f'{c}') is not None:
                 flight_phase.addItem(self._ti.getTask(f'{c}'), nodes=list(range(flight_duration, flight_duration+post_landing_stance)))
                 i=0
                 for force in self._ti.model.cmap[c]:
@@ -256,10 +255,45 @@ class CentauroRhc(HybridQuadRhc):
                     flight_phase.addCost(force_reg, nodes=list(range(flight_duration, flight_duration+post_landing_stance)))
                     i+=1
             else:
-                raise Exception('task not found')
+                Journal.log(self.__class__.__name__,
+                    "_init_contact_timelines",
+                    f"contact task {c} not found!",
+                    LogType.EXCEP,
+                    throw_when_excep=True)
+            # reference traj
+            der= [None, 0, 0]
+            second_der=[None, 0, 0]
+            # flight pos
+            if self._ti.getTask(f'z_{c}') is not None:
+                ref_trj = np.zeros(shape=[7, flight_duration])
+                ref_trj[2, :] = np.atleast_2d(self._tg.from_derivatives(flight_duration, init_z_foot, init_z_foot, step_height,
+                    derivatives=der,
+                    second_der=second_der))
+                flight_phase.addItemReference(self._ti.getTask(f'z_{c}'), ref_trj, nodes=list(range(0, flight_duration)))
+            else:
+                Journal.log(self.__class__.__name__,
+                    "_init_contact_timelines",
+                    f"contact pos traj tracking task z_{c} not found-> it won't be used",
+                    LogType.WARN,
+                    throw_when_excep=True)
+            # flight vel
+            if self._ti.getTask(f'vz_{c}') is not None:
+                ref_vtrj = np.zeros(shape=[1, flight_duration])
+                ref_vtrj[:, :] = np.atleast_2d(self._tg.derivative_of_trajectory(flight_duration, init_z_foot, init_z_foot, step_height, 
+                    derivatives=der,
+                    second_der=second_der))
+                flight_phase.addItemReference(self._ti.getTask(f'vz_{c}'), ref_vtrj, nodes=list(range(0, flight_duration)))
+            else:
+                Journal.log(self.__class__.__name__,
+                    "_init_contact_timelines",
+                    f"contact vel traj tracking task vz_{c} not found-> it won't be used",
+                    LogType.WARN,
+                    throw_when_excep=True)
+            
             cstr = self._prb.createConstraint(f'{c}_vert', ee_vel[0:2], [])
             flight_phase.addConstraint(cstr, nodes=[0, flight_duration-1])
 
+            # keep ankle vertical
             c_ori = self._model.kd.fk(c)(q=self._model.q)['ee_rot'][2, :]
             cost_ori = self._prb.createResidual(f'{c}_ori', self._yaw_vertical_weight * (c_ori.T - np.array([0, 0, 1])))
             # flight_phase.addCost(cost_ori, nodes=list(range(0, flight_duration+post_landing_stance)))

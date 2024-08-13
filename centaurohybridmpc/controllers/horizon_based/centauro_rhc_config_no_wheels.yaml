@@ -25,10 +25,14 @@ constraints:
   - contact_4
 
 costs:
-  - z_contact_1
-  - z_contact_2
-  - z_contact_3
-  - z_contact_4
+  # - z_contact_1
+  # - z_contact_2
+  # - z_contact_3
+  # - z_contact_4
+  - vz_contact_1
+  - vz_contact_2
+  - vz_contact_3
+  - vz_contact_4
   - base_lin_vel
   - base_omega
   - base_height
@@ -43,6 +47,7 @@ costs:
   - &w_base_ori 2.
   - &w_base_xy 2.
   - &w_contact_z 10.
+  - &w_contact_vz 100.
   - &w_postural 0.5
   - &w_postural_ub 1.0
   - &w_v 3e-3
@@ -249,31 +254,58 @@ force_regularization:
     force: *w_f # todo <----- how to do? if there are more forces...
 
 # flight phase traj tracking
-z_contact_1:
+# z_contact_1:
+#   type: Cartesian
+#   distal_link: contact_1
+#   indices: [2]
+#   cartesian_type: position
+#   weight: *w_contact_z
+
+# z_contact_2:
+#   type: Cartesian
+#   distal_link: contact_2
+#   indices: [2]
+#   cartesian_type: position
+#   weight: *w_contact_z
+
+# z_contact_3:
+#   type: Cartesian
+#   distal_link: contact_3
+#   indices: [2]
+#   cartesian_type: position
+#   weight: *w_contact_z
+
+# z_contact_4:
+#   type: Cartesian
+#   distal_link: contact_4
+#   indices: [2]
+#   cartesian_type: position
+#   weight: *w_contact_z
+
+vz_contact_1:
   type: Cartesian
   distal_link: contact_1
   indices: [2]
-  cartesian_type: position
-  weight: *w_contact_z
+  cartesian_type: velocity
+  weight: *w_contact_vz
 
-z_contact_2:
+vz_contact_2:
   type: Cartesian
   distal_link: contact_2
   indices: [2]
-  cartesian_type: position
-  weight: *w_contact_z
+  cartesian_type: velocity
+  weight: *w_contact_vz
 
-z_contact_3:
+vz_contact_3:
   type: Cartesian
   distal_link: contact_3
   indices: [2]
-  cartesian_type: position
-  weight: *w_contact_z
+  cartesian_type: velocity
+  weight: *w_contact_vz
 
-z_contact_4:
+vz_contact_4:
   type: Cartesian
   distal_link: contact_4
   indices: [2]
-  cartesian_type: position
-  weight: *w_contact_z
-
+  cartesian_type: velocity
+  weight: *w_contact_vz
