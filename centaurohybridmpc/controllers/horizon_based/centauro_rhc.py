@@ -13,7 +13,7 @@ import shutil
 import time
 
 from centaurohybridmpc.controllers.horizon_based.centauro_rhc_task_refs import CentauroRHCRefs
-from centaurohybridmpc.controllers.horizon_based.utils.sysutils import PathsGetter
+from centaurohybridmpc.utils.sysutils import PathsGetter
 
 class CentauroRhc(HybridQuadRhc):
 
