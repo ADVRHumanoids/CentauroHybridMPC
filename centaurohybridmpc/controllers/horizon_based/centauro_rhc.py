@@ -57,8 +57,8 @@ class CentauroRhc(HybridQuadRhc):
             timeout_ms=timeout_ms)
         
         self._fail_idx_scale=1e-9
-        self._fail_idx_thresh_open_loop=1e-1
-        self._fail_idx_thresh_close_loop=1e-1
+        self._fail_idx_thresh_open_loop=1e2
+        self._fail_idx_thresh_close_loop=1e2
         if open_loop:
             self._fail_idx_thresh=self._fail_idx_thresh_open_loop
         else:
@@ -215,8 +215,6 @@ class CentauroRhc(HybridQuadRhc):
         short_stance_duration = 1
         flight_duration = 10
         post_landing_stance = 5
-        if post_landing_stance<2:
-            post_landing_stance=2
         step_height=0.08
         for c in self._model.cmap.keys():
 
