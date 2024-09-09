@@ -23,7 +23,7 @@ class CentauroRHCLusterClient(HybridQuadrupedClusterClient):
             base_dump_dir: str = "/tmp",
             timeout_ms: int = 60000,
             codegen_override: str = "",
-            custom_opt: Dict={}):
+            custom_opts: Dict={}):
         
         self._with_wheels = with_wheels
 
@@ -41,7 +41,7 @@ class CentauroRHCLusterClient(HybridQuadrupedClusterClient):
             base_dump_dir=base_dump_dir,
             timeout_ms=timeout_ms,
             codegen_override=codegen_override,
-            custom_opt=custom_opt)
+            custom_opt=custom_opts)
 
     def _xrdf_cmds(self):
         parts = self._urdf_xacro_path.split('/')
