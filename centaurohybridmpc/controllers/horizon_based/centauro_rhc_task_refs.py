@@ -24,8 +24,9 @@ class CentauroRHCRefs(HybridQuadRhcRefs):
             self.base_lin_velxy.setRef(root_twist_ref_h[0:2, :])
             self.base_lin_velz.setRef(root_twist_ref_h[2:3, :])
             self.base_omega.setRef(root_twist_ref_h[3:, :])
-            # self.base_height.setRef(root_pose) # why for cart pos we need the whole 
-            # while for cart vel just the active components of the task=????
+            if self.base_height is not None:
+                self.base_height.setRef(root_pose) 
+                
         else:
             root_pose = self.rob_refs.root_state.get(data_type = "q_full", 
                                 robot_idxs=self.robot_index_np).reshape(-1, 1)
@@ -35,5 +36,5 @@ class CentauroRHCRefs(HybridQuadRhcRefs):
             self.base_lin_velxy.setRef(root_twist_ref[0:2, :])
             self.base_lin_velz.setRef(root_twist_ref[2:3, :])
             self.base_omega.setRef(root_twist_ref[3:, :])
-            # self.base_height.setRef(root_pose) # why for cart pos we need the whole 
-            # while for cart vel just the active components of the task=????
+            if self.base_height is not None:
+                self.base_height.setRef(root_pose)
