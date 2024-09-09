@@ -58,7 +58,7 @@ class CentauroRhc(HybridQuadRhc):
         
         self._fail_idx_scale=1e-9
         self._fail_idx_thresh_open_loop=1e0
-        self._fail_idx_thresh_close_loop=1e0
+        self._fail_idx_thresh_close_loop=1e2
         if open_loop:
             self._fail_idx_thresh=self._fail_idx_thresh_open_loop
         else:
@@ -90,7 +90,7 @@ class CentauroRhc(HybridQuadRhc):
         vel_bounds_weight=1.0
         meas_state_attractor_weight=1.0
         self._phase_force_reg=1e-2
-        self._yaw_vertical_weight=10.0
+        self._yaw_vertical_weight=5.0
         # overrides parent
         self._prb = Problem(self._n_intervals, 
                         receding=True, 
@@ -213,9 +213,9 @@ class CentauroRhc(HybridQuadRhc):
     def _init_contact_timelines(self):
         
         short_stance_duration = 1
-        flight_duration = 10
+        flight_duration = 15
         post_landing_stance = 5
-        step_height=0.08
+        step_height=0.10
         for c in self._model.cmap.keys():
 
             # stance phases
@@ -261,7 +261,7 @@ class CentauroRhc(HybridQuadRhc):
                     throw_when_excep=True)
             # reference traj
             der= [None, 0, 0]
-            second_der=[None, 0, 0]
+            second_der=[0, None, 0]
             # flight pos
             if self._ti.getTask(f'z_{c}') is not None:
                 ref_trj = np.zeros(shape=[7, flight_duration])

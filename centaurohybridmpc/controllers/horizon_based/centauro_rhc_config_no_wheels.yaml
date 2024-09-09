@@ -25,10 +25,6 @@ constraints:
   - contact_4
 
 costs:
-  - vz_contact_1
-  - vz_contact_2
-  - vz_contact_3
-  - vz_contact_4
   - base_lin_velxy
   - base_lin_velz
   - base_omega
@@ -36,15 +32,19 @@ costs:
   - joint_posture_capture
   - joint_v_regularization
   - joint_a_regularization
+  - vz_contact_1
+  - vz_contact_2
+  - vz_contact_3
+  - vz_contact_4
   # - force_regularization
 
 #open loop
 .define:
-  - &w_base_omega 10.
-  - &w_base_vxy 10.
-  - &w_base_vz 10.
+  - &w_base_omega 5.
+  - &w_base_vxy 5.
+  - &w_base_vz 5.
   - &w_contact_z 1.0
-  - &w_contact_vz 1000.0
+  - &w_contact_vz 100.0
   - &w_base_capture 10.
   - &w_capture_postural 10.0
   - &w_v 1e-1
@@ -242,13 +242,13 @@ joint_posture_capture:
 # todo: wrong, as the order COUNTS. If I add the contacts after the joint regularization, they wont get considered.
 joint_v_regularization:
   type: Regularization
-  nodes: ${range(1, N+1)}
+  nodes: ${range(0, N+1)}
   weight:
     velocity: *w_v
 
 joint_a_regularization:
   type: Regularization
-  nodes: ${range(1, N+1)}
+  nodes: ${range(0, N+1)}
   weight:
     acceleration: *w_a # 0.01
 
