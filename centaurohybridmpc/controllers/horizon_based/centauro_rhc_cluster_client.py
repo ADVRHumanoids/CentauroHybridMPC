@@ -41,7 +41,7 @@ class CentauroRHCLusterClient(HybridQuadrupedClusterClient):
             base_dump_dir=base_dump_dir,
             timeout_ms=timeout_ms,
             codegen_override=codegen_override,
-            custom_opt=custom_opts)
+            custom_opts=custom_opts)
 
     def _xrdf_cmds(self):
         parts = self._urdf_xacro_path.split('/')

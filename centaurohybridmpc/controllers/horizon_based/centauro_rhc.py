@@ -57,8 +57,8 @@ class CentauroRhc(HybridQuadRhc):
             timeout_ms=timeout_ms)
         
         self._fail_idx_scale=1e-9
-        self._fail_idx_thresh_open_loop=1e2
-        self._fail_idx_thresh_close_loop=1e2
+        self._fail_idx_thresh_open_loop=1e0
+        self._fail_idx_thresh_close_loop=1e0
         if open_loop:
             self._fail_idx_thresh=self._fail_idx_thresh_open_loop
         else:
@@ -88,9 +88,9 @@ class CentauroRhc(HybridQuadRhc):
     def _init_problem(self):
         
         vel_bounds_weight=1.0
-        meas_state_attractor_weight=100.0
+        meas_state_attractor_weight=1.0
         self._phase_force_reg=1e-2
-        self._yaw_vertical_weight=2.0
+        self._yaw_vertical_weight=10.0
         # overrides parent
         self._prb = Problem(self._n_intervals, 
                         receding=True, 
