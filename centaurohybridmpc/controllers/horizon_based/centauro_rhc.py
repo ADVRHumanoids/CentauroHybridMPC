@@ -90,7 +90,7 @@ class CentauroRhc(HybridQuadRhc):
         vel_bounds_weight=1.0
         meas_state_attractor_weight=1.0
         self._phase_force_reg=1e-2
-        self._yaw_vertical_weight=5.0
+        self._yaw_vertical_weight=100.0
         # overrides parent
         self._prb = Problem(self._n_intervals, 
                         receding=True, 
