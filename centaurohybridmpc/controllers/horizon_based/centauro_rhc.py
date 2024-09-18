@@ -57,7 +57,7 @@ class CentauroRhc(HybridQuadRhc):
             timeout_ms=timeout_ms)
         
         self._fail_idx_scale=1e-9
-        self._fail_idx_thresh_open_loop=1e0
+        self._fail_idx_thresh_open_loop=1e-1
         self._fail_idx_thresh_close_loop=1e2
         if open_loop:
             self._fail_idx_thresh=self._fail_idx_thresh_open_loop
