@@ -64,6 +64,7 @@ class CentauroRhc(HybridQuadRhc):
         else:
             self._fail_idx_thresh=self._fail_idx_thresh_close_loop
         
+    def _set_rhc_pred_idx(self):
         self._pred_node_idx=round((self._n_nodes-1)*2/3)
 
     def _init_rhc_task_cmds(self):
