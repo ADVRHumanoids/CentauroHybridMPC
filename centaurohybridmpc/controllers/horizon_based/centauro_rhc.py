@@ -57,8 +57,8 @@ class CentauroRhc(HybridQuadRhc):
             timeout_ms=timeout_ms)
         
         self._fail_idx_scale=1e-9
-        self._fail_idx_thresh_open_loop=1e-2
-        self._fail_idx_thresh_close_loop=1e2
+        self._fail_idx_thresh_open_loop=1e0
+        self._fail_idx_thresh_close_loop=5e0
         if open_loop:
             self._fail_idx_thresh=self._fail_idx_thresh_open_loop
         else:
@@ -226,6 +226,9 @@ class CentauroRhc(HybridQuadRhc):
             stance_phase_short = self._c_timelines[c].createPhase(short_stance_duration, f'stance_{c}_short')
             if self._ti.getTask(f'{c}') is not None:
                 stance_phase_short.addItem(self._ti.getTask(f'{c}'))
+                ref_trj = np.zeros(shape=[7, short_stance_duration])
+                stance_phase_short.addItemReference(self._ti.getTask(f'z_{c}'),
+                    ref_trj, nodes=list(range(0, short_stance_duration)))
             else:
                 Journal.log(self.__class__.__name__,
                     "_init_contact_timelines",
@@ -251,6 +254,10 @@ class CentauroRhc(HybridQuadRhc):
             # post landing contact + force reg
             if self._ti.getTask(f'{c}') is not None:
                 flight_phase.addItem(self._ti.getTask(f'{c}'), nodes=list(range(flight_duration, flight_duration+post_landing_stance)))
+                ref_trj = np.zeros(shape=[7, post_landing_stance])
+                flight_phase.addItemReference(self._ti.getTask(f'z_{c}'),
+                    ref_trj,
+                    nodes=list(range(flight_duration, flight_duration+post_landing_stance)))
                 i=0
                 for force in self._ti.model.cmap[c]:
                     force_reg=self._prb.getCosts(f'{c}_force_reg_f{i}')
