@@ -25,8 +25,6 @@ class CentauroRHCLusterClient(HybridQuadrupedClusterClient):
             codegen_override: str = "",
             custom_opts: Dict={}):
         
-        self._with_wheels = with_wheels
-
         super().__init__(namespace = namespace, 
             urdf_xacro_path=urdf_xacro_path,
             srdf_xacro_path=srdf_xacro_path,
@@ -59,7 +57,6 @@ class CentauroRHCLusterClient(HybridQuadrupedClusterClient):
                 srdf_path=self._srdf_path,
                 robot_name=self._namespace,
                 codegen_dir=codegen_dir,
-                with_wheels=self._with_wheels,
                 n_nodes=31, 
                 dt=0.03,
                 injection_node=5,
