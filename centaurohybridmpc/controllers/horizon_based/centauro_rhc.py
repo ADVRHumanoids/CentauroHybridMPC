@@ -30,9 +30,10 @@ class CentauroRhc(HybridQuadRhc):
 
         paths = PathsGetter()
         config_path=paths.RHCCONFIGPATH_NO_WHEELS
-        if ("wheels" in custom_opts) and \
-            ("true" in custom_opts["wheels"] or \
-            "True" in custom_opts["wheels"]):
+        self._control_wheels=False
+        if ("control_wheels" in custom_opts) and \
+            custom_opts["control_wheels"]:
+            self._control_wheels=True
             config_path = paths.RHCCONFIGPATH_WHEELS
             if ("replace_continuous_joints" in custom_opts) and \
                 (not custom_opts["replace_continuous_joints"]):
@@ -71,19 +72,22 @@ class CentauroRhc(HybridQuadRhc):
         
         self._yaw_vertical_weight=100.0
 
-        fixed_jnts_patterns=[r"j_wheel", 
-            r"ankle_yaw",
-            r"j_arm",
-            r"ankle_yaw",
-            r"torso",
-            r"d435_head",
-            r"velodyne_joint"]
+        fixed_jnts_patterns=[
+            "j_arm",
+            "torso",
+            "d435_head",
+            "velodyne_joint"]
+        if not self._control_wheels:
+            fixed_jnts_patterns=fixed_jnts_patterns+\
+                ["j_wheel", 
+                "ankle_yaw"]
         
         super()._init_problem(fixed_jnt_patterns=fixed_jnts_patterns,
+            foot_linkname="wheel_1",
             flight_duration=15,
             post_landing_stance=5,
             step_height=0.1,
             keep_yaw_vert=True,
-            yaw_vertical_weight=2.0,
+            yaw_vertical_weight=100.0,
             phase_force_reg=1e-2,
             vel_bounds_weight=1.0)
