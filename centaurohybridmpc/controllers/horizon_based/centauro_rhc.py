@@ -39,7 +39,7 @@ class CentauroRhc(HybridQuadRhc):
                 (not custom_opts["replace_continuous_joints"]):
                 # use continuous joints -> different config
                 config_path = paths.RHCCONFIGPATH_WHEELS_CONTINUOUS
-        
+    
         super().__init__(srdf_path=srdf_path,
             urdf_path=urdf_path,
             config_path=config_path,
@@ -77,6 +77,7 @@ class CentauroRhc(HybridQuadRhc):
             "torso",
             "d435_head",
             "velodyne_joint"]
+        
         if not self._control_wheels:
             fixed_jnts_patterns=fixed_jnts_patterns+\
                 ["j_wheel", 

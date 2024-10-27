@@ -66,6 +66,7 @@ class CentauroRHCLusterClient(HybridQuadrupedClusterClient):
                 verbose = self._verbose, 
                 debug = self._debug,
                 refs_in_hor_frame=True,
-                timeout_ms=self._timeout_ms)
+                timeout_ms=self._timeout_ms,
+                custom_opts=self._custom_opts)
         
         return controller 
