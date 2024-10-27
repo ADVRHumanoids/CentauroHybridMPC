@@ -57,6 +57,7 @@ costs:
   - &w_v 1e-1
   - &w_a 1e-2
   - &w_f 1e-6
+  - &wheel_radius 0.124
 
 base_lin_velxy:
   type: Cartesian
