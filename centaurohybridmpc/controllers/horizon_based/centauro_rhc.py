@@ -55,7 +55,8 @@ class CentauroRhc(HybridQuadRhc):
             verbose=verbose, 
             debug=debug,
             refs_in_hor_frame=refs_in_hor_frame,
-            timeout_ms=timeout_ms)
+            timeout_ms=timeout_ms,
+            custom_opts=custom_opts)
         
         self._fail_idx_scale=1e-9
         self._fail_idx_thresh_open_loop=1e0

@@ -57,6 +57,7 @@ costs:
   - &w_v 1e-1
   - &w_a 1e-2
   - &w_f 1e-6
+  - &wheel_radius 0.124
 
 base_lin_velxy:
   type: Cartesian
@@ -99,29 +100,25 @@ base_capture:
 
 # ===============================
 
-zero_velocity_contact_1:
-  type: Cartesian
-  distal_link: contact_1
-  indices: [0, 1, 2]
-  cartesian_type: velocity
+rolling_contact_1:
+  type: Rolling
+  frame: wheel_1
+  radius: *wheel_radius
 
-zero_velocity_contact_2:
-  type: Cartesian
-  distal_link: contact_2
-  indices: [0, 1, 2]
-  cartesian_type: velocity
+rolling_contact_2:
+  type: Rolling
+  frame: wheel_2
+  radius: *wheel_radius
 
-zero_velocity_contact_3:
-  type: Cartesian
-  distal_link: contact_3
-  indices: [0, 1, 2]
-  cartesian_type: velocity
+rolling_contact_3:
+  type: Rolling
+  frame: wheel_3
+  radius: *wheel_radius
 
-zero_velocity_contact_4:
-  type: Cartesian
-  distal_link: contact_4
-  indices: [0, 1, 2]
-  cartesian_type: velocity
+rolling_contact_4:
+  type: Rolling
+  frame: wheel_4
+  radius: *wheel_radius
 
 # ==================================
 
@@ -132,7 +129,7 @@ interaction_contact_1:
   enable_fc: true
   friction_coeff: 0.5
   vertex_frames:
-    - contact_1
+    - wheel_1
 
 interaction_contact_2:
   type: VertexForce
@@ -141,7 +138,7 @@ interaction_contact_2:
   enable_fc: true
   friction_coeff: 0.5
   vertex_frames:
-    - contact_2
+    - wheel_2
 
 interaction_contact_3:
   type: VertexForce
@@ -150,7 +147,7 @@ interaction_contact_3:
   enable_fc: true
   friction_coeff: 0.5
   vertex_frames:
-    - contact_3
+    - wheel_3
 
 interaction_contact_4:
   type: VertexForce
@@ -159,23 +156,23 @@ interaction_contact_4:
   enable_fc: true
   friction_coeff: 0.5
   vertex_frames:
-    - contact_4
+    - wheel_4
 
 contact_1:
   type: Contact
-  subtask: [interaction_contact_1, zero_velocity_contact_1]
+  subtask: [interaction_contact_1, rolling_contact_1]
 
 contact_2:
   type: Contact
-  subtask: [interaction_contact_2, zero_velocity_contact_2]
+  subtask: [interaction_contact_2, rolling_contact_2]
 
 contact_3:
   type: Contact
-  subtask: [interaction_contact_3, zero_velocity_contact_3]
+  subtask: [interaction_contact_3, rolling_contact_3]
 
 contact_4:
   type: Contact
-  subtask: [interaction_contact_4, zero_velocity_contact_4]
+  subtask: [interaction_contact_4, rolling_contact_4]
 
 joint_posture_capture:
   type: Postural
@@ -185,7 +182,7 @@ joint_posture_capture:
             14,  15, 16, 17, 18, 
             21, 22, 23, 24, 25]
   nodes: ${range(N-5, N+1)}
-
+  
 # joint_posture_capture_ub:
 #   type: Postural
 #   weight: *w_capture_postural_ub
