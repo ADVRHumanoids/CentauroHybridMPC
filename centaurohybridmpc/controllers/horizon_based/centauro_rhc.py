@@ -69,6 +69,9 @@ class CentauroRhc(HybridQuadRhc):
     def _set_rhc_pred_idx(self):
         self._pred_node_idx=round((self._n_nodes-1)*2/3)
 
+    def _set_rhc_cmds_idx(self):
+        self._rhc_cmds_node_idx=2
+
     def _init_problem(self):
         
         self._yaw_vertical_weight=100.0
@@ -84,10 +87,14 @@ class CentauroRhc(HybridQuadRhc):
                 ["j_wheel", 
                 "ankle_yaw"]
         
+        flight_duration_sec=0.45 # [s]
+        post_landing_duration=0.15
+        flight_duration=int(flight_duration_sec/self._dt)
+        post_landing_stance=int(post_landing_duration/self._dt)
         super()._init_problem(fixed_jnt_patterns=fixed_jnts_patterns,
             foot_linkname="wheel_1",
-            flight_duration=15,
-            post_landing_stance=5,
+            flight_duration=flight_duration,
+            post_landing_stance=post_landing_stance,
             step_height=0.1,
             keep_yaw_vert=True,
             yaw_vertical_weight=100.0,

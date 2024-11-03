@@ -35,12 +35,11 @@ costs:
   # - vz_contact_4
   - base_lin_velxy
   - base_lin_velz
-  # - base_height
   - base_omega
   - base_capture
   - joint_posture_capture
-  - joint_v_regularization
-  - joint_a_regularization
+  - v_regularization
+  - a_regularization
   # - force_regularization
 
 #open loop
@@ -52,11 +51,10 @@ costs:
   - &w_contact_z 50.0
   - &w_contact_vz 10.0
   - &w_base_capture 10.
-  - &w_capture_postural 8.0
+  - &w_capture_postural 5.0
   - &w_capture_postural_ub 1.
   - &w_v 1e-1
   - &w_a 1e-2
-  - &w_f 1e-6
 
 base_lin_velxy:
   type: Cartesian
@@ -73,13 +71,6 @@ base_lin_velz:
   nodes: ${range(1, N-5)}
   cartesian_type: velocity
   weight: *w_base_vz
-
-base_height:
-  type: Cartesian
-  distal_link: base_link
-  indices: [2]
-  nodes: ${range(1, N+1)}
-  weight: *w_base_z
 
 base_omega:
   type: Cartesian
@@ -196,15 +187,25 @@ joint_posture_capture:
 #             ]
 #   nodes: ${range(1, N+1)}
 # todo: wrong, as the order COUNTS. If I add the contacts after the joint regularization, they wont get considered.
-joint_v_regularization:
+v_regularization:
   type: Regularization
   nodes: ${range(0, N+1)}
+  indices: [0, 1, 2, 3, 4, 5,
+    6, 7, 8, 9, 
+    10, 11, 12, 13,
+    14, 15, 16, 17,
+    18, 19, 20, 21]
   weight:
     velocity: *w_v
 
-joint_a_regularization:
+a_regularization:
   type: Regularization
   nodes: ${range(0, N+1)}
+  indices: [0, 1, 2, 3, 4, 5,
+    6, 7, 8, 9, 
+    10, 11, 12, 13,
+    14, 15, 16, 17,
+    18, 19, 20, 21]
   weight:
     acceleration: *w_a # 0.01
 

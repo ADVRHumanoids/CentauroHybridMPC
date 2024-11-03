@@ -35,12 +35,13 @@ costs:
   # - vz_contact_4
   - base_lin_velxy
   - base_lin_velz
-  # - base_height
   - base_omega
   - base_capture
   - joint_posture_capture
-  - joint_v_regularization
-  - joint_a_regularization
+  - v_regularization
+  - a_regularization
+  - joint_v_reg_wheels
+  - joint_a_reg_wheels
   # - force_regularization
 
 #open loop
@@ -54,9 +55,10 @@ costs:
   - &w_base_capture 10.
   - &w_capture_postural 8.0
   - &w_capture_postural_ub 1.
-  - &w_v 1e-1
-  - &w_a 1e-2
-  - &w_f 1e-6
+  - &w_v 5e-1
+  - &w_a 1e-1
+  - &w_v_wheels 3e-2
+  - &w_a_wheels 1e-2
   - &wheel_radius 0.124
 
 base_lin_velxy:
@@ -74,13 +76,6 @@ base_lin_velz:
   nodes: ${range(1, N-5)}
   cartesian_type: velocity
   weight: *w_base_vz
-
-base_height:
-  type: Cartesian
-  distal_link: base_link
-  indices: [2]
-  nodes: ${range(1, N+1)}
-  weight: *w_base_z
 
 base_omega:
   type: Cartesian
@@ -193,22 +188,41 @@ joint_posture_capture:
 #             ]
 #   nodes: ${range(1, N+1)}
 # todo: wrong, as the order COUNTS. If I add the contacts after the joint regularization, they wont get considered.
-joint_v_regularization:
+v_regularization:
   type: Regularization
   nodes: ${range(0, N+1)}
+  indices: [0, 1, 2, 3, 4, 5,
+    6, 7, 8, 9, 10,
+    12, 13, 14, 15, 16,
+    18, 19, 20, 21, 22,
+    24, 25, 26, 27, 28]
   weight:
     velocity: *w_v
 
-joint_a_regularization:
+a_regularization:
   type: Regularization
   nodes: ${range(0, N+1)}
+  indices: [0, 1, 2, 3, 4, 5,
+    6, 7, 8, 9, 10,
+    12, 13, 14, 15, 16,
+    18, 19, 20, 21, 22,
+    24, 25, 26, 27, 28]
   weight:
     acceleration: *w_a # 0.01
 
-# force_regularization:
-#   type: Regularization
-#   weight:
-#     force: *w_f # todo <----- how to do? if there are more forces...
+joint_v_reg_wheels:
+  type: Regularization
+  nodes: ${range(0, N+1)}
+  indices: [11, 17, 23, 29]
+  weight:
+    velocity: *w_v_wheels
+
+joint_a_reg_wheels:
+  type: Regularization
+  nodes: ${range(0, N+1)}
+  indices: [11, 17, 23, 29]
+  weight:
+    acceleration: *w_a_wheels # 0.01
 
 # flight phase traj tracking
 z_contact_1:
