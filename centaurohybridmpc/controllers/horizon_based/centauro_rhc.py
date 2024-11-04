@@ -30,8 +30,6 @@ class CentauroRhc(HybridQuadRhc):
 
         paths = PathsGetter()
         config_path=paths.RHCCONFIGPATH_NO_WHEELS
-
-        self._control_wheels=False
         
         super().__init__(srdf_path=srdf_path,
             urdf_path=urdf_path,
@@ -67,15 +65,21 @@ class CentauroRhc(HybridQuadRhc):
 
     def _config_override(self):
         paths = PathsGetter()
-        if ("control_wheels" in self._custom_opts) and \
-            self._custom_opts["control_wheels"]:
-            self._control_wheels=True
-            self.config_path = paths.RHCCONFIGPATH_WHEELS
-            if ("replace_continuous_joints" in self._custom_opts) and \
-                (not self._custom_opts["replace_continuous_joints"]):
-                # use continuous joints -> different config
-                self.config_path = paths.RHCCONFIGPATH_WHEELS_CONTINUOUS
+        if ("control_wheels" in self._custom_opts):
+            if self._custom_opts["control_wheels"]:
+                self.config_path = paths.RHCCONFIGPATH_WHEELS
+                if ("replace_continuous_joints" in self._custom_opts) and \
+                    (not self._custom_opts["replace_continuous_joints"]):
+                    # use continuous joints -> different config
+                    self.config_path = paths.RHCCONFIGPATH_WHEELS_CONTINUOUS
+        else:
+            self._custom_opts["control_wheels"]=False
 
+        if not self._custom_opts["control_wheels"]:
+            self._fixed_jnt_patterns=self._fixed_jnt_patterns+\
+                ["j_wheel", 
+                "ankle_yaw"]
+            
     def _init_problem(self):
         
         self._yaw_vertical_weight=100.0
@@ -85,11 +89,6 @@ class CentauroRhc(HybridQuadRhc):
             "torso",
             "d435_head",
             "velodyne_joint"]
-        
-        if not self._control_wheels:
-            fixed_jnts_patterns=fixed_jnts_patterns+\
-                ["j_wheel", 
-                "ankle_yaw"]
         
         flight_duration_sec=0.45 # [s]
         post_landing_duration=0.15
