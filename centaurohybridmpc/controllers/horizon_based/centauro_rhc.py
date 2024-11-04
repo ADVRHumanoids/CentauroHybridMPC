@@ -30,7 +30,9 @@ class CentauroRhc(HybridQuadRhc):
 
         paths = PathsGetter()
         config_path=paths.RHCCONFIGPATH_NO_WHEELS
-    
+
+        self._control_wheels=False
+        
         super().__init__(srdf_path=srdf_path,
             urdf_path=urdf_path,
             config_path=config_path,
@@ -65,9 +67,9 @@ class CentauroRhc(HybridQuadRhc):
 
     def _config_override(self):
         paths = PathsGetter()
-        if ("wheels" in self._custom_opts) and \
-            ("true" in self._custom_opts["wheels"] or \
-            "True" in self._custom_opts["wheels"]):
+        if ("control_wheels" in self._custom_opts) and \
+            self._custom_opts["control_wheels"]:
+            self._control_wheels=True
             self.config_path = paths.RHCCONFIGPATH_WHEELS
             if ("replace_continuous_joints" in self._custom_opts) and \
                 (not self._custom_opts["replace_continuous_joints"]):
