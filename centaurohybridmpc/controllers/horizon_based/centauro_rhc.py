@@ -91,13 +91,10 @@ class CentauroRhc(HybridQuadRhc):
             "velodyne_joint"]
         
         flight_duration_sec=0.45 # [s]
-        post_landing_duration=0.15
         flight_duration=int(flight_duration_sec/self._dt)
-        post_landing_stance=int(post_landing_duration/self._dt)
         super()._init_problem(fixed_jnt_patterns=fixed_jnts_patterns,
             foot_linkname="wheel_1",
             flight_duration=flight_duration,
-            post_landing_stance=post_landing_stance,
             step_height=0.1,
             keep_yaw_vert=True,
             yaw_vertical_weight=100.0,
