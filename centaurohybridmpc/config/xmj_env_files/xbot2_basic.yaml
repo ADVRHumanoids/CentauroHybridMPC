@@ -23,6 +23,8 @@ motor_pd:
   neck_yaw: [10, 1]
   torso_yaw: [1000, 30]
   j_wheel_*: [0, 30]
+  velodyne_*: [10, 1]
+  d435_*: [10, 1]
 
 # startup pd config
 startup_motor_pd:
@@ -42,6 +44,8 @@ startup_motor_pd:
   neck_yaw: [10, 1]
   torso_yaw: [1000, 30]
   j_wheel_*: [0, 30]
+  velodyne_*: [10, 1]
+  d435_*: [10, 1]
   
 motor_vel:
   j_wheel_*: [1]
