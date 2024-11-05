@@ -51,9 +51,9 @@ costs:
   - &w_contact_z 50.0
   - &w_contact_vz 10.0
   - &w_base_capture 10.
-  - &w_capture_postural 8.0
+  - &w_capture_postural 5.0
   - &w_capture_postural_ub 1.
-  - &w_v 1e-1
+  - &w_v 5e-1
   - &w_a 1e-2
 
 base_lin_velxy:
