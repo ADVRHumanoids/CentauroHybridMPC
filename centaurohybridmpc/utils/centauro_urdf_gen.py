@@ -32,6 +32,7 @@ class CentauroUrdfGen(UrdfGenerator):
         
         cmds = []
         
+        cmds.append("root:=" + root)
         if self._big_wheels:
             cmds.append("big_wheel:=true")
         else:

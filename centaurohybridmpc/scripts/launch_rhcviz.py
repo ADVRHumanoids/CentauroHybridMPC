@@ -14,14 +14,13 @@ if __name__ == '__main__':
     parser.add_argument('--dpath', type=str,default="/root/ibrido_ws/src/iit-centauro-ros-pkg/centauro_urdf")
     parser.add_argument('--nodes_perc', type=int, default=30)
     parser.add_argument('--comment', type=str, help='Any useful comment associated with this run',default="")
-    parser.add_argument('--big_wheels', action=argparse.BooleanOptionalAction, default=True, help='use big wheels')
 
     args = parser.parse_args()
 
     syspaths = PathsGetter()
         
     urdf_generator = CentauroUrdfGen(robotname="centauro", 
-                big_wheels=args.big_wheels,
+                big_wheels=True,
                 descr_path=args.dpath,
                 name="centauroUrdf")
     
