@@ -79,7 +79,8 @@ class CentauroRhc(HybridQuadRhc):
             self._fixed_jnt_patterns=self._fixed_jnt_patterns+\
                 ["j_wheel", 
                 "ankle_yaw"]
-            
+            self._custom_opts["replace_continuous_joints"]=True
+                    
     def _init_problem(self):
         
         self._yaw_vertical_weight=100.0
