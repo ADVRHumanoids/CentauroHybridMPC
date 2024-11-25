@@ -51,7 +51,7 @@ class CentauroRhc(HybridQuadRhc):
         
         self._fail_idx_scale=1e-9
         self._fail_idx_thresh_open_loop=1e0
-        self._fail_idx_thresh_close_loop=5e0
+        self._fail_idx_thresh_close_loop=10
         if open_loop:
             self._fail_idx_thresh=self._fail_idx_thresh_open_loop
         else:
@@ -83,7 +83,7 @@ class CentauroRhc(HybridQuadRhc):
                     
     def _init_problem(self):
         
-        self._yaw_vertical_weight=100.0
+        self._yaw_vertical_weight=50.0
 
         fixed_jnts_patterns=[
             "j_arm",
@@ -93,11 +93,14 @@ class CentauroRhc(HybridQuadRhc):
         
         flight_duration_sec=0.45 # [s]
         flight_duration=int(flight_duration_sec/self._dt)
+        post_flight_duration_sec=0.15 # [s]
+        post_flight_duration=int(post_flight_duration_sec/self._dt)
         super()._init_problem(fixed_jnt_patterns=fixed_jnts_patterns,
             foot_linkname="wheel_1",
             flight_duration=flight_duration,
+            post_flight_stance=post_flight_duration,
             step_height=0.1,
             keep_yaw_vert=True,
-            yaw_vertical_weight=100.0,
-            phase_force_reg=1e-2,
+            yaw_vertical_weight=self._yaw_vertical_weight,
+            phase_force_reg=5e-3,
             vel_bounds_weight=1.0)
