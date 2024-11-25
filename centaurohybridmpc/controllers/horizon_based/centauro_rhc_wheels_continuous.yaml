@@ -54,7 +54,7 @@ costs:
   - &w_base_vz 6
   - &w_base_z 4.
   - &w_contact_z 5.0
-  - &w_contact_vz 100.0
+  - &w_contact_vz 10.0
   - &w_base_capture 10.
   - &w_capture_postural 5.0
   - &w_capture_postural_ub 1.
@@ -204,7 +204,7 @@ v_root_reg:
 
 a_root_reg:
   type: Regularization
-  nodes: ${range(0, N+1)}
+  nodes: ${range(1, N+1)}
   indices: [0, 1, 2, 3, 4, 5]
   weight:
     a: *w_a_root # 0.01
