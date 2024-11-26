@@ -93,7 +93,7 @@ class CentauroRhc(HybridQuadRhc):
         
         flight_duration_sec=0.45 # [s]
         flight_duration=int(flight_duration_sec/self._dt)
-        post_flight_duration_sec=0.15 # [s]
+        post_flight_duration_sec=0.25 # [s]
         post_flight_duration=int(post_flight_duration_sec/self._dt)
         super()._init_problem(fixed_jnt_patterns=fixed_jnts_patterns,
             foot_linkname="wheel_1",
