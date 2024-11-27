@@ -99,8 +99,8 @@ class CentauroRhc(HybridQuadRhc):
             foot_linkname="wheel_1",
             flight_duration=flight_duration,
             post_flight_stance=post_flight_duration,
-            step_height=0.1,
+            step_height=0.15,
             keep_yaw_vert=True,
             yaw_vertical_weight=self._yaw_vertical_weight,
-            phase_force_reg=5e-3,
+            phase_force_reg=1e-2,
             vel_bounds_weight=1.0)
