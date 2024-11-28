@@ -56,6 +56,11 @@ class CentauroRhc(HybridQuadRhc):
             self._fail_idx_thresh=self._fail_idx_thresh_open_loop
         else:
             self._fail_idx_thresh=self._fail_idx_thresh_close_loop
+
+        # adding some additional config files for jnt imp control
+        self._rhc_fpaths.append(paths.JNT_IMP_CONFIG_XBOT)
+        self._rhc_fpaths.append(paths.JNT_IMP_CONFIG)
+
         
     def _set_rhc_pred_idx(self):
         self._pred_node_idx=round((self._n_nodes-1)*2/3)
