@@ -96,7 +96,7 @@ class CentauroRhc(HybridQuadRhc):
             "d435_head",
             "velodyne_joint"]
         
-        flight_duration_sec=0.45 # [s]
+        flight_duration_sec=0.6 # [s]
         flight_duration=int(flight_duration_sec/self._dt)
         post_flight_duration_sec=0.25 # [s]
         post_flight_duration=int(post_flight_duration_sec/self._dt)
