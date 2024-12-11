@@ -96,15 +96,15 @@ class CentauroRhc(HybridQuadRhc):
             "d435_head",
             "velodyne_joint"]
         
-        flight_duration_sec=0.6 # [s]
+        flight_duration_sec=0.5 # [s]
         flight_duration=int(flight_duration_sec/self._dt)
-        post_flight_duration_sec=0.25 # [s]
+        post_flight_duration_sec=0.35 # [s]
         post_flight_duration=int(post_flight_duration_sec/self._dt)
         super()._init_problem(fixed_jnt_patterns=fixed_jnts_patterns,
             foot_linkname="wheel_1",
             flight_duration=flight_duration,
             post_flight_stance=post_flight_duration,
-            step_height=0.15,
+            step_height=0.1,
             keep_yaw_vert=True,
             yaw_vertical_weight=self._yaw_vertical_weight,
             phase_force_reg=1e-2,
