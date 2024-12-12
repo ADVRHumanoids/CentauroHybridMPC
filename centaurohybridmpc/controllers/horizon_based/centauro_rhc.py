@@ -105,7 +105,7 @@ class CentauroRhc(HybridQuadRhc):
         
         if ("fix_yaw" in self._custom_opts) and \
             (self._custom_opts["fix_yaw"]):
-            fixed_jnts_patterns.append("ankle_yaw")
+            fixed_jnts_patterns.append("yaw")
 
         flight_duration_sec=0.5 # [s]
         flight_duration=int(flight_duration_sec/self._dt)
