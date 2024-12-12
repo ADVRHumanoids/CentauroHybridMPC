@@ -73,10 +73,17 @@ class CentauroRhc(HybridQuadRhc):
         if ("control_wheels" in self._custom_opts):
             if self._custom_opts["control_wheels"]:
                 self.config_path = paths.RHCCONFIGPATH_WHEELS
+                if ("fix_yaw" in self._custom_opts) and \
+                    (self._custom_opts["fix_yaw"]):
+                    self.config_path = paths.RHCCONFIGPATH_WHEELS_NO_YAW
                 if ("replace_continuous_joints" in self._custom_opts) and \
                     (not self._custom_opts["replace_continuous_joints"]):
                     # use continuous joints -> different config
                     self.config_path = paths.RHCCONFIGPATH_WHEELS_CONTINUOUS
+                    if ("fix_yaw" in self._custom_opts) and \
+                        (self._custom_opts["fix_yaw"]):
+                        self.config_path = paths.RHCCONFIGPATH_WHEELS_CONTINUOUS_NO_YAW
+
         else:
             self._custom_opts["control_wheels"]=False
 
@@ -96,6 +103,10 @@ class CentauroRhc(HybridQuadRhc):
             "d435_head",
             "velodyne_joint"]
         
+        if ("fix_yaw" in self._custom_opts) and \
+            (self._custom_opts["fix_yaw"]):
+            fixed_jnts_patterns.append("yaw")
+
         flight_duration_sec=0.5 # [s]
         flight_duration=int(flight_duration_sec/self._dt)
         post_flight_duration_sec=0.35 # [s]
