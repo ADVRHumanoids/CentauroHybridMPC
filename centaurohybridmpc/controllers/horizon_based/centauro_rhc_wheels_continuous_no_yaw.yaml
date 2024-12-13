@@ -174,10 +174,10 @@ contact_4:
 joint_posture_capture:
   type: Postural
   weight: *w_capture_postural
-  indices: [0,  1, 2, 
-            5, 6, 7,
-            10, 11, 12, 
-            15, 16, 17]
+  indices: [0,  1,  2,  3,
+            6, 7,  8,  9,  
+            12, 13, 14, 15, 
+            18, 19, 20, 21]
   nodes: ${range(N-5, N+1)}
   
 # joint_posture_capture_ub:
@@ -194,10 +194,10 @@ v_regularization:
   type: Regularization
   nodes: ${range(0, N+1)}
   indices: [0, 1, 2, 3, 4, 5,
-    6, 7, 8,
-    10, 11, 12, 
-    14, 15, 16, 
-    18, 19, 20]
+    6, 7, 8, 9,
+    11, 12, 13, 14,
+    16, 17, 18, 19,
+    21, 21, 23, 24]
   weight:
     v: *w_v
 
@@ -205,24 +205,24 @@ a_regularization:
   type: Regularization
   nodes: ${range(0, N+1)}
   indices: [0, 1, 2, 3, 4, 5,
-    6, 7, 8,
-    10, 11, 12, 
-    14, 15, 16, 
-    18, 19, 20]
+    6, 7, 8, 9,
+    11, 12, 13, 14,
+    16, 17, 18, 19,
+    21, 21, 23, 24]
   weight:
     a: *w_a # 0.01
 
 joint_v_reg_wheels:
   type: Regularization
   nodes: ${range(0, N+1)}
-  indices: [9, 13, 17, 21]
+  indices: [10, 15, 20, 25]
   weight:
     v: *w_v_wheels
 
 joint_a_reg_wheels:
   type: Regularization
   nodes: ${range(0, N+1)}
-  indices: [9, 13, 17, 21]
+  indices: [10, 15, 20, 25]
   weight:
     a: *w_a_wheels # 0.01
 

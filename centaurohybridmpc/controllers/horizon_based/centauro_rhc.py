@@ -60,7 +60,6 @@ class CentauroRhc(HybridQuadRhc):
         # adding some additional config files for jnt imp control
         self._rhc_fpaths.append(paths.JNT_IMP_CONFIG_XBOT)
         self._rhc_fpaths.append(paths.JNT_IMP_CONFIG)
-
         
     def _set_rhc_pred_idx(self):
         self._pred_node_idx=round((self._n_nodes-1)*2/3)
@@ -105,13 +104,14 @@ class CentauroRhc(HybridQuadRhc):
         
         if ("fix_yaw" in self._custom_opts) and \
             (self._custom_opts["fix_yaw"]):
-            fixed_jnts_patterns.append("yaw")
+            fixed_jnts_patterns.append("ankle_yaw")
 
         flight_duration_sec=0.5 # [s]
         flight_duration=int(flight_duration_sec/self._dt)
         post_flight_duration_sec=0.35 # [s]
         post_flight_duration=int(post_flight_duration_sec/self._dt)
         super()._init_problem(fixed_jnt_patterns=fixed_jnts_patterns,
+            wheels_patterns=["wheel_"],
             foot_linkname="wheel_1",
             flight_duration=flight_duration,
             post_flight_stance=post_flight_duration,
