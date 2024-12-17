@@ -25,14 +25,14 @@ constraints:
   - contact_4
 
 costs:
-  # - z_contact_1
-  # - z_contact_2
-  # - z_contact_3
-  # - z_contact_4
-  - vz_contact_1
-  - vz_contact_2
-  - vz_contact_3
-  - vz_contact_4
+  - z_contact_1
+  - z_contact_2
+  - z_contact_3
+  - z_contact_4
+  # - vz_contact_1
+  # - vz_contact_2
+  # - vz_contact_3
+  # - vz_contact_4
   - base_lin_velxy
   - base_lin_velz
   - base_omega
@@ -95,25 +95,37 @@ base_capture:
 
 # ===============================
 
-rolling_contact_1:
-  type: Rolling
-  frame: wheel_1
-  radius: *wheel_radius
+zero_velocity_contact_1:
+  type: Cartesian
+  base_link: "world"
+  distal_link: wheel_1
+  indices: [0, 1, 2]
+  cartesian_type: velocity
+  # offset: *wheel_radius
 
-rolling_contact_2:
-  type: Rolling
-  frame: wheel_2
-  radius: *wheel_radius
+zero_velocity_contact_2:
+  type: Cartesian
+  base_link: "world"
+  distal_link: wheel_2
+  indices: [0, 1, 2]
+  cartesian_type: velocity
+  # offset: *wheel_radius
 
-rolling_contact_3:
-  type: Rolling
-  frame: wheel_3
-  radius: *wheel_radius
+zero_velocity_contact_3:
+  type: Cartesian
+  base_link: "world"
+  distal_link: wheel_3
+  indices: [0, 1, 2]
+  cartesian_type: velocity
+  # offset: *wheel_radius
 
-rolling_contact_4:
-  type: Rolling
-  frame: wheel_4
-  radius: *wheel_radius
+zero_velocity_contact_4:
+  type: Cartesian
+  base_link: "world"
+  distal_link: wheel_4
+  indices: [0, 1, 2]
+  cartesian_type: velocity
+  # offset: *wheel_radius
 
 # ==================================
 
@@ -155,19 +167,19 @@ interaction_contact_4:
 
 contact_1:
   type: Contact
-  subtask: [interaction_contact_1, rolling_contact_1]
+  subtask: [interaction_contact_1, zero_velocity_contact_1]
 
 contact_2:
   type: Contact
-  subtask: [interaction_contact_2, rolling_contact_2]
+  subtask: [interaction_contact_2, zero_velocity_contact_2]
 
 contact_3:
   type: Contact
-  subtask: [interaction_contact_3, rolling_contact_3]
+  subtask: [interaction_contact_3, zero_velocity_contact_3]
 
 contact_4:
   type: Contact
-  subtask: [interaction_contact_4, rolling_contact_4]
+  subtask: [interaction_contact_4, zero_velocity_contact_4]
 
 joint_posture_capture:
   type: Postural
