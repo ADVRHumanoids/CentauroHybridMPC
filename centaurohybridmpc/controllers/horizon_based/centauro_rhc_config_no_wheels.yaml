@@ -134,7 +134,7 @@ interaction_contact_1:
   frame: contact_1
   fn_min: 100.0
   enable_fc: true
-  friction_coeff: 0.5
+  friction_coeff: 0.2
   vertex_frames:
     - wheel_1
 
@@ -143,7 +143,7 @@ interaction_contact_2:
   frame: contact_2
   fn_min: 100.0
   enable_fc: true
-  friction_coeff: 0.5
+  friction_coeff: 0.2
   vertex_frames:
     - wheel_2
 
@@ -152,7 +152,7 @@ interaction_contact_3:
   frame: contact_3
   fn_min: 100.0
   enable_fc: true
-  friction_coeff: 0.5
+  friction_coeff: 0.2
   vertex_frames:
     - wheel_3
 
@@ -161,7 +161,7 @@ interaction_contact_4:
   frame: contact_4
   fn_min: 100.0
   enable_fc: true
-  friction_coeff: 0.5
+  friction_coeff: 0.2
   vertex_frames:
     - wheel_4
 
@@ -265,6 +265,7 @@ z_contact_4:
 
 vz_contact_1:
   type: Cartesian
+  base_link: base_link
   distal_link: contact_1
   indices: [2]
   cartesian_type: velocity
@@ -272,6 +273,7 @@ vz_contact_1:
 
 vz_contact_2:
   type: Cartesian
+  base_link: base_link
   distal_link: contact_2
   indices: [2]
   cartesian_type: velocity
@@ -279,6 +281,7 @@ vz_contact_2:
 
 vz_contact_3:
   type: Cartesian
+  base_link: base_link
   distal_link: contact_3
   indices: [2]
   cartesian_type: velocity
@@ -286,6 +289,7 @@ vz_contact_3:
 
 vz_contact_4:
   type: Cartesian
+  base_link: base_link
   distal_link: contact_4
   indices: [2]
   cartesian_type: velocity
