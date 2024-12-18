@@ -122,5 +122,7 @@ class CentauroRhc(HybridQuadRhc):
             step_height=0.1,
             keep_yaw_vert=True,
             yaw_vertical_weight=self._yaw_vertical_weight,
+            vertical_landing=False,
+            vertical_land_weight=500.0,
             phase_force_reg=4e-2,
             vel_bounds_weight=1.0)
