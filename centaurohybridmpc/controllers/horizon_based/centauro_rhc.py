@@ -29,7 +29,10 @@ class CentauroRhc(HybridQuadRhc):
             ):
 
         paths = PathsGetter()
-        config_path=paths.RHCCONFIGPATH_NO_WHEELS
+        self._files_suffix=""
+        if open_loop:
+            self._files_suffix="_open"
+        config_path=paths.RHCCONFIGPATH_NO_WHEELS+self._files_suffix+".yaml"
         
         super().__init__(srdf_path=srdf_path,
             urdf_path=urdf_path,
@@ -52,14 +55,15 @@ class CentauroRhc(HybridQuadRhc):
         self._fail_idx_scale=1e-9
         self._fail_idx_thresh_open_loop=1e0
         self._fail_idx_thresh_close_loop=10
+        
         if open_loop:
             self._fail_idx_thresh=self._fail_idx_thresh_open_loop
         else:
             self._fail_idx_thresh=self._fail_idx_thresh_close_loop
 
         # adding some additional config files for jnt imp control
-        self._rhc_fpaths.append(paths.JNT_IMP_CONFIG_XBOT)
-        self._rhc_fpaths.append(paths.JNT_IMP_CONFIG)
+        self._rhc_fpaths.append(paths.JNT_IMP_CONFIG_XBOT+".yaml")
+        self._rhc_fpaths.append(paths.JNT_IMP_CONFIG+".yaml")
         
     def _set_rhc_pred_idx(self):
         self._pred_node_idx=round((self._n_nodes-1)*2/3)
@@ -71,17 +75,17 @@ class CentauroRhc(HybridQuadRhc):
         paths = PathsGetter()
         if ("control_wheels" in self._custom_opts):
             if self._custom_opts["control_wheels"]:
-                self.config_path = paths.RHCCONFIGPATH_WHEELS
+                self.config_path = paths.RHCCONFIGPATH_WHEELS+self._files_suffix+".yaml"
                 if ("fix_yaw" in self._custom_opts) and \
                     (self._custom_opts["fix_yaw"]):
-                    self.config_path = paths.RHCCONFIGPATH_WHEELS_NO_YAW
+                    self.config_path = paths.RHCCONFIGPATH_WHEELS_NO_YAW+self._files_suffix+".yaml"
                 if ("replace_continuous_joints" in self._custom_opts) and \
                     (not self._custom_opts["replace_continuous_joints"]):
                     # use continuous joints -> different config
-                    self.config_path = paths.RHCCONFIGPATH_WHEELS_CONTINUOUS
+                    self.config_path = paths.RHCCONFIGPATH_WHEELS_CONTINUOUS+self._files_suffix+".yaml"
                     if ("fix_yaw" in self._custom_opts) and \
                         (self._custom_opts["fix_yaw"]):
-                        self.config_path = paths.RHCCONFIGPATH_WHEELS_CONTINUOUS_NO_YAW
+                        self.config_path = paths.RHCCONFIGPATH_WHEELS_CONTINUOUS_NO_YAW+self._files_suffix+".yaml"
 
         else:
             self._custom_opts["control_wheels"]=False

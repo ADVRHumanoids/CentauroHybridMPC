@@ -25,14 +25,14 @@ constraints:
   - contact_4
 
 costs:
-  # - z_contact_1
-  # - z_contact_2
-  # - z_contact_3
-  # - z_contact_4
-  - vz_contact_1
-  - vz_contact_2
-  - vz_contact_3
-  - vz_contact_4
+  - z_contact_1
+  - z_contact_2
+  - z_contact_3
+  - z_contact_4
+  # - vz_contact_1
+  # - vz_contact_2
+  # - vz_contact_3
+  # - vz_contact_4
   - base_lin_velxy
   - base_lin_velz
   - base_omega
@@ -95,11 +95,44 @@ base_capture:
 
 # ===============================
 
+# zero_velocity_contact_1:
+#   type: Cartesian
+#   base_link: "world"
+#   distal_link: wheel_1
+#   indices: [0, 1, 2]
+#   cartesian_type: velocity
+#   # offset: *wheel_radius
+
+# zero_velocity_contact_2:
+#   type: Cartesian
+#   base_link: "world"
+#   distal_link: wheel_2
+#   indices: [0, 1, 2]
+#   cartesian_type: velocity
+#   # offset: *wheel_radius
+
+# zero_velocity_contact_3:
+#   type: Cartesian
+#   base_link: "world"
+#   distal_link: wheel_3
+#   indices: [0, 1, 2]
+#   cartesian_type: velocity
+#   # offset: *wheel_radius
+
+# zero_velocity_contact_4:
+#   type: Cartesian
+#   base_link: "world"
+#   distal_link: wheel_4
+#   indices: [0, 1, 2]
+#   cartesian_type: velocity
+#   # offset: *wheel_radius
+
+# open loop
 zero_velocity_contact_1:
   type: Cartesian
   base_link: "world"
   distal_link: wheel_1
-  indices: [0, 1, 2]
+  indices: [0, 1]
   cartesian_type: velocity
   # offset: *wheel_radius
 
@@ -107,7 +140,7 @@ zero_velocity_contact_2:
   type: Cartesian
   base_link: "world"
   distal_link: wheel_2
-  indices: [0, 1, 2]
+  indices: [0, 1]
   cartesian_type: velocity
   # offset: *wheel_radius
 
@@ -115,7 +148,7 @@ zero_velocity_contact_3:
   type: Cartesian
   base_link: "world"
   distal_link: wheel_3
-  indices: [0, 1, 2]
+  indices: [0, 1]
   cartesian_type: velocity
   # offset: *wheel_radius
 
@@ -123,8 +156,40 @@ zero_velocity_contact_4:
   type: Cartesian
   base_link: "world"
   distal_link: wheel_4
-  indices: [0, 1, 2]
+  indices: [0, 1]
   cartesian_type: velocity
+  # offset: *wheel_radius
+
+pos_contact_1:
+  type: Cartesian
+  base_link: "world"
+  distal_link: wheel_1
+  indices: [2]
+  cartesian_type: position
+  # offset: *wheel_radius
+
+pos_contact_2:
+  type: Cartesian
+  base_link: "world"
+  distal_link: wheel_2
+  indices: [2]
+  cartesian_type: position
+  # offset: *wheel_radius
+
+pos_contact_3:
+  type: Cartesian
+  base_link: "world"
+  distal_link: wheel_3
+  indices: [2]
+  cartesian_type: position
+  # offset: *wheel_radius
+
+pos_contact_4:
+  type: Cartesian
+  base_link: "world"
+  distal_link: wheel_4
+  indices: [2]
+  cartesian_type: position
   # offset: *wheel_radius
 
 # ==================================
@@ -165,21 +230,38 @@ interaction_contact_4:
   vertex_frames:
     - wheel_4
 
+# contact_1:
+#   type: Contact
+#   subtask: [interaction_contact_1, zero_velocity_contact_1]
+
+# contact_2:
+#   type: Contact
+#   subtask: [interaction_contact_2, zero_velocity_contact_2]
+
+# contact_3:
+#   type: Contact
+#   subtask: [interaction_contact_3, zero_velocity_contact_3]
+
+# contact_4:
+#   type: Contact
+#   subtask: [interaction_contact_4, zero_velocity_contact_4]
+
+# open loop
 contact_1:
   type: Contact
-  subtask: [interaction_contact_1, zero_velocity_contact_1]
+  subtask: [interaction_contact_1, zero_velocity_contact_1, pos_contact_1]
 
 contact_2:
   type: Contact
-  subtask: [interaction_contact_2, zero_velocity_contact_2]
+  subtask: [interaction_contact_2, zero_velocity_contact_2, pos_contact_2]
 
 contact_3:
   type: Contact
-  subtask: [interaction_contact_3, zero_velocity_contact_3]
+  subtask: [interaction_contact_3, zero_velocity_contact_3, pos_contact_3]
 
 contact_4:
   type: Contact
-  subtask: [interaction_contact_4, zero_velocity_contact_4]
+  subtask: [interaction_contact_4, zero_velocity_contact_4, pos_contact_4]
 
 joint_posture_capture:
   type: Postural

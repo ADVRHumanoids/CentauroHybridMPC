@@ -38,27 +38,29 @@ costs:
   - base_omega
   - base_capture
   - joint_posture_capture
-  - v_jnts_regularization
-  - a_jnts_regularization
-  - v_root_regularization
-  - a_root_regularization
+  - v_regularization
+  - a_regularization
+  - joint_v_reg_yaw
+  - joint_a_reg_yaw
+  - joint_v_reg_wheels
+  - joint_a_reg_wheels
   # - force_regularization
 
 #open loop
 .define:
-  - &w_base_omega 20.
-  - &w_base_vxy 20.
-  - &w_base_vz 20.
-  - &w_base_z 20.
+  - &w_base_omega 10.
+  - &w_base_vxy 10.
+  - &w_base_vz 10.
+  - &w_base_z 10.
   - &w_contact_z 50.0
   - &w_contact_vz 100.0
   - &w_base_capture 10.
-  - &w_capture_postural 10.0
+  - &w_capture_postural 5.0
   - &w_capture_postural_ub 1.
-  - &w_v_jnts 8e-1
-  - &w_a_jnts 3e-1
-  - &w_v_root 2e-1
-  - &w_a_root 1e-1
+  - &w_v 5e-1
+  - &w_a 1e-1
+  - &w_v_wheels 1e-1
+  - &w_a_wheels 1e-1
   - &wheel_radius 0.124
 
 base_lin_velxy:
@@ -95,37 +97,25 @@ base_capture:
 
 # ===============================
 
-zero_velocity_contact_1:
-  type: Cartesian
-  base_link: "world"
-  distal_link: wheel_1
-  indices: [0, 1, 2]
-  cartesian_type: velocity
-  # offset: *wheel_radius
+rolling_contact_1:
+  type: Rolling
+  frame: wheel_1
+  radius: *wheel_radius
 
-zero_velocity_contact_2:
-  type: Cartesian
-  base_link: "world"
-  distal_link: wheel_2
-  indices: [0, 1, 2]
-  cartesian_type: velocity
-  # offset: *wheel_radius
+rolling_contact_2:
+  type: Rolling
+  frame: wheel_2
+  radius: *wheel_radius
 
-zero_velocity_contact_3:
-  type: Cartesian
-  base_link: "world"
-  distal_link: wheel_3
-  indices: [0, 1, 2]
-  cartesian_type: velocity
-  # offset: *wheel_radius
+rolling_contact_3:
+  type: Rolling
+  frame: wheel_3
+  radius: *wheel_radius
 
-zero_velocity_contact_4:
-  type: Cartesian
-  base_link: "world"
-  distal_link: wheel_4
-  indices: [0, 1, 2]
-  cartesian_type: velocity
-  # offset: *wheel_radius
+rolling_contact_4:
+  type: Rolling
+  frame: wheel_4
+  radius: *wheel_radius
 
 # ==================================
 
@@ -167,27 +157,27 @@ interaction_contact_4:
 
 contact_1:
   type: Contact
-  subtask: [interaction_contact_1, zero_velocity_contact_1]
+  subtask: [interaction_contact_1, rolling_contact_1]
 
 contact_2:
   type: Contact
-  subtask: [interaction_contact_2, zero_velocity_contact_2]
+  subtask: [interaction_contact_2, rolling_contact_2]
 
 contact_3:
   type: Contact
-  subtask: [interaction_contact_3, zero_velocity_contact_3]
+  subtask: [interaction_contact_3, rolling_contact_3]
 
 contact_4:
   type: Contact
-  subtask: [interaction_contact_4, zero_velocity_contact_4]
+  subtask: [interaction_contact_4, rolling_contact_4]
 
 joint_posture_capture:
   type: Postural
   weight: *w_capture_postural
   indices: [0,  1,  2,  3,
-            4,  5,  6,  7,
-            8,  9, 10, 11,
-           12, 13, 14, 15]
+            6, 7,  8,  9,  
+            12, 13, 14, 15, 
+            18, 19, 20, 21]
   nodes: ${range(N-5, N+1)}
   
 # joint_posture_capture_ub:
@@ -200,40 +190,42 @@ joint_posture_capture:
 #             ]
 #   nodes: ${range(1, N+1)}
 # todo: wrong, as the order COUNTS. If I add the contacts after the joint regularization, they wont get considered.
-v_root_regularization:
+v_regularization:
   type: Regularization
   nodes: ${range(0, N+1)}
-  indices: [0, 1, 2, 3, 4, 5]
+  indices: [0, 1, 2, 3, 4, 5,
+    6, 7, 8, 9,
+    11, 12, 13, 14,
+    16, 17, 18, 19,
+    21, 21, 23, 24]
   weight:
-    v: *w_v_root
+    v: *w_v
 
-a_root_regularization:
+a_regularization:
   type: Regularization
   nodes: ${range(0, N+1)}
-  indices: [0, 1, 2, 3, 4, 5]
+  indices: [0, 1, 2, 3, 4, 5,
+    6, 7, 8, 9,
+    11, 12, 13, 14,
+    16, 17, 18, 19,
+    21, 21, 23, 24]
   weight:
-    a: *w_a_root # 0.01
+    a: *w_a # 0.01
 
-v_jnts_regularization:
+joint_v_reg_wheels:
   type: Regularization
   nodes: ${range(0, N+1)}
-  indices: [6, 7, 8, 9, 
-    10, 11, 12, 13,
-    14, 15, 16, 17,
-    18, 19, 20, 21]
+  indices: [10, 15, 20, 25]
   weight:
-    v: *w_v_jnts
+    v: *w_v_wheels
 
-a_jnts_regularization:
+joint_a_reg_wheels:
   type: Regularization
   nodes: ${range(0, N+1)}
-  indices: [6, 7, 8, 9, 
-    10, 11, 12, 13,
-    14, 15, 16, 17,
-    18, 19, 20, 21]
+  indices: [10, 15, 20, 25]
   weight:
-    a: *w_a_jnts # 0.01
-    
+    a: *w_a_wheels # 0.01
+
 # flight phase traj tracking
 z_contact_1:
   type: Cartesian
