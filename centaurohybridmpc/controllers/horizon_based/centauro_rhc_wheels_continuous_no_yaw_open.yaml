@@ -25,14 +25,14 @@ constraints:
   - contact_4
 
 costs:
-  # - z_contact_1
-  # - z_contact_2
-  # - z_contact_3
-  # - z_contact_4
-  - vz_contact_1
-  - vz_contact_2
-  - vz_contact_3
-  - vz_contact_4
+  - z_contact_1
+  - z_contact_2
+  - z_contact_3
+  - z_contact_4
+  # - vz_contact_1
+  # - vz_contact_2
+  # - vz_contact_3
+  # - vz_contact_4
   - base_lin_velxy
   - base_lin_velz
   - base_omega
@@ -40,8 +40,10 @@ costs:
   - joint_posture_capture
   - v_regularization
   - a_regularization
-  - joint_v_reg_yaw
-  - joint_a_reg_yaw
+  - v_jnts_regularization
+  - a_jnts_regularization
+  - v_root_regularization
+  - a_root_regularization
   - joint_v_reg_wheels
   - joint_a_reg_wheels
   # - force_regularization
@@ -55,10 +57,12 @@ costs:
   - &w_contact_z 50.0
   - &w_contact_vz 100.0
   - &w_base_capture 10.
-  - &w_capture_postural 5.0
+  - &w_capture_postural 10.0
   - &w_capture_postural_ub 1.
-  - &w_v 5e-1
-  - &w_a 1e-1
+  - &w_v_jnts 8e-1
+  - &w_a_jnts 3e-1
+  - &w_v_root 2e-1
+  - &w_a_root 1e-1
   - &w_v_wheels 1e-1
   - &w_a_wheels 1e-1
   - &wheel_radius 0.124
@@ -190,27 +194,39 @@ joint_posture_capture:
 #             ]
 #   nodes: ${range(1, N+1)}
 # todo: wrong, as the order COUNTS. If I add the contacts after the joint regularization, they wont get considered.
-v_regularization:
+v_root_regularization:
   type: Regularization
   nodes: ${range(0, N+1)}
-  indices: [0, 1, 2, 3, 4, 5,
-    6, 7, 8, 9,
-    11, 12, 13, 14,
-    16, 17, 18, 19,
-    21, 21, 23, 24]
+  indices: [0, 1, 2, 3, 4, 5]
   weight:
-    v: *w_v
+    v: *w_v_root
 
-a_regularization:
+a_root_regularization:
   type: Regularization
   nodes: ${range(0, N+1)}
-  indices: [0, 1, 2, 3, 4, 5,
-    6, 7, 8, 9,
+  indices: [0, 1, 2, 3, 4, 5]
+  weight:
+    a: *w_a_root # 0.01
+
+v_jnts_regularization:
+  type: Regularization
+  nodes: ${range(0, N+1)}
+  indices: [6, 7, 8, 9,
     11, 12, 13, 14,
     16, 17, 18, 19,
     21, 21, 23, 24]
   weight:
-    a: *w_a # 0.01
+    v: *w_v_jnts
+
+a_jnts_regularization:
+  type: Regularization
+  nodes: ${range(0, N+1)}
+  indices: [6, 7, 8, 9,
+    11, 12, 13, 14,
+    16, 17, 18, 19,
+    21, 21, 23, 24]
+  weight:
+    a: *w_a_jnts # 0.01
 
 joint_v_reg_wheels:
   type: Regularization
