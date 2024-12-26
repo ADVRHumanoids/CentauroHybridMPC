@@ -31,6 +31,12 @@ class CentauroRhc(HybridQuadRhc):
         self._files_suffix=""
         if open_loop:
             self._files_suffix="_open"
+        
+        self._add_upper_body=False
+        if ("add_upper_body" in custom_opts) and \
+            (custom_opts["add_upper_body"]):
+            self._add_upper_body=True
+
         config_path=paths.RHCCONFIGPATH_NO_WHEELS+self._files_suffix+".yaml"
         
         super().__init__(srdf_path=srdf_path,
@@ -94,17 +100,19 @@ class CentauroRhc(HybridQuadRhc):
                 ["j_wheel", 
                 "ankle_yaw"]
             self._custom_opts["replace_continuous_joints"]=True
-                    
+        
     def _init_problem(self):
         
         self._yaw_vertical_weight=50.0
 
         fixed_jnts_patterns=[
-            "j_arm",
-            "torso",
             "d435_head",
             "velodyne_joint"]
         
+        if not self._add_upper_body:
+            fixed_jnts_patterns.append("j_arm")
+            fixed_jnts_patterns.append("torso")
+
         if ("fix_yaw" in self._custom_opts) and \
             (self._custom_opts["fix_yaw"]):
             fixed_jnts_patterns.append("ankle_yaw")
