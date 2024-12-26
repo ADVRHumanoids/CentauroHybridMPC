@@ -36,6 +36,7 @@ class CentauroRhc(HybridQuadRhc):
         if ("add_upper_body" in custom_opts) and \
             (custom_opts["add_upper_body"]):
             self._add_upper_body=True
+            self._files_suffix+="_ub"
 
         config_path=paths.RHCCONFIGPATH_NO_WHEELS+self._files_suffix+".yaml"
         
