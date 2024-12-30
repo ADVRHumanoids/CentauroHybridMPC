@@ -9,20 +9,23 @@ class PathsGetter:
         self.CONTROLLER_ROOT_DIR = os.path.join(self.ROOT_DIR, 
                                         'controllers',
                                         'horizon_based')
+        
+        self.CONTROLLER_CFGS_DIR = os.path.join(self.CONTROLLER_ROOT_DIR, 
+                                        'cfgs')
 
-        self.RHCCONFIGPATH_NO_WHEELS = os.path.join(self.CONTROLLER_ROOT_DIR, 
+        self.RHCCONFIGPATH_NO_WHEELS = os.path.join(self.CONTROLLER_CFGS_DIR, 
                                         'centauro_rhc_config_no_wheels')
         
-        self.RHCCONFIGPATH_WHEELS = os.path.join(self.CONTROLLER_ROOT_DIR, 
+        self.RHCCONFIGPATH_WHEELS = os.path.join(self.CONTROLLER_CFGS_DIR, 
                                         'centauro_rhc_wheels')
         
-        self.RHCCONFIGPATH_WHEELS_CONTINUOUS = os.path.join(self.CONTROLLER_ROOT_DIR, 
+        self.RHCCONFIGPATH_WHEELS_CONTINUOUS = os.path.join(self.CONTROLLER_CFGS_DIR, 
                                         'centauro_rhc_wheels_continuous')
         
-        self.RHCCONFIGPATH_WHEELS_NO_YAW = os.path.join(self.CONTROLLER_ROOT_DIR, 
+        self.RHCCONFIGPATH_WHEELS_NO_YAW = os.path.join(self.CONTROLLER_CFGS_DIR, 
                                         'centauro_rhc_wheels_no_yaw')
         
-        self.RHCCONFIGPATH_WHEELS_CONTINUOUS_NO_YAW = os.path.join(self.CONTROLLER_ROOT_DIR, 
+        self.RHCCONFIGPATH_WHEELS_CONTINUOUS_NO_YAW = os.path.join(self.CONTROLLER_CFGS_DIR, 
                                         'centauro_rhc_wheels_continuous_no_yaw')
         
         self.JNT_IMP_CONFIG = os.path.join(self.ROOT_DIR, 
