@@ -44,7 +44,6 @@ costs:
   - joint_a_reg_wheels
   # - force_regularization
 
-#open loop
 .define:
   - &w_base_omega 10.
   - &w_base_vxy 10.
@@ -53,14 +52,11 @@ costs:
   - &w_contact_z 50.0
   - &w_contact_vz 100.0
   - &w_base_capture 10.
-  - &w_capture_postural 10.0
-  - &w_capture_postural_ub 1.
-  - &w_v_jnts 8e-1
-  - &w_a_jnts 3e-1
-  - &w_v_root 2e-1
-  - &w_a_root 1e-1
-  - &w_v_wheels 1e-1
-  - &w_a_wheels 1e-1
+  - &w_capture_postural 8.0
+  - &w_v 8e-1
+  - &w_a 5e-1
+  - &w_v_wheels 3e-1
+  - &w_a_wheels 3e-1
   - &wheel_radius 0.124
 
 base_lin_velxy:
@@ -182,7 +178,7 @@ joint_posture_capture:
             25, 26, 27, 28, 29, 30,
             31, 32, 33, 34, 35, 36]
   nodes: ${range(N-5, N+1)}
-
+  
 v_regularization:
   type: Regularization
   nodes: ${range(0, N+1)}
