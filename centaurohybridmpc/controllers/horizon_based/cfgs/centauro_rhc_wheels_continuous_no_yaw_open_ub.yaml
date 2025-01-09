@@ -45,10 +45,10 @@ costs:
   # - force_regularization
 
 .define:
-  - &w_base_omega 10.
-  - &w_base_vxy 10.
-  - &w_base_vz 10.
-  - &w_base_z 10.
+  - &w_base_omega 20.
+  - &w_base_vxy 20.
+  - &w_base_vz 20.
+  - &w_base_z 20.
   - &w_contact_z 50.0
   - &w_contact_vz 100.0
   - &w_base_capture 10.

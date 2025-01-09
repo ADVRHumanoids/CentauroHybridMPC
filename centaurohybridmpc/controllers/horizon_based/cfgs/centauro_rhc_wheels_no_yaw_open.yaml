@@ -48,17 +48,17 @@ costs:
 
 #open loop
 .define:
-  - &w_base_omega 20.
-  - &w_base_vxy 20.
-  - &w_base_vz 20.
-  - &w_base_z 20.
-  - &w_contact_z 50.0
+  - &w_base_omega 10.
+  - &w_base_vxy 10.
+  - &w_base_vz 10.
+  - &w_base_z 10.
+  - &w_contact_z 100.0
   - &w_contact_vz 100.0
   - &w_base_capture 10.
-  - &w_capture_postural 10.0
+  - &w_capture_postural 5.0
   - &w_capture_postural_ub 1.
-  - &w_v 8e-1
-  - &w_a 3e-1
+  - &w_v 5e-1
+  - &w_a 1e-1
   - &w_v_wheels 1e-1
   - &w_a_wheels 1e-1
   - &wheel_radius 0.124
@@ -255,30 +255,30 @@ z_contact_4:
   cartesian_type: position
   weight: *w_contact_z
 
-# vz_contact_1:
-#   type: Cartesian
-#   distal_link: contact_1
-#   indices: [2]
-#   cartesian_type: velocity
-#   weight: *w_contact_vz
+vz_contact_1:
+  type: Cartesian
+  distal_link: contact_1
+  indices: [2]
+  cartesian_type: velocity
+  weight: *w_contact_vz
 
-# vz_contact_2:
-#   type: Cartesian
-#   distal_link: contact_2
-#   indices: [2]
-#   cartesian_type: velocity
-#   weight: *w_contact_vz
+vz_contact_2:
+  type: Cartesian
+  distal_link: contact_2
+  indices: [2]
+  cartesian_type: velocity
+  weight: *w_contact_vz
 
-# vz_contact_3:
-#   type: Cartesian
-#   distal_link: contact_3
-#   indices: [2]
-#   cartesian_type: velocity
-#   weight: *w_contact_vz
+vz_contact_3:
+  type: Cartesian
+  distal_link: contact_3
+  indices: [2]
+  cartesian_type: velocity
+  weight: *w_contact_vz
 
-# vz_contact_4:
-#   type: Cartesian
-#   distal_link: contact_4
-#   indices: [2]
-#   cartesian_type: velocity
-#   weight: *w_contact_vz
+vz_contact_4:
+  type: Cartesian
+  distal_link: contact_4
+  indices: [2]
+  cartesian_type: velocity
+  weight: *w_contact_vz
