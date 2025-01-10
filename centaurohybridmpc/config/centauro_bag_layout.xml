@@ -8,7 +8,7 @@
       <DockSplitter count="2" orientation="-" sizes="0.50055;0.49945">
        <DockArea name="...">
         <plot style="Lines" flip_y="false" mode="TimeSeries" flip_x="false">
-         <range left="0.000423" right="466.540778" top="0.922914" bottom="-1.784173"/>
+         <range left="159.071293" right="466.540778" top="0.922914" bottom="-1.784173"/>
          <limitY/>
          <curve name="/xbotcore/command/position[0]" color="#1f77b4"/>
          <curve name="/xbotcore/command/position[1]" color="#d62728"/>
@@ -26,7 +26,7 @@
        </DockArea>
        <DockArea name="...">
         <plot style="Lines" flip_y="false" mode="TimeSeries" flip_x="false">
-         <range left="0.000423" right="466.540778" top="1.964572" bottom="-1.534039"/>
+         <range left="159.071293" right="466.540778" top="1.964572" bottom="-1.534039"/>
          <limitY/>
          <curve name="/xbotcore/command/position[12]" color="#9467bd"/>
          <curve name="/xbotcore/command/position[13]" color="#17becf"/>
@@ -46,7 +46,7 @@
       <DockSplitter count="2" orientation="-" sizes="0.50055;0.49945">
        <DockArea name="...">
         <plot style="Lines" flip_y="false" mode="TimeSeries" flip_x="false">
-         <range left="0.000423" right="466.540778" top="1.963170" bottom="-1.741060"/>
+         <range left="159.071293" right="466.540778" top="1.963170" bottom="-1.741060"/>
          <limitY/>
          <curve name="/xbotcore/command/position[6]" color="#9467bd"/>
          <curve name="/xbotcore/command/position[7]" color="#1f77b4"/>
@@ -64,7 +64,7 @@
        </DockArea>
        <DockArea name="...">
         <plot style="Lines" flip_y="false" mode="TimeSeries" flip_x="false">
-         <range left="0.000423" right="466.540778" top="0.823892" bottom="-2.162925"/>
+         <range left="159.071293" right="466.540778" top="0.823802" bottom="-2.159228"/>
          <limitY/>
          <curve name="/xbotcore/command/position[18]" color="#ff7f0e"/>
          <curve name="/xbotcore/command/position[19]" color="#f14cc1"/>
@@ -91,7 +91,7 @@
      <DockSplitter count="2" orientation="|" sizes="0.5;0.5">
       <DockArea name="...">
        <plot style="Lines" flip_y="false" mode="TimeSeries" flip_x="false">
-        <range left="0.000423" right="466.540778" top="7.292825" bottom="-7.819825"/>
+        <range left="159.071293" right="466.540778" top="7.292825" bottom="-7.819825"/>
         <limitY/>
         <curve name="/xbotcore/command/velocity[0]" color="#1f77b4"/>
         <curve name="/xbotcore/command/velocity[1]" color="#1f77b4"/>
@@ -109,7 +109,7 @@
       </DockArea>
       <DockArea name="...">
        <plot style="Lines" flip_y="false" mode="TimeSeries" flip_x="false">
-        <range left="0.000423" right="466.540778" top="2.021725" bottom="-1.914725"/>
+        <range left="159.071293" right="466.540778" top="2.021725" bottom="-1.914725"/>
         <limitY/>
         <curve name="/xbotcore/command/velocity[6]" color="#9467bd"/>
         <curve name="/xbotcore/command/velocity[7]" color="#17becf"/>
@@ -129,7 +129,7 @@
      <DockSplitter count="2" orientation="|" sizes="0.5;0.5">
       <DockArea name="...">
        <plot style="Lines" flip_y="false" mode="TimeSeries" flip_x="false">
-        <range left="0.000423" right="466.540778" top="2.579427" bottom="-2.396474"/>
+        <range left="159.071293" right="466.540778" top="2.579427" bottom="-2.396474"/>
         <limitY/>
         <curve name="/xbotcore/command/velocity[12]" color="#ff7f0e"/>
         <curve name="/xbotcore/command/velocity[13]" color="#f14cc1"/>
@@ -147,7 +147,7 @@
       </DockArea>
       <DockArea name="...">
        <plot style="Lines" flip_y="false" mode="TimeSeries" flip_x="false">
-        <range left="0.000423" right="466.540778" top="16.314450" bottom="-19.614451"/>
+        <range left="159.071293" right="466.540778" top="16.314450" bottom="-19.614451"/>
         <limitY/>
         <curve name="/xbotcore/command/velocity[18]" color="#d62728"/>
         <curve name="/xbotcore/command/velocity[19]" color="#1ac938"/>
@@ -174,7 +174,7 @@
       <DockSplitter count="2" orientation="-" sizes="0.50055;0.49945">
        <DockArea name="...">
         <plot style="Lines" flip_y="false" mode="TimeSeries" flip_x="false">
-         <range left="0.000423" right="466.540778" top="152.221190" bottom="-161.362425"/>
+         <range left="159.071293" right="466.540778" top="152.221190" bottom="-161.362425"/>
          <limitY/>
          <curve name="/xbotcore/command/effort[0]" color="#17becf"/>
          <curve name="/xbotcore/command/effort[1]" color="#bcbd22"/>
@@ -192,7 +192,7 @@
        </DockArea>
        <DockArea name="...">
         <plot style="Lines" flip_y="false" mode="TimeSeries" flip_x="false">
-         <range left="0.000423" right="466.540778" top="85.520751" bottom="-146.548186"/>
+         <range left="159.071293" right="466.540778" top="85.520751" bottom="-146.548186"/>
          <limitY/>
          <curve name="/xbotcore/command/effort[12]" color="#1ac938"/>
          <curve name="/xbotcore/command/effort[13]" color="#ff7f0e"/>
@@ -212,7 +212,7 @@
       <DockSplitter count="2" orientation="-" sizes="0.50055;0.49945">
        <DockArea name="...">
         <plot style="Lines" flip_y="false" mode="TimeSeries" flip_x="false">
-         <range left="0.000423" right="466.540778" top="69.093086" bottom="-155.217201"/>
+         <range left="159.071293" right="466.540778" top="69.093086" bottom="-155.217201"/>
          <limitY/>
          <curve name="/xbotcore/command/effort[6]" color="#f14cc1"/>
          <curve name="/xbotcore/command/effort[7]" color="#9467bd"/>
@@ -230,7 +230,7 @@
        </DockArea>
        <DockArea name="...">
         <plot style="Lines" flip_y="false" mode="TimeSeries" flip_x="false">
-         <range left="0.000423" right="466.540778" top="118.507949" bottom="-82.692260"/>
+         <range left="159.071293" right="466.540778" top="118.507949" bottom="-82.692260"/>
          <limitY/>
          <curve name="/xbotcore/command/effort[18]" color="#1f77b4"/>
          <curve name="/xbotcore/command/effort[19]" color="#d62728"/>
@@ -257,7 +257,7 @@
      <DockSplitter count="2" orientation="|" sizes="0.5;0.5">
       <DockArea name="...">
        <plot style="Lines" flip_y="false" mode="TimeSeries" flip_x="false">
-        <range left="0.000423" right="466.540778" top="2050.002628" bottom="-50.000064"/>
+        <range left="159.071293" right="466.540778" top="2049.989615" bottom="-49.999747"/>
         <limitY/>
         <curve name="/xbotcore/command/stiffness[0]" color="#f14cc1"/>
         <curve name="/xbotcore/command/stiffness[1]" color="#9467bd"/>
@@ -275,7 +275,7 @@
       </DockArea>
       <DockArea name="...">
        <plot style="Lines" flip_y="false" mode="TimeSeries" flip_x="false">
-        <range left="0.000423" right="466.540778" top="820.040790" bottom="-20.000995"/>
+        <range left="159.071293" right="466.540778" top="820.000000" bottom="-20.000000"/>
         <limitY/>
         <curve name="/xbotcore/command/stiffness[10]" color="#1ac938"/>
         <curve name="/xbotcore/command/stiffness[11]" color="#ff7f0e"/>
@@ -295,7 +295,7 @@
      <DockSplitter count="2" orientation="|" sizes="0.5;0.5">
       <DockArea name="...">
        <plot style="Lines" flip_y="false" mode="TimeSeries" flip_x="false">
-        <range left="0.000423" right="466.540778" top="820.040790" bottom="-20.000995"/>
+        <range left="159.071293" right="466.540778" top="820.000000" bottom="-20.000000"/>
         <limitY/>
         <curve name="/xbotcore/command/stiffness[10]" color="#1ac938"/>
         <curve name="/xbotcore/command/stiffness[11]" color="#ff7f0e"/>
@@ -313,7 +313,7 @@
       </DockArea>
       <DockArea name="...">
        <plot style="Lines" flip_y="false" mode="TimeSeries" flip_x="false">
-        <range left="0.000423" right="466.540778" top="820.040790" bottom="-20.000995"/>
+        <range left="159.071293" right="466.540778" top="820.000000" bottom="-20.000000"/>
         <limitY/>
         <curve name="/xbotcore/command/stiffness[16]" color="#f14cc1"/>
         <curve name="/xbotcore/command/stiffness[17]" color="#9467bd"/>
@@ -339,7 +339,7 @@
      <DockSplitter count="2" orientation="|" sizes="0.5;0.5">
       <DockArea name="...">
        <plot style="Lines" flip_y="false" mode="TimeSeries" flip_x="false">
-        <range left="0.000423" right="466.540778" top="82.003065" bottom="-2.000075"/>
+        <range left="159.071293" right="466.540778" top="82.000000" bottom="-2.000000"/>
         <limitY/>
         <curve name="/xbotcore/command/damping[0]" color="#1ac938"/>
         <curve name="/xbotcore/command/damping[1]" color="#ff7f0e"/>
@@ -357,7 +357,7 @@
       </DockArea>
       <DockArea name="...">
        <plot style="Lines" flip_y="false" mode="TimeSeries" flip_x="false">
-        <range left="0.000423" right="466.540778" top="82.003065" bottom="-2.000075"/>
+        <range left="159.071293" right="466.540778" top="82.000000" bottom="-2.000000"/>
         <limitY/>
         <curve name="/xbotcore/command/damping[10]" color="#1f77b4"/>
         <curve name="/xbotcore/command/damping[11]" color="#d62728"/>
@@ -377,7 +377,7 @@
      <DockSplitter count="2" orientation="|" sizes="0.5;0.5">
       <DockArea name="...">
        <plot style="Lines" flip_y="false" mode="TimeSeries" flip_x="false">
-        <range left="0.000423" right="466.540778" top="82.003065" bottom="-2.000075"/>
+        <range left="159.071293" right="466.540778" top="82.000000" bottom="-2.000000"/>
         <limitY/>
         <curve name="/xbotcore/command/damping[12]" color="#17becf"/>
         <curve name="/xbotcore/command/damping[13]" color="#bcbd22"/>
@@ -395,7 +395,7 @@
       </DockArea>
       <DockArea name="...">
        <plot style="Lines" flip_y="false" mode="TimeSeries" flip_x="false">
-        <range left="0.000423" right="466.540778" top="82.003065" bottom="-2.000075"/>
+        <range left="159.071293" right="466.540778" top="82.000000" bottom="-2.000000"/>
         <limitY/>
         <curve name="/xbotcore/command/damping[18]" color="#f14cc1"/>
         <curve name="/xbotcore/command/damping[19]" color="#9467bd"/>
@@ -421,7 +421,7 @@
      <DockSplitter count="2" orientation="|" sizes="0.5;0.5">
       <DockArea name="...">
        <plot style="Lines" flip_y="false" mode="TimeSeries" flip_x="false">
-        <range left="0.000423" right="466.540778" top="1.739748" bottom="-2.601830"/>
+        <range left="159.071293" right="466.540778" top="1.739748" bottom="-2.601830"/>
         <limitY/>
         <curve name="/xbotcore/command/position[25]" color="#bcbd22"/>
         <curve name="/xbotcore/command/position[26]" color="#1f77b4"/>
@@ -439,7 +439,7 @@
       </DockArea>
       <DockArea name="...">
        <plot style="Lines" flip_y="false" mode="TimeSeries" flip_x="false">
-        <range left="0.000423" right="466.540778" top="1.743022" bottom="-2.601941"/>
+        <range left="159.071293" right="466.540778" top="1.743022" bottom="-2.601941"/>
         <limitY/>
         <curve name="/xbotcore/command/position[31]" color="#9467bd"/>
         <curve name="/xbotcore/command/position[32]" color="#17becf"/>
@@ -458,7 +458,7 @@
      </DockSplitter>
      <DockArea name="...">
       <plot style="Lines" flip_y="false" mode="TimeSeries" flip_x="false">
-       <range left="0.000423" right="466.540778" top="0.513075" bottom="-0.586754"/>
+       <range left="159.071293" right="466.540778" top="0.513075" bottom="-0.586754"/>
        <limitY/>
        <curve name="/xbotcore/command/position[24]" color="#ff7f0e"/>
        <curve name="/xbotcore/joint_states/link_position[24]" color="#17becf"/>
@@ -473,7 +473,7 @@
      <DockSplitter count="2" orientation="|" sizes="0.5;0.5">
       <DockArea name="...">
        <plot style="Lines" flip_y="false" mode="TimeSeries" flip_x="false">
-        <range left="0.000423" right="466.540778" top="2.610900" bottom="-1.920900"/>
+        <range left="159.071293" right="466.540778" top="2.610900" bottom="-1.920900"/>
         <limitY/>
         <curve name="/xbotcore/command/velocity[25]" color="#ff7f0e"/>
         <curve name="/xbotcore/command/velocity[26]" color="#f14cc1"/>
@@ -491,7 +491,7 @@
       </DockArea>
       <DockArea name="...">
        <plot style="Lines" flip_y="false" mode="TimeSeries" flip_x="false">
-        <range left="0.000423" right="466.540778" top="2.017900" bottom="-2.387900"/>
+        <range left="159.071293" right="466.540778" top="2.017900" bottom="-2.387900"/>
         <limitY/>
         <curve name="/xbotcore/command/velocity[31]" color="#d62728"/>
         <curve name="/xbotcore/command/velocity[32]" color="#1ac938"/>
@@ -510,7 +510,7 @@
      </DockSplitter>
      <DockArea name="...">
       <plot style="Lines" flip_y="false" mode="TimeSeries" flip_x="false">
-       <range left="0.000423" right="466.540778" top="1.155325" bottom="-1.252303"/>
+       <range left="159.071293" right="466.540778" top="1.155325" bottom="-1.252303"/>
        <limitY/>
        <curve name="/xbotcore/command/velocity[24]" color="#1ac938"/>
        <curve name="/xbotcore/joint_states/link_velocity[24]" color="#9467bd"/>
@@ -525,7 +525,7 @@
      <DockSplitter count="2" orientation="|" sizes="0.5;0.5">
       <DockArea name="...">
        <plot style="Lines" flip_y="false" mode="TimeSeries" flip_x="false">
-        <range left="0.000423" right="466.540778" top="39.260850" bottom="-69.806787"/>
+        <range left="159.071293" right="466.540778" top="39.260850" bottom="-69.806787"/>
         <limitY/>
         <curve name="/xbotcore/command/effort[25]" color="#bcbd22"/>
         <curve name="/xbotcore/command/effort[26]" color="#1f77b4"/>
@@ -543,7 +543,7 @@
       </DockArea>
       <DockArea name="...">
        <plot style="Lines" flip_y="false" mode="TimeSeries" flip_x="false">
-        <range left="0.000423" right="466.540778" top="56.161456" bottom="-25.539874"/>
+        <range left="159.071293" right="466.540778" top="56.161456" bottom="-25.539874"/>
         <limitY/>
         <curve name="/xbotcore/command/effort[31]" color="#9467bd"/>
         <curve name="/xbotcore/command/effort[32]" color="#17becf"/>
@@ -562,7 +562,7 @@
      </DockSplitter>
      <DockArea name="...">
       <plot style="Lines" flip_y="false" mode="TimeSeries" flip_x="false">
-       <range left="0.000423" right="466.540778" top="62.013603" bottom="-76.573059"/>
+       <range left="159.071293" right="466.540778" top="62.013603" bottom="-76.573059"/>
        <limitY/>
        <curve name="/xbotcore/command/effort[24]" color="#ff7f0e"/>
        <curve name="/xbotcore/joint_states/effort[24]" color="#f14cc1"/>
@@ -577,7 +577,7 @@
      <DockSplitter count="2" orientation="|" sizes="0.5;0.5">
       <DockArea name="...">
        <plot style="Lines" flip_y="false" mode="TimeSeries" flip_x="false">
-        <range left="0.000423" right="466.540778" top="204.000000" bottom="36.000000"/>
+        <range left="159.071293" right="466.540778" top="204.000000" bottom="36.000000"/>
         <limitY/>
         <curve name="/xbotcore/command/stiffness[25]" color="#bcbd22"/>
         <curve name="/xbotcore/command/stiffness[26]" color="#1f77b4"/>
@@ -589,7 +589,7 @@
       </DockArea>
       <DockArea name="...">
        <plot style="Lines" flip_y="false" mode="TimeSeries" flip_x="false">
-        <range left="0.000423" right="466.540778" top="204.000000" bottom="36.000000"/>
+        <range left="159.071293" right="466.540778" top="204.000000" bottom="36.000000"/>
         <limitY/>
         <curve name="/xbotcore/command/stiffness[31]" color="#9467bd"/>
         <curve name="/xbotcore/command/stiffness[32]" color="#17becf"/>
@@ -602,7 +602,7 @@
      </DockSplitter>
      <DockArea name="...">
       <plot style="Lines" flip_y="false" mode="TimeSeries" flip_x="false">
-       <range left="0.000423" right="466.540778" top="800.100000" bottom="799.900000"/>
+       <range left="159.071293" right="466.540778" top="800.100000" bottom="799.900000"/>
        <limitY/>
        <curve name="/xbotcore/command/stiffness[24]" color="#ff7f0e"/>
       </plot>
@@ -616,7 +616,7 @@
      <DockSplitter count="2" orientation="|" sizes="0.5;0.5">
       <DockArea name="...">
        <plot style="Lines" flip_y="false" mode="TimeSeries" flip_x="false">
-        <range left="0.000423" right="466.540778" top="20.375767" bottom="4.624941"/>
+        <range left="159.071293" right="466.540778" top="20.375001" bottom="4.624959"/>
         <limitY/>
         <curve name="/xbotcore/command/damping[25]" color="#9467bd"/>
         <curve name="/xbotcore/command/damping[26]" color="#17becf"/>
@@ -634,7 +634,7 @@
       </DockArea>
       <DockArea name="...">
        <plot style="Lines" flip_y="false" mode="TimeSeries" flip_x="false">
-        <range left="0.000423" right="466.540778" top="20.375496" bottom="4.624947"/>
+        <range left="159.071293" right="466.540778" top="20.375001" bottom="4.624959"/>
         <limitY/>
         <curve name="/xbotcore/command/damping[31]" color="#ff7f0e"/>
         <curve name="/xbotcore/command/damping[32]" color="#f14cc1"/>
@@ -653,7 +653,7 @@
      </DockSplitter>
      <DockArea name="...">
       <plot style="Lines" flip_y="false" mode="TimeSeries" flip_x="false">
-       <range left="0.000423" right="466.540778" top="80.001947" bottom="79.999304"/>
+       <range left="159.071293" right="466.540778" top="80.000016" bottom="79.999351"/>
        <limitY/>
        <curve name="/xbotcore/command/damping[24]" color="#f14cc1"/>
        <curve name="/xbotcore/joint_states/damping[24]" color="#d62728"/>
@@ -667,14 +667,14 @@
     <DockSplitter count="2" orientation="-" sizes="0.50055;0.49945">
      <DockArea name="...">
       <plot style="Lines" flip_y="false" mode="TimeSeries" flip_x="false">
-       <range left="0.000423" right="466.540778" top="0.001059" bottom="-0.000025"/>
+       <range left="159.071293" right="466.540778" top="0.000360" bottom="-0.000008"/>
        <limitY/>
        <curve name="/xbotcore/statistics/task_stats[4]/run_time" color="#17becf"/>
       </plot>
      </DockArea>
      <DockArea name="...">
       <plot style="Lines" flip_y="false" mode="TimeSeries" flip_x="false">
-       <range left="0.000423" right="466.540778" top="0.039945" bottom="-0.000590"/>
+       <range left="159.071293" right="466.540778" top="0.005481" bottom="0.000251"/>
        <limitY/>
        <curve name="/xbotcore/statistics/thread_stats[0]/expected_period" color="#bcbd22"/>
        <curve name="/xbotcore/statistics/thread_stats[0]/period" color="#1f77b4"/>
@@ -688,14 +688,14 @@
     <DockSplitter count="2" orientation="-" sizes="0.50055;0.49945">
      <DockArea name="...">
       <plot style="Lines" flip_y="false" mode="TimeSeries" flip_x="false">
-       <range left="0.000423" right="466.540778" top="1.100000" bottom="0.900000"/>
+       <range left="159.071293" right="466.540778" top="1.100000" bottom="0.900000"/>
        <limitY/>
        <curve name="/xbotcore/joint_device_info/filter_active" color="#1ac938"/>
       </plot>
      </DockArea>
      <DockArea name="...">
       <plot style="Lines" flip_y="false" mode="TimeSeries" flip_x="false">
-       <range left="0.000423" right="466.540778" top="15.250000" bottom="4.750000"/>
+       <range left="159.071293" right="466.540778" top="15.100000" bottom="14.900000"/>
        <limitY/>
        <curve name="/xbotcore/joint_device_info/filter_cutoff_hz" color="#d62728"/>
       </plot>
@@ -710,7 +710,7 @@
       <DockSplitter count="2" orientation="-" sizes="0.50055;0.49945">
        <DockArea name="...">
         <plot style="Lines" flip_y="false" mode="TimeSeries" flip_x="false">
-         <range left="0.000423" right="466.540778" top="0.638696" bottom="-0.545563"/>
+         <range left="159.071293" right="466.540778" top="0.638696" bottom="-0.545563"/>
          <limitY/>
          <curve name="/xbotcore/imu/imu_link/angular_velocity/x" color="#17becf"/>
          <curve name="/xbotcore/imu/imu_link/angular_velocity/y" color="#bcbd22"/>
@@ -719,7 +719,7 @@
        </DockArea>
        <DockArea name="...">
         <plot style="Lines" flip_y="false" mode="TimeSeries" flip_x="false">
-         <range left="0.000423" right="466.540778" top="0.901685" bottom="-0.988515"/>
+         <range left="159.071293" right="466.540778" top="0.901685" bottom="-0.988515"/>
          <limitY/>
          <curve name="/xbotcore/imu/imu_link/orientation/w" color="#f14cc1"/>
          <curve name="/xbotcore/imu/imu_link/orientation/x" color="#9467bd"/>
@@ -731,7 +731,7 @@
       <DockSplitter count="2" orientation="-" sizes="0.50055;0.49945">
        <DockArea name="...">
         <plot style="Lines" flip_y="false" mode="TimeSeries" flip_x="false">
-         <range left="0.000423" right="466.540778" top="22.295864" bottom="-9.606832"/>
+         <range left="159.071293" right="466.540778" top="22.295864" bottom="-9.606832"/>
          <limitY/>
          <curve name="/xbotcore/imu/imu_link/linear_acceleration/x" color="#d62728"/>
          <curve name="/xbotcore/imu/imu_link/linear_acceleration/y" color="#1ac938"/>
@@ -754,7 +754,7 @@
     <DockSplitter count="2" orientation="-" sizes="0.50055;0.49945">
      <DockArea name="...">
       <plot style="Lines" flip_y="false" mode="TimeSeries" flip_x="false">
-       <range left="0.000423" right="466.540778" top="58.425000" bottom="-1.425000"/>
+       <range left="159.071293" right="466.540778" top="56.375000" bottom="-1.375000"/>
        <limitY/>
        <curve name="/xbotcore/joint_states/temperature_driver[0]" color="#1f77b4"/>
        <curve name="/xbotcore/joint_states/temperature_driver[10]" color="#d62728"/>
@@ -799,7 +799,7 @@
      </DockArea>
      <DockArea name="...">
       <plot style="Lines" flip_y="false" mode="TimeSeries" flip_x="false">
-       <range left="0.000423" right="466.540778" top="58.425000" bottom="-1.425000"/>
+       <range left="159.071293" right="466.540778" top="56.375000" bottom="-1.375000"/>
        <limitY/>
        <curve name="/xbotcore/joint_states/temperature_driver[21]" color="#9467bd"/>
        <curve name="/xbotcore/joint_states/temperature_motor[0]" color="#bcbd22"/>
@@ -851,7 +851,7 @@
     <DockSplitter count="1" orientation="-" sizes="1">
      <DockArea name="...">
       <plot style="Lines" flip_y="false" mode="TimeSeries" flip_x="false">
-       <range left="0.000423" right="466.540778" top="65535.100000" bottom="65534.900000"/>
+       <range left="159.071293" right="466.540778" top="65535.100000" bottom="65534.900000"/>
        <limitY/>
        <curve name="/xbotcore/joint_states/fault[0]" color="#17becf"/>
        <curve name="/xbotcore/joint_states/fault[1]" color="#bcbd22"/>
@@ -897,7 +897,331 @@
     </DockSplitter>
    </Container>
   </Tab>
-  <currentTabIndex index="14"/>
+  <Tab containers="1" tab_name="velocity_tracking_detail_leg1">
+   <Container>
+    <DockSplitter count="6" orientation="-" sizes="0.166851;0.166851;0.165746;0.166851;0.166851;0.166851">
+     <DockArea name="...">
+      <plot style="Lines" flip_y="false" mode="TimeSeries" flip_x="false">
+       <range left="159.071293" right="466.540778" top="1.549442" bottom="-2.048981"/>
+       <limitY/>
+       <curve name="/xbotcore/joint_states/link_velocity[0]" color="#9467bd"/>
+       <curve name="/xbotcore/command/velocity[0]" color="#1ac938"/>
+      </plot>
+     </DockArea>
+     <DockArea name="...">
+      <plot style="Lines" flip_y="false" mode="TimeSeries" flip_x="false">
+       <range left="159.071293" right="466.540778" top="1.437711" bottom="-1.616169"/>
+       <limitY/>
+       <curve name="/xbotcore/joint_states/link_velocity[1]" color="#17becf"/>
+       <curve name="/xbotcore/command/velocity[1]" color="#ff7f0e"/>
+      </plot>
+     </DockArea>
+     <DockArea name="...">
+      <plot style="Lines" flip_y="false" mode="TimeSeries" flip_x="false">
+       <range left="159.071293" right="466.540778" top="1.786963" bottom="-1.319464"/>
+       <limitY/>
+       <curve name="/xbotcore/joint_states/link_velocity[2]" color="#bcbd22"/>
+       <curve name="/xbotcore/command/velocity[2]" color="#1f77b4"/>
+      </plot>
+     </DockArea>
+     <DockArea name="...">
+      <plot style="Lines" flip_y="false" mode="TimeSeries" flip_x="false">
+       <range left="159.071293" right="466.540778" top="7.292825" bottom="-7.819825"/>
+       <limitY/>
+       <curve name="/xbotcore/joint_states/link_velocity[3]" color="#bcbd22"/>
+       <curve name="/xbotcore/command/velocity[3]" color="#f14cc1"/>
+      </plot>
+     </DockArea>
+     <DockArea name="...">
+      <plot style="Lines" flip_y="false" mode="TimeSeries" flip_x="false">
+       <range left="159.071293" right="466.540778" top="0.265300" bottom="-0.251300"/>
+       <limitY/>
+       <curve name="/xbotcore/joint_states/link_velocity[4]" color="#1f77b4"/>
+       <curve name="/xbotcore/command/velocity[4]" color="#9467bd"/>
+      </plot>
+     </DockArea>
+     <DockArea name="...">
+      <plot style="Lines" flip_y="false" mode="TimeSeries" flip_x="false">
+       <range left="159.071293" right="466.540778" top="0.267925" bottom="-0.190925"/>
+       <limitY/>
+       <curve name="/xbotcore/joint_states/link_velocity[5]" color="#d62728"/>
+       <curve name="/xbotcore/command/velocity[5]" color="#17becf"/>
+      </plot>
+     </DockArea>
+    </DockSplitter>
+   </Container>
+  </Tab>
+  <Tab containers="1" tab_name="effort_detail_leg1">
+   <Container>
+    <DockSplitter count="6" orientation="-" sizes="0.166851;0.166851;0.165746;0.166851;0.166851;0.166851">
+     <DockArea name="...">
+      <plot style="Lines" flip_y="false" mode="TimeSeries" flip_x="false">
+       <range left="159.071293" right="466.540778" top="37.087797" bottom="-30.758701"/>
+       <limitY/>
+       <curve name="/xbotcore/command/effort[0]" color="#17becf"/>
+       <curve name="/xbotcore/joint_states/effort[0]" color="#17becf"/>
+      </plot>
+     </DockArea>
+     <DockArea name="...">
+      <plot style="Lines" flip_y="false" mode="TimeSeries" flip_x="false">
+       <range left="159.071293" right="466.540778" top="149.911454" bottom="-66.663251"/>
+       <limitY/>
+       <curve name="/xbotcore/command/effort[1]" color="#bcbd22"/>
+       <curve name="/xbotcore/joint_states/effort[1]" color="#bcbd22"/>
+      </plot>
+     </DockArea>
+     <DockArea name="...">
+      <plot style="Lines" flip_y="false" mode="TimeSeries" flip_x="false">
+       <range left="159.071293" right="466.540778" top="70.225444" bottom="-27.431926"/>
+       <limitY/>
+       <curve name="/xbotcore/command/effort[2]" color="#1f77b4"/>
+       <curve name="/xbotcore/joint_states/effort[2]" color="#1f77b4"/>
+      </plot>
+     </DockArea>
+     <DockArea name="...">
+      <plot style="Lines" flip_y="false" mode="TimeSeries" flip_x="false">
+       <range left="159.071293" right="466.540778" top="38.102190" bottom="-158.579035"/>
+       <limitY/>
+       <curve name="/xbotcore/command/effort[3]" color="#d62728"/>
+       <curve name="/xbotcore/joint_states/effort[3]" color="#d62728"/>
+      </plot>
+     </DockArea>
+     <DockArea name="...">
+      <plot style="Lines" flip_y="false" mode="TimeSeries" flip_x="false">
+       <range left="159.071293" right="466.540778" top="5.072638" bottom="-6.256343"/>
+       <limitY/>
+       <curve name="/xbotcore/command/effort[4]" color="#1ac938"/>
+       <curve name="/xbotcore/joint_states/effort[4]" color="#1ac938"/>
+      </plot>
+     </DockArea>
+     <DockArea name="...">
+      <plot style="Lines" flip_y="false" mode="TimeSeries" flip_x="false">
+       <range left="159.071293" right="466.540778" top="0.100000" bottom="-0.100000"/>
+       <limitY/>
+       <curve name="/xbotcore/command/effort[5]" color="#ff7f0e"/>
+       <curve name="/xbotcore/joint_states/effort[5]" color="#ff7f0e"/>
+      </plot>
+     </DockArea>
+    </DockSplitter>
+   </Container>
+  </Tab>
+  <Tab containers="1" tab_name="effort_detail_leg3">
+   <Container>
+    <DockSplitter count="6" orientation="-" sizes="0.166851;0.166851;0.165746;0.166851;0.166851;0.166851">
+     <DockArea name="...">
+      <plot style="Lines" flip_y="false" mode="TimeSeries" flip_x="false">
+       <range left="159.071293" right="466.540778" top="23.398029" bottom="-56.988028"/>
+       <limitY/>
+       <curve name="/xbotcore/command/effort[12]" color="#1ac938"/>
+       <curve name="/xbotcore/joint_states/effort[12]" color="#1ac938"/>
+      </plot>
+     </DockArea>
+     <DockArea name="...">
+      <plot style="Lines" flip_y="false" mode="TimeSeries" flip_x="false">
+       <range left="159.071293" right="466.540778" top="85.520751" bottom="-146.548186"/>
+       <limitY/>
+       <curve name="/xbotcore/command/effort[13]" color="#ff7f0e"/>
+       <curve name="/xbotcore/joint_states/effort[13]" color="#ff7f0e"/>
+      </plot>
+     </DockArea>
+     <DockArea name="...">
+      <plot style="Lines" flip_y="false" mode="TimeSeries" flip_x="false">
+       <range left="159.071293" right="466.540778" top="42.944072" bottom="-110.760509"/>
+       <limitY/>
+       <curve name="/xbotcore/command/effort[14]" color="#f14cc1"/>
+       <curve name="/xbotcore/joint_states/effort[14]" color="#f14cc1"/>
+      </plot>
+     </DockArea>
+     <DockArea name="...">
+      <plot style="Lines" flip_y="false" mode="TimeSeries" flip_x="false">
+       <range left="159.071293" right="466.540778" top="53.798738" bottom="-28.032308"/>
+       <limitY/>
+       <curve name="/xbotcore/command/effort[15]" color="#9467bd"/>
+       <curve name="/xbotcore/joint_states/effort[15]" color="#9467bd"/>
+      </plot>
+     </DockArea>
+     <DockArea name="...">
+      <plot style="Lines" flip_y="false" mode="TimeSeries" flip_x="false">
+       <range left="159.071293" right="466.540778" top="5.456212" bottom="-6.311784"/>
+       <limitY/>
+       <curve name="/xbotcore/command/effort[16]" color="#17becf"/>
+       <curve name="/xbotcore/joint_states/effort[16]" color="#17becf"/>
+      </plot>
+     </DockArea>
+     <DockArea name="...">
+      <plot style="Lines" flip_y="false" mode="TimeSeries" flip_x="false">
+       <range left="159.071293" right="466.540778" top="0.100000" bottom="-0.100000"/>
+       <limitY/>
+       <curve name="/xbotcore/command/effort[17]" color="#bcbd22"/>
+       <curve name="/xbotcore/joint_states/effort[17]" color="#bcbd22"/>
+      </plot>
+     </DockArea>
+    </DockSplitter>
+   </Container>
+  </Tab>
+  <Tab containers="1" tab_name="pos_tracking_detail_arm1">
+   <Container>
+    <DockSplitter count="6" orientation="-" sizes="0.166851;0.166851;0.165746;0.166851;0.166851;0.166851">
+     <DockArea name="...">
+      <plot style="Lines" flip_y="false" mode="TimeSeries" flip_x="false">
+       <range left="159.071293" right="466.540778" top="1.673511" bottom="0.113889"/>
+       <limitY/>
+       <curve name="/xbotcore/command/position[25]" color="#bcbd22"/>
+       <curve name="/xbotcore/joint_states/link_position[25]" color="#ff7f0e"/>
+      </plot>
+     </DockArea>
+     <DockArea name="...">
+      <plot style="Lines" flip_y="false" mode="TimeSeries" flip_x="false">
+       <range left="159.071293" right="466.540778" top="1.113918" bottom="-0.039467"/>
+       <limitY/>
+       <curve name="/xbotcore/command/position[26]" color="#1f77b4"/>
+       <curve name="/xbotcore/joint_states/link_position[26]" color="#f14cc1"/>
+      </plot>
+     </DockArea>
+     <DockArea name="...">
+      <plot style="Lines" flip_y="false" mode="TimeSeries" flip_x="false">
+       <range left="159.071293" right="466.540778" top="0.580734" bottom="-0.243099"/>
+       <limitY/>
+       <curve name="/xbotcore/command/position[27]" color="#d62728"/>
+       <curve name="/xbotcore/joint_states/link_position[27]" color="#9467bd"/>
+      </plot>
+     </DockArea>
+     <DockArea name="...">
+      <plot style="Lines" flip_y="false" mode="TimeSeries" flip_x="false">
+       <range left="159.071293" right="466.540778" top="-1.378598" bottom="-2.525773"/>
+       <limitY/>
+       <curve name="/xbotcore/command/position[28]" color="#1ac938"/>
+       <curve name="/xbotcore/joint_states/link_position[28]" color="#17becf"/>
+      </plot>
+     </DockArea>
+     <DockArea name="...">
+      <plot style="Lines" flip_y="false" mode="TimeSeries" flip_x="false">
+       <range left="159.071293" right="466.540778" top="0.090421" bottom="-0.040385"/>
+       <limitY/>
+       <curve name="/xbotcore/command/position[29]" color="#ff7f0e"/>
+       <curve name="/xbotcore/joint_states/link_position[29]" color="#bcbd22"/>
+      </plot>
+     </DockArea>
+     <DockArea name="...">
+      <plot style="Lines" flip_y="false" mode="TimeSeries" flip_x="false">
+       <range left="159.071293" right="466.540778" top="-0.687743" bottom="-0.930531"/>
+       <limitY/>
+       <curve name="/xbotcore/command/position[30]" color="#f14cc1"/>
+       <curve name="/xbotcore/joint_states/link_position[30]" color="#1f77b4"/>
+      </plot>
+     </DockArea>
+    </DockSplitter>
+   </Container>
+  </Tab>
+  <Tab containers="1" tab_name="vel_tracking_detail_arm1">
+   <Container>
+    <DockSplitter count="6" orientation="-" sizes="0.166851;0.166851;0.165746;0.166851;0.166851;0.166851">
+     <DockArea name="...">
+      <plot style="Lines" flip_y="false" mode="TimeSeries" flip_x="false">
+       <range left="159.071293" right="466.540778" top="1.452650" bottom="-1.892650"/>
+       <limitY/>
+       <curve name="/xbotcore/command/velocity[25]" color="#ff7f0e"/>
+       <curve name="/xbotcore/joint_states/link_velocity[25]" color="#bcbd22"/>
+      </plot>
+     </DockArea>
+     <DockArea name="...">
+      <plot style="Lines" flip_y="false" mode="TimeSeries" flip_x="false">
+       <range left="159.071293" right="466.540778" top="2.605050" bottom="-1.681050"/>
+       <limitY/>
+       <curve name="/xbotcore/command/velocity[26]" color="#f14cc1"/>
+       <curve name="/xbotcore/joint_states/link_velocity[26]" color="#1f77b4"/>
+      </plot>
+     </DockArea>
+     <DockArea name="...">
+      <plot style="Lines" flip_y="false" mode="TimeSeries" flip_x="false">
+       <range left="159.071293" right="466.540778" top="1.117200" bottom="-0.991200"/>
+       <limitY/>
+       <curve name="/xbotcore/command/velocity[27]" color="#9467bd"/>
+       <curve name="/xbotcore/joint_states/link_velocity[27]" color="#d62728"/>
+      </plot>
+     </DockArea>
+     <DockArea name="...">
+      <plot style="Lines" flip_y="false" mode="TimeSeries" flip_x="false">
+       <range left="159.071293" right="466.540778" top="1.174875" bottom="-0.835875"/>
+       <limitY/>
+       <curve name="/xbotcore/command/velocity[28]" color="#17becf"/>
+       <curve name="/xbotcore/joint_states/link_velocity[28]" color="#1ac938"/>
+      </plot>
+     </DockArea>
+     <DockArea name="...">
+      <plot style="Lines" flip_y="false" mode="TimeSeries" flip_x="false">
+       <range left="159.071293" right="466.540778" top="0.239650" bottom="-0.207650"/>
+       <limitY/>
+       <curve name="/xbotcore/command/velocity[29]" color="#bcbd22"/>
+       <curve name="/xbotcore/joint_states/link_velocity[29]" color="#ff7f0e"/>
+      </plot>
+     </DockArea>
+     <DockArea name="...">
+      <plot style="Lines" flip_y="false" mode="TimeSeries" flip_x="false">
+       <range left="159.071293" right="466.540778" top="0.381600" bottom="-0.273600"/>
+       <limitY/>
+       <curve name="/xbotcore/command/velocity[30]" color="#1f77b4"/>
+       <curve name="/xbotcore/joint_states/link_velocity[30]" color="#f14cc1"/>
+      </plot>
+     </DockArea>
+    </DockSplitter>
+   </Container>
+  </Tab>
+  <Tab containers="1" tab_name="eff_detail_arm1">
+   <Container>
+    <DockSplitter count="6" orientation="-" sizes="0.166851;0.166851;0.165746;0.166851;0.166851;0.166851">
+     <DockArea name="...">
+      <plot style="Lines" flip_y="false" mode="TimeSeries" flip_x="false">
+       <range left="159.071293" right="466.540778" top="38.125183" bottom="-23.244446"/>
+       <limitY/>
+       <curve name="/xbotcore/command/effort[25]" color="#bcbd22"/>
+       <curve name="/xbotcore/joint_states/effort[25]" color="#ff7f0e"/>
+      </plot>
+     </DockArea>
+     <DockArea name="...">
+      <plot style="Lines" flip_y="false" mode="TimeSeries" flip_x="false">
+       <range left="159.071293" right="466.540778" top="27.930843" bottom="-69.530445"/>
+       <limitY/>
+       <curve name="/xbotcore/command/effort[26]" color="#1f77b4"/>
+       <curve name="/xbotcore/joint_states/effort[26]" color="#f14cc1"/>
+      </plot>
+     </DockArea>
+     <DockArea name="...">
+      <plot style="Lines" flip_y="false" mode="TimeSeries" flip_x="false">
+       <range left="159.071293" right="466.540778" top="15.752392" bottom="-21.163787"/>
+       <limitY/>
+       <curve name="/xbotcore/command/effort[27]" color="#d62728"/>
+       <curve name="/xbotcore/joint_states/effort[27]" color="#9467bd"/>
+      </plot>
+     </DockArea>
+     <DockArea name="...">
+      <plot style="Lines" flip_y="false" mode="TimeSeries" flip_x="false">
+       <range left="159.071293" right="466.540778" top="17.294562" bottom="-30.395354"/>
+       <limitY/>
+       <curve name="/xbotcore/command/effort[28]" color="#1ac938"/>
+       <curve name="/xbotcore/joint_states/effort[28]" color="#17becf"/>
+      </plot>
+     </DockArea>
+     <DockArea name="...">
+      <plot style="Lines" flip_y="false" mode="TimeSeries" flip_x="false">
+       <range left="159.071293" right="466.540778" top="5.166599" bottom="-6.679307"/>
+       <limitY/>
+       <curve name="/xbotcore/command/effort[29]" color="#ff7f0e"/>
+       <curve name="/xbotcore/joint_states/effort[29]" color="#bcbd22"/>
+      </plot>
+     </DockArea>
+     <DockArea name="...">
+      <plot style="Lines" flip_y="false" mode="TimeSeries" flip_x="false">
+       <range left="159.071293" right="466.540778" top="6.154873" bottom="-6.826534"/>
+       <limitY/>
+       <curve name="/xbotcore/command/effort[30]" color="#f14cc1"/>
+       <curve name="/xbotcore/joint_states/effort[30]" color="#1f77b4"/>
+      </plot>
+     </DockArea>
+    </DockSplitter>
+   </Container>
+  </Tab>
+  <currentTabIndex index="20"/>
  </tabbed_widget>
  <use_relative_time_offset enabled="1"/>
  <!-- - - - - - - - - - - - - - - -->
@@ -939,7 +1263,7 @@
  </Plugins>
  <!-- - - - - - - - - - - - - - - -->
  <previouslyLoaded_Datafiles>
-  <fileInfo filename="../work/containers/ibrido-singularity-xbot/training_data/joint_logs_10_01/bags/rosbag_centauro_big_wheels_ub_open_2025-01-10_12-14-24_0.bag" prefix=""/>
+  <fileInfo filename="../../../../../../ibrido-singularity-xbot/training_data/joint_logs_10_01/bags/rosbag_centauro_big_wheels_ub_open_2025-01-10_12-14-24_0.bag" prefix=""/>
  </previouslyLoaded_Datafiles>
  <!-- - - - - - - - - - - - - - - -->
  <customMathEquations/>
