@@ -21,7 +21,7 @@ xbotcore_device_configs:
 # threads
 xbotcore_threads:
     rt_main:  {sched: fifo , prio: 60, period: 0.001, core_id: 2}
-    nrt_main: {sched: other, prio: 0 , period: 0.001, core_id: 3}
+    nrt_main: {sched: other, prio: 0 , period: 0.0005, core_id: 3}
 
 
 # plugins
