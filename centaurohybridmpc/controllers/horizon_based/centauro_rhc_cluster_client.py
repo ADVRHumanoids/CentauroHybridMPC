@@ -1,4 +1,4 @@
-from lrhc_control.controllers.rhc.hybrid_quad_client import HybridQuadrupedClusterClient
+from aug_mpc.controllers.rhc.hybrid_quad_client import HybridQuadrupedClusterClient
 
 from centaurohybridmpc.controllers.horizon_based.centauro_rhc import CentauroRhc
 from centaurohybridmpc.utils.xrdf_cmd import get_xrdf_cmds_horizon

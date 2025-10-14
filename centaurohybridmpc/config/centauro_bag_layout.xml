@@ -1237,7 +1237,7 @@
    <max_array_size value="100"/>
    <boolean_strings_to_number value="true"/>
    <remove_suffix_from_strings value="true"/>
-   <selected_topics value="/RHCViz_centauro_big_wheels_ub_open_HandShake;/RHCViz_centauro_big_wheels_ub_open_rhc_actuated_jointnames;/RHCViz_centauro_big_wheels_ub_open_rhc_q;/RHCViz_centauro_big_wheels_ub_open_rhc_refs;/RHCViz_centauro_big_wheels_ub_open_robot_actuated_jointnames;/RHCViz_centauro_big_wheels_ub_open_robot_q;/xbotcore/command;/xbotcore/imu/imu_link;/xbotcore/joint_device_info;/xbotcore/joint_states;/xbotcore/statistics;/xbotcore/status"/>
+   <selected_topics value="/MPCViz_centauro_big_wheels_ub_open_HandShake;/MPCViz_centauro_big_wheels_ub_open_rhc_actuated_jointnames;/MPCViz_centauro_big_wheels_ub_open_rhc_q;/MPCViz_centauro_big_wheels_ub_open_rhc_refs;/MPCViz_centauro_big_wheels_ub_open_robot_actuated_jointnames;/MPCViz_centauro_big_wheels_ub_open_robot_q;/xbotcore/command;/xbotcore/imu/imu_link;/xbotcore/joint_device_info;/xbotcore/joint_states;/xbotcore/statistics;/xbotcore/status"/>
   </plugin>
   <plugin ID="DataLoad ULog"/>
   <plugin ID="ROS Topic Subscriber">

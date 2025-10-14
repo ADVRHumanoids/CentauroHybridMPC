@@ -1,4 +1,4 @@
-from rhcviz.utils.xrdf_gen import UrdfGenerator
+from mpcviz.utils.xrdf_gen import UrdfGenerator
 
 class CentauroUrdfGen(UrdfGenerator):
 
@@ -6,7 +6,7 @@ class CentauroUrdfGen(UrdfGenerator):
             robotname: str,
             descr_path: str,
             big_wheels: bool = True,
-            name: str = "CentauroUrdfRHCViz"):
+            name: str = "CentauroUrdfMPCViz"):
         
         super().__init__(
             robotname = robotname,
