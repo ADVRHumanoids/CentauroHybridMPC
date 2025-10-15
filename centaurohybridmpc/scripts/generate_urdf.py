@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-from mpcviz.MPCViz import MPCViz
+from mpc_viz.MPCViz import MPCViz
 from centaurohybridmpc.utils.centauro_urdf_gen import CentauroUrdfGen
 
 import argparse

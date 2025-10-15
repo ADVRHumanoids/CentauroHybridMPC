@@ -1,6 +1,6 @@
 #!/usr/bin/env python
-from mpcviz.MPCViz import MPCViz
-from mpcviz.utils.sys_utils import PathsGetter
+from mpc_viz.MPCViz import MPCViz
+from mpc_viz.utils.sys_utils import PathsGetter
 
 from centaurohybridmpc.utils.centauro_urdf_gen import CentauroUrdfGen
 
@@ -24,7 +24,7 @@ if __name__ == '__main__':
                 descr_path=args.dpath,
                 name="centauroUrdf")
     
-    mpcviz = MPCViz(urdf_file_path=urdf_generator.urdf_path, 
+    mpc_viz= MPCViz(urdf_file_path=urdf_generator.urdf_path, 
         rviz_config_path=syspaths.DEFAULT_RVIZ_CONFIG_PATH,
         namespace=args.ns, 
         basename="MPCViz", 
@@ -33,4 +33,4 @@ if __name__ == '__main__':
         nodes_perc = args.nodes_perc       
         )
     
-    mpcviz.run()
+    mpc_viz.run()
