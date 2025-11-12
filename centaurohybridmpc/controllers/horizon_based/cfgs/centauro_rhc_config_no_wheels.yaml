@@ -46,7 +46,7 @@ costs:
 
 #open loop
 .define:
-  - &w_base_omega 20.
+  - &w_base_omega 30.
   - &w_base_vxy 20.
   - &w_base_vz 20.
   - &w_base_z 20.
