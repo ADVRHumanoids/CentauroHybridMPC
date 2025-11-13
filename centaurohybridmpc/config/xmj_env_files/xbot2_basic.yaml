@@ -60,7 +60,6 @@ xbotcore_threads:
     rt_main:  {sched: fifo , prio: 60, period: 0.001}
     nrt_main: {sched: other, prio: 0 , period: 0.005}
 
-
 # plugins
 xbotcore_plugins:
 
