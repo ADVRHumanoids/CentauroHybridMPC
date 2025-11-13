@@ -5,7 +5,7 @@ source /opt/ros/noetic/setup.bash
 source /opt/xbot/setup.sh
 source /root/ibrido_ws/setup.bash
 
-python /root/ibrido_ws/src/xbot2_mujoco/tests/PyXBotMjSim/launch_simulator.py --urdf_path /root/ibrido_ws/src/xbot2_mujoco/tests/files/centauro/centauro.urdf \
+python /root/ibrido_ws/src/xbot2_mujoco/tests/PyXBotMjSim/launch_simulator.py --urdf_path /tmp/RtDeploymentEnv/centauro_big_wheels_no_yaw.urdf \
     --simopt_path /root/ibrido_ws/src/xbot2_mujoco/tests/files/centauro/sim_opt.xml \
     --world_path /root/ibrido_ws/src/xbot2_mujoco/tests/files/centauro/world.xml \
     --sites_path /root/ibrido_ws/src/xbot2_mujoco/tests/files/centauro/sites.xml \
