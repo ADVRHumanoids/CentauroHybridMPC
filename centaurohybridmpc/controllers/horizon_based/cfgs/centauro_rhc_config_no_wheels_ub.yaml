@@ -25,14 +25,14 @@ constraints:
   - contact_4
 
 costs:
-  # - z_contact_1
-  # - z_contact_2
-  # - z_contact_3
-  # - z_contact_4
-  - vz_contact_1
-  - vz_contact_2
-  - vz_contact_3
-  - vz_contact_4
+  - z_contact_1
+  - z_contact_2
+  - z_contact_3
+  - z_contact_4
+  # - vz_contact_1
+  # - vz_contact_2
+  # - vz_contact_3
+  # - vz_contact_4
   - base_lin_velxy
   - base_lin_velz
   - base_omega
@@ -46,12 +46,12 @@ costs:
 
 #open loop
 .define:
-  - &w_base_omega 20.
-  - &w_base_vxy 20.
+  - &w_base_omega 25.
+  - &w_base_vxy 30.
   - &w_base_vz 20.
   - &w_base_z 20.
-  - &w_contact_z 50.0
-  - &w_contact_vz 100.0
+  - &w_contact_z 150.0
+  - &w_contact_vz 250.0
   - &w_base_capture 10.
   - &w_capture_postural 10.0
   - &w_capture_postural_ub 10.0
