@@ -46,17 +46,17 @@ costs:
 
 #open loop
 .define:
-  - &w_base_omega 30.
-  - &w_base_vxy 30.
+  - &w_base_omega 20.
+  - &w_base_vxy 20.
   - &w_base_vz 20.
   - &w_base_z 20.
   - &w_contact_z 150.0
   - &w_contact_vz 250.0
-  - &w_base_capture 10.
+  - &w_base_capture 100.
   - &w_capture_postural 10.0
-  - &w_capture_postural_ub 10.0
+  - &w_capture_postural_ub 1.
   - &w_v_jnts 8e-1
-  - &w_a_jnts 3e-1
+  - &w_a_jnts 2e-1
   - &w_v_root 2e-1
   - &w_a_root 1e-1
   - &wheel_radius 0.124
@@ -65,7 +65,7 @@ base_lin_velxy:
   type: Cartesian
   distal_link: base_link
   indices: [0, 1]
-  nodes: ${range(1, N-10)}
+  nodes: ${range(1, N-5)}
   cartesian_type: velocity
   weight: *w_base_vxy
 
@@ -73,7 +73,7 @@ base_lin_velz:
   type: Cartesian
   distal_link: base_link
   indices: [2]
-  nodes: ${range(1, N-10)}
+  nodes: ${range(1, N-5)}
   cartesian_type: velocity
   weight: *w_base_vz
 
@@ -81,7 +81,7 @@ base_omega:
   type: Cartesian
   distal_link: base_link
   indices: [3, 4, 5]
-  nodes: ${range(1, N-10)}
+  nodes: ${range(1, N-5)}
   cartesian_type: velocity
   weight: *w_base_omega
 
@@ -89,7 +89,7 @@ base_capture:
   type: Cartesian
   distal_link: base_link
   indices: [0, 1, 2, 3, 4, 5]
-  nodes: ${range(N-10, N+1)}
+  nodes: ${range(N-5, N+1)}
   cartesian_type: velocity
   weight: *w_base_capture
 
@@ -191,11 +191,11 @@ joint_posture_capture:
           16,
           17, 18, 19, 20, 21, 22,
           23, 24, 25, 26, 27, 28]
-  nodes: ${range(N-10, N+1)}
+  nodes: ${range(N-5, N+1)}
 
 v_root_regularization:
   type: Regularization
-  nodes: ${range(0, N+1)}
+  nodes: ${range(0, 1)}
   indices: [0, 1, 2, 3, 4, 5]
   weight:
     v: *w_v_root
