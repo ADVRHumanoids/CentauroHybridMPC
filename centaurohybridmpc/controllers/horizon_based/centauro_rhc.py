@@ -118,7 +118,7 @@ class CentauroRhc(HybridQuadRhc):
             (self._custom_opts["fix_yaw"]):
             fixed_jnts_patterns.append("ankle_yaw")
 
-        flight_duration_sec=0.6 # [s]
+        flight_duration_sec=0.5 # [s]
         flight_duration=int(flight_duration_sec/self._dt)
         post_flight_duration_sec=0.2 # [s]
         post_flight_duration=int(post_flight_duration_sec/self._dt)
@@ -137,5 +137,5 @@ class CentauroRhc(HybridQuadRhc):
             yaw_vertical_weight=self._yaw_vertical_weight,
             vertical_landing=True,
             vertical_land_weight=10.0,
-            phase_force_reg=4e-2,
+            phase_force_reg=5e-2,
             vel_bounds_weight=1.0)
