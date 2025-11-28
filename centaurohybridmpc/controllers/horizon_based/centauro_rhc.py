@@ -104,7 +104,10 @@ class CentauroRhc(HybridQuadRhc):
         
     def _init_problem(self):
         
-        self._yaw_vertical_weight=120.0
+        if not self._custom_opts["control_wheels"]:
+            self._yaw_vertical_weight=120.0
+        else:
+            self._yaw_vertical_weight=50.0
 
         fixed_jnts_patterns=[
             "d435_head",

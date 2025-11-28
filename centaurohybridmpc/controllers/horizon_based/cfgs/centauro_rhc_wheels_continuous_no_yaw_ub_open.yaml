@@ -38,25 +38,27 @@ costs:
   - base_omega
   - base_capture
   - joint_posture_capture
-  - v_regularization
+  - v_root_regularization
+  - v_jnts_regularization
   - a_regularization
   - joint_v_reg_wheels
   - joint_a_reg_wheels
   # - force_regularization
 
 .define:
-  - &w_base_omega 20.
-  - &w_base_vxy 20.
-  - &w_base_vz 20.
-  - &w_base_z 20.
-  - &w_contact_z 50.0
-  - &w_contact_vz 100.0
-  - &w_base_capture 10.
-  - &w_capture_postural 8.0
-  - &w_v 8e-1
-  - &w_a 5e-1
-  - &w_v_wheels 3e-1
-  - &w_a_wheels 3e-1
+  - &w_base_omega 15.
+  - &w_base_vxy 18.
+  - &w_base_vz 15.
+  - &w_base_z 15.
+  - &w_contact_z 170.0
+  - &w_contact_vz 250.0
+  - &w_base_capture 200.
+  - &w_capture_postural 15.0
+  - &w_v_root 2e-1
+  - &w_v_jnts 8e-1
+  - &w_v_wheels 1e0
+  - &w_a 2e-1
+  - &w_a_wheels 8e-1
   - &wheel_radius 0.124
 
 base_lin_velxy:
@@ -178,12 +180,18 @@ joint_posture_capture:
             25, 26, 27, 28, 29, 30,
             31, 32, 33, 34, 35, 36]
   nodes: ${range(N-5, N+1)}
-  
-v_regularization:
+
+v_root_regularization:
+  type: Regularization
+  nodes: ${range(0, 1)}
+  indices: [0, 1, 2, 3, 4, 5]
+  weight:
+    v: *w_v_root
+
+v_jnts_regularization:
   type: Regularization
   nodes: ${range(0, N+1)}
-  indices: [0, 1, 2, 3, 4, 5,
-    6, 7, 8, 9,
+  indices: [6, 7, 8, 9,
     11, 12, 13, 14,
     16, 17, 18, 19,
     21, 21, 23, 24,
@@ -191,7 +199,7 @@ v_regularization:
     27, 28, 29, 30, 31, 32,
     33, 34, 35, 36, 37, 38]
   weight:
-    v: *w_v
+    v: *w_v_jnts
 
 a_regularization:
   type: Regularization

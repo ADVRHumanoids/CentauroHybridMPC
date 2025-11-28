@@ -35,7 +35,7 @@ startup_motor_pd: # iannis combo
   "hip_pitch_*": [200, 60]
   "knee_pitch_*": [200, 60]
   "ankle_pitch_*": [200, 60]
-  "ankle_yaw_*": [400, 10]
+  "ankle_yaw_*": [600, 10]
   "neck_pitch": [10, 1]
   "neck_yaw": [10, 1]
   "torso_yaw": [1000, 30]
