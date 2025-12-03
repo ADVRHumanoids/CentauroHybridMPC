@@ -38,6 +38,7 @@ costs:
   - base_omega
   - base_capture
   - joint_posture_capture
+  - joint_posture_capture_ub
   - v_root_regularization
   - v_jnts_regularization
   - a_regularization
@@ -47,17 +48,18 @@ costs:
 
 .define:
   - &w_base_omega 15.
-  - &w_base_vxy 18.
-  - &w_base_vz 15.
+  - &w_base_vxy 20.
+  - &w_base_vz 20.
   - &w_base_z 15.
   - &w_contact_z 170.0
   - &w_contact_vz 250.0
   - &w_base_capture 200.
-  - &w_capture_postural 15.0
+  - &w_capture_postural 30.0
+  - &w_capture_postural_ub 5.0
   - &w_v_root 2e-1
-  - &w_v_jnts 8e-1
+  - &w_v_jnts 2e0
   - &w_v_wheels 1e0
-  - &w_a 2e-1
+  - &w_a 4e-1
   - &w_a_wheels 8e-1
   - &wheel_radius 0.124
 
@@ -175,8 +177,13 @@ joint_posture_capture:
   indices: [0,  1,  2,  3,
             6, 7,  8,  9,  
             12, 13, 14, 15, 
-            18, 19, 20, 21,
-            24,
+            18, 19, 20, 21]
+  nodes: ${range(N-5, N+1)}
+
+joint_posture_capture_ub:
+  type: Postural
+  weight: *w_capture_postural_ub
+  indices: [24,
             25, 26, 27, 28, 29, 30,
             31, 32, 33, 34, 35, 36]
   nodes: ${range(N-5, N+1)}
