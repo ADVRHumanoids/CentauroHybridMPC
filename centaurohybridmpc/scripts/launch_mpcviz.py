@@ -14,6 +14,7 @@ if __name__ == '__main__':
     parser.add_argument('--dpath', type=str,default="/root/ibrido_ws/src/iit-centauro-ros-pkg/centauro_urdf")
     parser.add_argument('--nodes_perc', type=int, default=30)
     parser.add_argument('--comment', type=str, help='Any useful comment associated with this run',default="")
+    parser.add_argument('--show_heightmap', action='store_true', help='Visualize heightmap markers if available')
 
     args = parser.parse_args()
 
@@ -30,7 +31,8 @@ if __name__ == '__main__':
         basename="MPCViz", 
         rate = 100,
         use_only_collisions=False,
-        nodes_perc = args.nodes_perc       
+        nodes_perc = args.nodes_perc,
+        show_heightmap=args.show_heightmap
         )
     
     mpc_viz.run()
