@@ -33,6 +33,14 @@ costs:
   # - vz_contact_2
   # - vz_contact_3
   # - vz_contact_4
+  - xy_contact_1
+  - xy_contact_2
+  - xy_contact_3
+  - xy_contact_4
+  # - vxy_contact_1
+  # - vxy_contact_2
+  # - vxy_contact_3
+  # - vxy_contact_4
   - base_lin_velxy
   - base_lin_velz
   - base_omega
@@ -51,8 +59,10 @@ costs:
   - &w_base_vxy 20.
   - &w_base_vz 20.
   - &w_base_z 15.
-  - &w_contact_z 170.0
+  - &w_contact_z 175.0
   - &w_contact_vz 250.0
+  - &w_contact_xy 50.0
+  - &w_contact_vxy 50.0
   - &w_base_capture 200.
   - &w_capture_postural 30.0
   - &w_capture_postural_ub 5.0
@@ -265,6 +275,34 @@ z_contact_4:
   cartesian_type: position
   weight: *w_contact_z
 
+xy_contact_1:
+  type: Cartesian
+  distal_link: contact_1
+  indices: [0, 1]
+  cartesian_type: position
+  weight: *w_contact_xy
+
+xy_contact_2:
+  type: Cartesian
+  distal_link: contact_2
+  indices: [0, 1]
+  cartesian_type: position
+  weight: *w_contact_xy
+
+xy_contact_3:
+  type: Cartesian
+  distal_link: contact_3
+  indices: [0, 1]
+  cartesian_type: position
+  weight: *w_contact_xy
+
+xy_contact_4:
+  type: Cartesian
+  distal_link: contact_4
+  indices: [0, 1]
+  cartesian_type: position
+  weight: *w_contact_xy
+
 vz_contact_1:
   type: Cartesian
   distal_link: contact_1
@@ -292,3 +330,31 @@ vz_contact_4:
   indices: [2]
   cartesian_type: velocity
   weight: *w_contact_vz
+
+vxy_contact_1:
+  type: Cartesian
+  distal_link: contact_1
+  indices: [0, 1]
+  cartesian_type: velocity
+  weight: *w_contact_vxy
+
+vxy_contact_2:
+  type: Cartesian
+  distal_link: contact_2
+  indices: [0, 1]
+  cartesian_type: velocity
+  weight: *w_contact_vxy
+
+vxy_contact_3:
+  type: Cartesian
+  distal_link: contact_3
+  indices: [0, 1]
+  cartesian_type: velocity
+  weight: *w_contact_vxy
+
+vxy_contact_4:
+  type: Cartesian
+  distal_link: contact_4
+  indices: [0, 1]
+  cartesian_type: velocity
+  weight: *w_contact_vxy
