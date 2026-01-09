@@ -33,10 +33,10 @@ costs:
   # - vz_contact_2
   # - vz_contact_3
   # - vz_contact_4
-  - xy_contact_1
-  - xy_contact_2
-  - xy_contact_3
-  - xy_contact_4
+  # - xy_contact_1
+  # - xy_contact_2
+  # - xy_contact_3
+  # - xy_contact_4
   # - vxy_contact_1
   # - vxy_contact_2
   # - vxy_contact_3
