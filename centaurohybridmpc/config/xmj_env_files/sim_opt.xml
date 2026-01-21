@@ -2,14 +2,21 @@
 <mujoco>
     <!-- <compiler discardvisual="false" strippath="false" angle="radian" autolimits="true" balanceinertia="true" fusestatic="true" boundmass="0"/> -->
 
-    <option cone="elliptic" impratio="100" timestep="0.0005"/>
+    <option cone="elliptic" impratio="2" timestep="0.0005"/>
+
+    <default>
+        <!-- More over-damped, fewer friction directions to reduce jitter -->
+        <geom condim="3" solref="0.005 1.2" solimp="0.995 0.995 0.001 0.5 2" friction="0.7 0.005 0.001"/>
+    </default>
     <!-- Simulation settings -->
     <size njmax="1000" nconmax="200"/>
+    
     <contact>
         <exclude name="hip_1_exclude" body1="pelvis" body2="hip2_1"/>
         <exclude name="hip_2_exclude" body1="pelvis" body2="hip2_2"/>
         <exclude name="hip_3_exclude" body1="pelvis" body2="hip2_3"/>
         <exclude name="hip_4_exclude" body1="pelvis" body2="hip2_4"/>
+        <!-- Wheel contacts tuned for stepup terrain and floor -->
     </contact>
     <sensor>
         <accelerometer name="imu_link_acc" site="imu_link"/>
