@@ -46,13 +46,8 @@ costs:
   - base_omega
   - base_capture
   - joint_posture_capture
-  - joint_posture_capture_torso
-  - joint_posture_capture_ub
-  - v_root_regularization
-  - v_jnts_regularization
+  - v_regularization
   - a_regularization
-  - joint_v_reg_wheels
-  - joint_a_reg_wheels
   # - force_regularization
 
 .define:
@@ -65,14 +60,6 @@ costs:
   - &w_contact_xy 60.0
   - &w_contact_vxy 50.0
   - &w_base_capture 200.
-  - &w_capture_postural 30.0
-  - &w_capture_postural_torso 30.0
-  - &w_capture_postural_ub 5.0
-  - &w_v_root 2e-1
-  - &w_v_jnts 2e0
-  - &w_v_wheels 1e0
-  - &w_a 4e-1
-  - &w_a_wheels 8e-1
   - &wheel_radius 0.124
 
 base_lin_velxy:
@@ -185,74 +172,63 @@ contact_4:
 
 joint_posture_capture:
   type: Postural
-  weight: *w_capture_postural
+  weight: [30.0, 30.0, 30.0, 30.0,
+          30.0, 30.0, 30.0, 30.0,
+          30.0, 30.0, 30.0, 30.0,
+          30.0, 30.0, 30.0, 30.0,
+          30.0,
+          5.0, 5.0, 5.0, 5.0, 5.0, 5.0,
+          5.0, 5.0, 5.0, 5.0, 5.0, 5.0]
   indices: [0,  1,  2,  3,
             6, 7,  8,  9,  
             12, 13, 14, 15, 
-            18, 19, 20, 21]
-  nodes: ${range(N-5, N+1)}
-
-joint_posture_capture_torso:
-  type: Postural
-  weight: *w_capture_postural_torso
-  indices: [24]
-  nodes: ${range(N-5, N+1)}
-
-joint_posture_capture_ub:
-  type: Postural
-  weight: *w_capture_postural_ub
-  indices: [
+            18, 19, 20, 21,
+            24,
             25, 26, 27, 28, 29, 30,
             31, 32, 33, 34, 35, 36]
   nodes: ${range(N-5, N+1)}
 
-v_root_regularization:
+v_regularization:
   type: Regularization
-  nodes: ${range(0, 1)}
-  indices: [0, 1, 2, 3, 4, 5]
-  weight:
-    v: *w_v_root
-
-v_jnts_regularization:
-  type: Regularization
+  variable_name: v
   nodes: ${range(0, N+1)}
-  indices: [6, 7, 8, 9,
-    11, 12, 13, 14,
-    16, 17, 18, 19,
-    21, 21, 23, 24,
+  indices: [0, 1, 2, 3, 4, 5,
+    6, 7, 8, 9, 10,
+    11, 12, 13, 14, 15,
+    16, 17, 18, 19, 20,
+    21, 21, 23, 24, 25,
     26, 
     27, 28, 29, 30, 31, 32,
     33, 34, 35, 36, 37, 38]
-  weight:
-    v: *w_v_jnts
+  weight: [2e-1, 2e-1, 2e-1, 2e-1, 2e-1, 2e-1,
+        2e0, 2e0, 2e0, 2e0, 1e0,
+        2e0, 2e0, 2e0, 2e0, 1e0,
+        2e0, 2e0, 2e0, 2e0, 1e0,
+        2e0, 2e0, 2e0, 2e0, 1e0,
+        2e0,
+        2e0, 2e0, 2e0, 2e0, 2e0, 2e0,
+        2e0, 2e0, 2e0, 2e0, 2e0, 2e0]
 
 a_regularization:
   type: Regularization
+  variable_name: a
   nodes: ${range(0, N+1)}
   indices: [0, 1, 2, 3, 4, 5,
-    6, 7, 8, 9,
-    11, 12, 13, 14,
-    16, 17, 18, 19,
-    21, 21, 23, 24,
+    6, 7, 8, 9, 10,
+    11, 12, 13, 14, 15,
+    16, 17, 18, 19, 20,
+    21, 21, 23, 24, 25,
     26, 
     27, 28, 29, 30, 31, 32,
     33, 34, 35, 36, 37, 38]
-  weight:
-    a: *w_a # 0.01
-
-joint_v_reg_wheels:
-  type: Regularization
-  nodes: ${range(0, N+1)}
-  indices: [10, 15, 20, 25]
-  weight:
-    v: *w_v_wheels
-
-joint_a_reg_wheels:
-  type: Regularization
-  nodes: ${range(0, N+1)}
-  indices: [10, 15, 20, 25]
-  weight:
-    a: *w_a_wheels # 0.01
+  weight: [4e-1, 4e-1, 4e-1, 4e-1, 4e-1, 4e-1,
+        4e-1, 4e-1, 4e-1, 4e-1, 8e-1,
+        4e-1, 4e-1, 4e-1, 4e-1, 8e-1,
+        4e-1, 4e-1, 4e-1, 4e-1, 8e-1,
+        4e-1, 4e-1, 4e-1, 4e-1, 8e-1,
+        4e-1,
+        4e-1, 4e-1, 4e-1, 4e-1, 4e-1, 4e-1,
+        4e-1, 4e-1, 4e-1, 4e-1, 4e-1, 4e-1]
 
 # flight phase traj tracking
 z_contact_1:

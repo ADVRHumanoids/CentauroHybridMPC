@@ -51,8 +51,6 @@ costs:
   - &w_contact_z 170.0
   - &w_contact_vz 250.0
   - &w_base_capture 200.
-  - &w_capture_postural 10.0
-  - &w_capture_postural_ub 1.
   - &wheel_radius 0.124
 
 base_lin_velxy:
