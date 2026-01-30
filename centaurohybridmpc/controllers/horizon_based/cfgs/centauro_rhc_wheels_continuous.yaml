@@ -40,13 +40,8 @@ costs:
   - joint_posture_capture
   - v_regularization
   - a_regularization
-  - joint_v_reg_yaw
-  - joint_a_reg_yaw
-  - joint_v_reg_wheels
-  - joint_a_reg_wheels
   # - force_regularization
 
-#open loop
 .define:
   - &w_base_omega 20.
   - &w_base_vxy 10.
@@ -56,13 +51,6 @@ costs:
   - &w_contact_vz 50.0
   - &w_base_capture 10.
   - &w_capture_postural 15.0
-  - &w_capture_postural_ub 1.
-  - &w_v 5e-1
-  - &w_a 5e-2
-  - &w_v_wheels 1e-1
-  - &w_a_wheels 1e-1
-  - &w_v_yaw 5e-1
-  - &w_a_yaw 5e-2
   - &wheel_radius 0.124
 
 base_lin_velxy:
@@ -175,72 +163,45 @@ contact_4:
 
 joint_posture_capture:
   type: Postural
-  weight: *w_capture_postural
+  weight: [15.0, 15.0, 15.0, 15.0, 15.0,
+            15.0, 15.0, 15.0, 15.0, 15.0,
+            15.0, 15.0, 15.0, 15.0, 15.0,
+            15.0, 15.0, 15.0, 15.0, 15.0]
   indices: [0,  1,  2,  3, 4,
             7, 8,  9,  10, 11, 
             14,  15, 16, 17, 18, 
             21, 22, 23, 24, 25]
   nodes: ${range(N-5, N+1)}
   
-# joint_posture_capture_ub:
-#   type: Postural
-#   weight: *w_capture_postural_ub
-#   indices:  [16,
-#              17, 18, 19, 20, 21, 22,
-#              23, 24, 25, 26, 27, 28,
-#              29, 30
-#             ]
-#   nodes: ${range(1, N+1)}
-# todo: wrong, as the order COUNTS. If I add the contacts after the joint regularization, they wont get considered.
 v_regularization:
   type: Regularization
+  variable_name: v
   nodes: ${range(0, N+1)}
   indices: [0, 1, 2, 3, 4, 5,
-    6, 7, 8, 9,
-    12, 13, 14, 15,
-    18, 19, 20, 21,
-    24, 25, 26, 27]
-  weight:
-    v: *w_v
+    6, 7, 8, 9, 10, 11,
+    12, 13, 14, 15, 16, 17,
+    18, 19, 20, 21, 22, 23,
+    24, 25, 26, 27, 28, 29]
+  weight: [5e-1, 5e-1, 5e-1, 5e-1, 5e-1, 5e-1,
+    5e-1, 5e-1, 5e-1, 5e-1, 5e-1, 1e-1,
+    5e-1, 5e-1, 5e-1, 5e-1, 5e-1, 1e-1,
+    5e-1, 5e-1, 5e-1, 5e-1, 5e-1, 1e-1,
+    5e-1, 5e-1, 5e-1, 5e-1, 5e-1, 1e-1]
 
 a_regularization:
   type: Regularization
+  variable_name: a
   nodes: ${range(0, N+1)}
   indices: [0, 1, 2, 3, 4, 5,
-    6, 7, 8, 9,
-    12, 13, 14, 15,
-    18, 19, 20, 21,
-    24, 25, 26, 27]
-  weight:
-    a: *w_a # 0.01
-
-joint_v_reg_yaw:
-  type: Regularization
-  nodes: ${range(0, N+1)}
-  indices: [10, 16, 22, 28]
-  weight:
-    v: *w_v_yaw
-
-joint_a_reg_yaw:
-  type: Regularization
-  nodes: ${range(0, N+1)}
-  indices: [10, 16, 22, 28]
-  weight:
-    a: *w_a_yaw # 0.01
-
-joint_v_reg_wheels:
-  type: Regularization
-  nodes: ${range(0, N+1)}
-  indices: [11, 17, 23, 29]
-  weight:
-    v: *w_v_wheels
-
-joint_a_reg_wheels:
-  type: Regularization
-  nodes: ${range(0, N+1)}
-  indices: [11, 17, 23, 29]
-  weight:
-    a: *w_a_wheels # 0.01
+    6, 7, 8, 9, 10, 11,
+    12, 13, 14, 15, 16, 17,
+    18, 19, 20, 21, 22, 23,
+    24, 25, 26, 27, 28, 29]
+  weight: [5e-2, 5e-2, 5e-2, 5e-2, 5e-2, 5e-2,
+    5e-2, 5e-2, 5e-2, 5e-2, 5e-2, 1e-1,
+    5e-2, 5e-2, 5e-2, 5e-2, 5e-2, 1e-1,
+    5e-2, 5e-2, 5e-2, 5e-2, 5e-2, 1e-1,
+    5e-2, 5e-2, 5e-2, 5e-2, 5e-2, 1e-1]
 
 # flight phase traj tracking
 z_contact_1:
