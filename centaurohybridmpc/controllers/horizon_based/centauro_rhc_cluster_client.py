@@ -44,9 +44,18 @@ class CentauroRHCLusterClient(HybridQuadrupedClusterClient):
     def _xrdf_cmds(self):
         parts = self._urdf_xacro_path.split('/')
         urdf_descr_root_path = '/'.join(parts[:-2])
+
         cmds = get_xrdf_cmds_horizon(urdf_descr_root_path=urdf_descr_root_path)
         return cmds
 
+    def _xrdf_cmds_override(self):
+        
+        to_be_overridden = []
+        # to_be_overridden.append("end_effector_left:=ball")
+        # to_be_overridden.append("end_effector_right:=ball")
+
+        return to_be_overridden
+    
     def _generate_controller(self,
         idx: int):
         

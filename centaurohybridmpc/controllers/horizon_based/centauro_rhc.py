@@ -111,7 +111,8 @@ class CentauroRhc(HybridQuadRhc):
 
         fixed_jnts_patterns=[
             "d435_head",
-            "velodyne_joint"]
+            "velodyne_joint",
+            "dagana"]
         
         if not self._add_upper_body:
             fixed_jnts_patterns.append("j_arm")

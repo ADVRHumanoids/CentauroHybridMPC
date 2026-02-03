@@ -2,11 +2,11 @@ from typing import List
 from EigenIPC.PyEigenIPC import VLevel
 from EigenIPC.PyEigenIPC import Journal, LogType
            
-def get_xrdf_cmds_horizon(urdf_descr_root_path : str = None):
+def get_xrdf_cmds_horizon(urdf_descr_root_path : str = None, custom_args_xacro: List = []):
 
-        return get_xrdf_cmds_horizon_centauro(urdf_descr_root_path=urdf_descr_root_path)  
+        return get_xrdf_cmds_horizon_centauro(urdf_descr_root_path=urdf_descr_root_path, custom_args_xacro=custom_args_xacro)  
 
-def get_xrdf_cmds_horizon_centauro(urdf_descr_root_path: str = None):
+def get_xrdf_cmds_horizon_centauro(urdf_descr_root_path: str = None, custom_args_xacro: List = []):
 
         cmds = []
         
@@ -26,8 +26,13 @@ def get_xrdf_cmds_horizon_centauro(urdf_descr_root_path: str = None):
         cmds.append("realsense:=" + realsense)
         cmds.append("floating_joint:=" + floating_joint)
         cmds.append("use_abs_mesh_paths:=true") # use absolute paths for meshes             \       
-        
+
+        cmds.append("end_effector_left:=ball")
+        cmds.append("end_effector_right:=ball")
+
         if urdf_descr_root_path is not None:
                 cmds.append("root:=" + urdf_descr_root_path)
-
+        
+        cmds+=custom_args_xacro
+ 
         return cmds

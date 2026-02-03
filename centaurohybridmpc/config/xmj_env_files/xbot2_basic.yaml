@@ -1,6 +1,8 @@
 XBotInterface:
   urdf_path: $PWD/centauro.urdf
   srdf_path: $PWD/centauro.srdf
+  # urdf_path: $PWD/centauro_dagana_right.urdf
+  # srdf_path: $PWD/centauro_dagana_right.srdf
 
 ModelInterface:
   model_type: RBDL
@@ -25,6 +27,7 @@ motor_pd:
   "j_wheel_*": [0, 30]
   "velodyne_*": [10, 1]
   "d435_*": [10, 1]
+  "dagana_*": [50, 1]
 
 startup_motor_pd:
   "j_arm*_1": [500, 30]
@@ -45,6 +48,7 @@ startup_motor_pd:
   "j_wheel_*": [0, 30]
   "velodyne_*": [10, 1]
   "d435_*": [10, 1]
+  "dagana_*": [50, 1]
 
 motor_vel:
   j_wheel_*: [1]
