@@ -22,6 +22,7 @@ motor_pd:
   "j_wheel_*": [0, 30]
   "velodyne_*": [10, 1]
   "d435_*": [10, 1]
+  "dagana_*": [10, 1]
 
 startup_motor_pd: # iannis combo
   "j_arm*_1": [100, 25]
@@ -42,3 +43,4 @@ startup_motor_pd: # iannis combo
   "j_wheel_*": [0, 30]
   "velodyne_*": [10, 1]
   "d435_*": [10, 1]
+  "dagana_*": [10, 1]
