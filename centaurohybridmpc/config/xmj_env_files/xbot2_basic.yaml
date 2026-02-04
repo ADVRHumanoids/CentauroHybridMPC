@@ -1,6 +1,6 @@
 XBotInterface:
   urdf_path: $PWD/centauro.urdf
-  srdf_path: $PWD/centauro.srdf
+  srdf_path: $PWD/centauro_old.srdf
   # urdf_path: $PWD/centauro_dagana_right.urdf
   # srdf_path: $PWD/centauro_dagana_right.srdf
 
