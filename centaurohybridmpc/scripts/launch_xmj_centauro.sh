@@ -1,5 +1,20 @@
+usage() {
+  echo "Usage: $0 [--rt_factor <value>]"
+  exit 1
+}
+
+RT_FACTOR=1.0
+
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --rt_factor) RT_FACTOR="$2"; shift ;;
+    *) echo "Unknown arg: $1"; usage ;;
+  esac
+  shift
+done
+
 source /root/ibrido_utils/mamba_utils/bin/_activate_current_env.sh
-micromamba activate  ibrido
+micromamba activate ibrido
 
 source /opt/ros/noetic/setup.bash
 source /opt/xbot/setup.sh
@@ -10,4 +25,5 @@ python /root/ibrido_ws/src/xbot2_mujoco/tests/PyXBotMjSim/launch_simulator.py --
     --world_path /root/ibrido_ws/src/CentauroHybridMPC/centaurohybridmpc/config/xmj_env_files/world.xml \
     --sites_path /root/ibrido_ws/src/CentauroHybridMPC/centaurohybridmpc/config/xmj_env_files/sites.xml \
     --xbot_config_path /root/ibrido_ws/src/CentauroHybridMPC/centaurohybridmpc/config/xmj_env_files/xbot2_basic.yaml \
-    --pub_rostime --blink_name base_link
+    --pub_rostime --blink_name base_link \
+    --rt_factor "$RT_FACTOR"
