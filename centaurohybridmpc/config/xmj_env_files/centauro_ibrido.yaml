@@ -76,11 +76,9 @@ xbotcore_plugins:
           type: yamlfile
         contact_links: [force_contact_1, force_contact_2, force_contact_3, force_contact_4]
 
-
-
-
 # global parameters
 xbotcore_param:
+  /xbot/hal/joint_safety/delta_check_dt: 0.04
   /xbot/hal/joint_safety/filter_autostart: {value: true, type: bool}
 #  /xbot/hal/joint_safety/filter_cutoff_hz: {value: 5.0, type: double}
   /xbot/hal/joint_safety/filter_safe_cutoff_hz: {value: 5.0, type: double}
