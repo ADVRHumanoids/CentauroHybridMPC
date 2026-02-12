@@ -12,9 +12,14 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="Multi Robot Visualizer")
     parser.add_argument('--ns', type=str, help='Namespace to be used for cluster shared memory',default="centauro0")
     parser.add_argument('--dpath', type=str,default="/root/ibrido_ws/src/iit-centauro-ros-pkg/centauro_urdf")
+    parser.add_argument('--dpath_dagana', type=str,default="/root/ibrido_ws/src/iit-dagana-ros-pkg/dagana_urdf")
+    parser.add_argument('--end_eff_left', type=str,default="ball")
+    parser.add_argument('--end_eff_right', type=str,default="ball")
+
     parser.add_argument('--nodes_perc', type=int, default=30)
     parser.add_argument('--comment', type=str, help='Any useful comment associated with this run',default="")
     parser.add_argument('--show_heightmap', action='store_true', help='Visualize heightmap markers if available')
+    parser.add_argument('--dagana', action='store_true', help='generate urdf with dagana')
 
     args = parser.parse_args()
 
@@ -23,6 +28,9 @@ if __name__ == '__main__':
     urdf_generator = CentauroUrdfGen(robotname="centauro", 
                 big_wheels=True,
                 descr_path=args.dpath,
+                descr_path_dagana=args.dpath_dagana,
+                end_eff_left=args.end_eff_left,
+                end_eff_right=args.end_eff_right,
                 name="centauroUrdf")
     
     mpc_viz= MPCViz(urdf_file_path=urdf_generator.urdf_path, 

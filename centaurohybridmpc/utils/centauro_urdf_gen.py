@@ -6,6 +6,9 @@ class CentauroUrdfGen(UrdfGenerator):
             robotname: str,
             descr_path: str,
             big_wheels: bool = True,
+            descr_path_dagana: str = None,
+            end_eff_left: str = "ball",
+            end_eff_right: str = "ball",
             name: str = "CentauroUrdfMPCViz"):
         
         super().__init__(
@@ -14,6 +17,10 @@ class CentauroUrdfGen(UrdfGenerator):
             name = name)
 
         self._big_wheels = big_wheels
+        self._end_eff_left=end_eff_left
+        self._end_eff_right=end_eff_right
+    
+        self._descr_path_dagana=descr_path_dagana
 
         self.generate_urdf() # actually generated urdf
 
@@ -37,6 +44,10 @@ class CentauroUrdfGen(UrdfGenerator):
             cmds.append("big_wheel:=true")
         else:
             cmds.append("big_wheel:=false")
+
+        cmds.append("dagana_root:="+ self._descr_path_dagana)
+        cmds.append("end_effector_left:="+ self._end_eff_left)
+        cmds.append("end_effector_right:="+ self._end_eff_right)
 
         cmds.append("legs:=true")
         cmds.append("upper_body:=true")
