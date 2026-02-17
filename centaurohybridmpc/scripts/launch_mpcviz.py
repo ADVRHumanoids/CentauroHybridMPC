@@ -19,7 +19,6 @@ if __name__ == '__main__':
     parser.add_argument('--nodes_perc', type=int, default=30)
     parser.add_argument('--comment', type=str, help='Any useful comment associated with this run',default="")
     parser.add_argument('--show_heightmap', action='store_true', help='Visualize heightmap markers if available')
-    parser.add_argument('--dagana', action='store_true', help='generate urdf with dagana')
 
     args = parser.parse_args()
 

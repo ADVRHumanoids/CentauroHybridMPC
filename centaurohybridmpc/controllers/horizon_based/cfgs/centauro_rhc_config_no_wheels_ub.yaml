@@ -209,8 +209,8 @@ v_regularization:
         8e-1, 8e-1, 8e-1, 8e-1,
         8e-1, 8e-1, 8e-1, 8e-1,
         8e-1,
-        8e-1, 8e-1, 8e-1, 8e-1, 8e-1, 8e-1,
-        8e-1, 8e-1, 8e-1, 8e-1, 8e-1, 8e-1]
+        1.2, 1.2, 1.2, 1.2, 1.2, 1.2,
+        1.2, 1.2, 1.2, 1.2, 1.2, 1.2]
 
 a_regularization:
   type: Regularization
