@@ -48,7 +48,7 @@ costs:
   - &w_base_vxy 18.
   - &w_base_vz 15.
   - &w_base_z 15.
-  - &w_contact_z 170.0
+  - &w_contact_z 200.0
   - &w_contact_vz 250.0
   - &w_base_capture 200.
   - &wheel_radius 0.124
