@@ -77,7 +77,7 @@ xbotcore_plugins:
 
 # global parameters
 xbotcore_param:
-  /xbot/hal/joint_safety/delta_check_dt: 0.01
+  /xbot/hal/joint_safety/delta_check_dt: 0.02
   /xbot/hal/joint_safety/filter_autostart: {value: true, type: bool}
   # /xbot/hal/joint_safety/filter_cutoff_hz: {value: 1.0, type: double}
   /xbot/hal/joint_safety/filter_safe_cutoff_hz: {value: 5.0, type: double}
