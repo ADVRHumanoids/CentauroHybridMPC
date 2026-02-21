@@ -1,6 +1,6 @@
 XBotInterface: # just used for retrieving homing in sim with xbot_mujoco
   urdf_path: $PWD/xmj_env_files/centauro.urdf
-  srdf_path: $PWD/xmj_env_files/centauro_old.srdf
+  srdf_path: $PWD/xmj_env_files/centauro.srdf
 
 # defaults
 motor_pd:
