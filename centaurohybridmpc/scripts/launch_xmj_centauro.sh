@@ -1,7 +1,7 @@
 #!/bin/bash
 
 usage() {
-  echo "Usage: $0 [--rt_factor <value>] [--ros-version <ros2|ros1>] [--urdf_path <path>] [--headless]"
+  echo "Usage: $0 [--rt_factor <value>] [--ros-version <ros2|ros1>] [--urdf_path <path>] [--headless] [--pub-rostime]"
   exit 1
 }
 
@@ -11,6 +11,7 @@ ROS1_DISTRO="${ROS1_DISTRO:-noetic}"
 ROS2_DISTRO="${ROS2_DISTRO:-jazzy}"
 URDF_PATH="${XMJ_URDF_PATH:-/tmp/CentauroHybridMPC/centauro_big_wheels_no_yaw.urdf}"
 HEADLESS=false
+PUB_ROSTIME=false
 CENTAURO_URDF_ROOT="${CENTAURO_URDF_ROOT:-/root/ibrido_ws/src/iit-centauro-ros-pkg/centauro_urdf}"
 CENTAURO_URDF_XACRO="${CENTAURO_URDF_XACRO:-${CENTAURO_URDF_ROOT}/urdf/centauro.urdf.xacro}"
 
@@ -104,6 +105,7 @@ while [[ $# -gt 0 ]]; do
     --ros-version|--ros_version) XMJ_ROS_VERSION="$2"; shift ;;
     --urdf_path|--urdf-path) URDF_PATH="$2"; shift ;;
     --headless) HEADLESS=true ;;
+    --pub-rostime|--pub_rostime) PUB_ROSTIME=true ;;
     *) echo "Unknown arg: $1"; usage ;;
   esac
   shift
@@ -111,30 +113,33 @@ done
 
 source /root/ibrido_utils/mamba_utils/bin/_activate_current_env.sh
 micromamba activate ibrido
-
-case "$XMJ_ROS_VERSION" in
-  1) XMJ_ROS_VERSION="ros1"; source "/opt/ros/${ROS1_DISTRO}/setup.bash" ;;
-  2) XMJ_ROS_VERSION="ros2"; source "/opt/ros/${ROS2_DISTRO}/setup.bash" ;;
-  ros1) source "/opt/ros/${ROS1_DISTRO}/setup.bash" ;;
-  ros2) source "/opt/ros/${ROS2_DISTRO}/setup.bash" ;;
-  *) echo "Unsupported ROS version: ${XMJ_ROS_VERSION}"; usage ;;
-esac
-source /opt/xbot/setup.sh
-source /root/ibrido_ws/setup.bash
-
-ensure_urdf "$URDF_PATH"
+if [ -f /opt/xbot/setup.sh ]; then
+  source /opt/xbot/setup.sh
+fi
 
 extra_args=()
 if [ "$HEADLESS" = true ]; then
   extra_args+=(--headless)
 fi
+if [ "$PUB_ROSTIME" = true ]; then
+  case "$XMJ_ROS_VERSION" in
+    1) XMJ_ROS_VERSION="ros1"; source "/opt/ros/${ROS1_DISTRO}/setup.bash" ;;
+    2) XMJ_ROS_VERSION="ros2"; source "/opt/ros/${ROS2_DISTRO}/setup.bash" ;;
+    ros1) source "/opt/ros/${ROS1_DISTRO}/setup.bash" ;;
+    ros2) source "/opt/ros/${ROS2_DISTRO}/setup.bash" ;;
+    *) echo "Unsupported ROS version: ${XMJ_ROS_VERSION}"; usage ;;
+  esac
+  extra_args+=(--pub_rostime --ros-version "$XMJ_ROS_VERSION")
+fi
+source /root/ibrido_ws/setup.bash
+
+ensure_urdf "$URDF_PATH"
 
 python /root/ibrido_ws/src/xbot2_mujoco/tests/PyXBotMjSim/launch_simulator.py --urdf_path "$URDF_PATH" \
     --simopt_path /root/ibrido_ws/src/CentauroHybridMPC/centaurohybridmpc/config/xmj_env_files/sim_opt.xml \
     --world_path /root/ibrido_ws/src/CentauroHybridMPC/centaurohybridmpc/config/xmj_env_files/world.xml \
     --sites_path /root/ibrido_ws/src/CentauroHybridMPC/centaurohybridmpc/config/xmj_env_files/sites.xml \
     --xbot_config_path /root/ibrido_ws/src/CentauroHybridMPC/centaurohybridmpc/config/xmj_env_files/xbot2_basic.yaml \
-    --pub_rostime --blink_name base_link \
-    --ros-version "$XMJ_ROS_VERSION" \
+    --blink_name base_link \
     --rt_factor "$RT_FACTOR" \
     "${extra_args[@]}"

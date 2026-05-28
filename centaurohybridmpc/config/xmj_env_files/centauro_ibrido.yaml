@@ -4,7 +4,7 @@ XBotInterface:
   joint_map_path: $PWD/joint_map/centauro_joint_map.yaml
 
 ModelInterface:
-  model_type: RBDL
+  model_type: pin
   is_model_floating_base: true
 
 
