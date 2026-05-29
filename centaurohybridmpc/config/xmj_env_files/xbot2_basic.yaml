@@ -71,6 +71,8 @@ xbotcore_plugins:
         thread: rt_main
         type: homing
 
+    ros_io: {thread: nrt_main, type: ros2_io}
+
     zmq_io:
         thread: nrt_main
         type: zmq_io

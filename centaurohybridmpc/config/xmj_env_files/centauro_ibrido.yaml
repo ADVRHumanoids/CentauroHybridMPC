@@ -42,11 +42,11 @@ xbotcore_plugins:
         params:
           ctrl_override: *ctrl_override
 
-    ros_io: {thread: nrt_main, type: ros_io}
+    ros_io: {thread: nrt_main, type: ros2_io}
 
     ros_control: 
         thread: nrt_main
-        type: ros_control
+        type: ros2_control
         params:
           ctrl_override: *ctrl_override
 
