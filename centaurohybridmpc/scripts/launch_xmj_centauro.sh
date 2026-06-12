@@ -106,19 +106,6 @@ ensure_urdf() {
   require_valid_urdf "$urdf_path"
 }
 
-patch_runtime_xbot_config() {
-  python3 -c 'from pathlib import Path
-import sys
-cfg = Path(sys.argv[1])
-text = cfg.read_text()
-text = text.replace("urdf_path: $PWD/centauro.urdf", "urdf_path: " + sys.argv[2])
-text = text.replace("srdf_path: $PWD/centauro_old.srdf", "srdf_path: " + sys.argv[3])
-text = text.replace("sim: $PWD/hal/centauro_gz.yaml", "sim: " + sys.argv[4])
-text = text.replace("dummy: $PWD/hal/centauro_dummy.yaml", "dummy: " + sys.argv[5])
-cfg.write_text(text)
-' "$XBOT_CONFIG_PATH" "$URDF_PATH" "$CENTAURO_SRDF_PATH" "${CENTAURO_XMJ_DIR}/hal/centauro_gz.yaml" "${CENTAURO_XMJ_DIR}/hal/centauro_dummy.yaml"
-}
-
 apply_runtime_impedance_config() {
   if [ ! -f "$XBOT_CONFIG_BUILDER" ]; then
     echo "XBot config builder not found: $XBOT_CONFIG_BUILDER"
@@ -133,6 +120,8 @@ apply_runtime_impedance_config() {
     python3 "$XBOT_CONFIG_BUILDER" \
       --xbot-config "$XBOT_CONFIG_PATH" \
       --impedance-config "$CENTAURO_JNT_IMP_CONFIG_PATH" \
+      --urdf-path "$URDF_PATH" \
+      --srdf-path "$CENTAURO_SRDF_PATH" \
       --output-dir "${RUNTIME_DIR}/xbot_runtime"
   )"
 }
@@ -141,7 +130,8 @@ prepare_runtime_files() {
   mkdir -p "$RUNTIME_DIR"
   ensure_urdf "$URDF_PATH"
   cp "$XBOT_CONFIG_SRC" "$XBOT_CONFIG_PATH"
-  patch_runtime_xbot_config
+  rm -rf "$RUNTIME_DIR/hal"
+  cp -r "$CENTAURO_XMJ_DIR/hal" "$RUNTIME_DIR/hal"
   apply_runtime_impedance_config
 }
 

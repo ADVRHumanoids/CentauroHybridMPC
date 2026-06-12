@@ -1,5 +1,6 @@
 from mpc_viz.utils.xrdf_gen import UrdfGenerator
 
+
 class CentauroUrdfGen(UrdfGenerator):
 
     def __init__(self, 
@@ -9,6 +10,7 @@ class CentauroUrdfGen(UrdfGenerator):
             descr_path_dagana: str = None,
             end_eff_left: str = "ball",
             end_eff_right: str = "ball",
+            custom_args_xacro = None,
             name: str = "CentauroUrdfMPCViz"):
         
         super().__init__(
@@ -21,6 +23,7 @@ class CentauroUrdfGen(UrdfGenerator):
         self._end_eff_right=end_eff_right
     
         self._descr_path_dagana=descr_path_dagana
+        self._custom_args_xacro = custom_args_xacro or []
 
         self.generate_urdf() # actually generated urdf
 
@@ -56,5 +59,6 @@ class CentauroUrdfGen(UrdfGenerator):
         cmds.append("floating_joint:=false")
         cmds.append("use_abs_mesh_paths:=true")
         cmds.append("use_local_filesys_for_meshes:=true")
+        cmds += self._custom_args_xacro
 
         return cmds

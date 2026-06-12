@@ -3,6 +3,7 @@ from mpc_viz.MPCViz import MPCViz
 from mpc_viz.utils.sys_utils import PathsGetter
 
 from centaurohybridmpc.utils.centauro_urdf_gen import CentauroUrdfGen
+from aug_mpc.utils.custom_arg_parsing import extract_custom_xacro_args, generate_custom_arg_dict
 
 import os
 import argparse
@@ -19,10 +20,14 @@ if __name__ == '__main__':
     parser.add_argument('--nodes_perc', type=int, default=30)
     parser.add_argument('--comment', type=str, help='Any useful comment associated with this run',default="")
     parser.add_argument('--show_heightmap', action='store_true', help='Visualize heightmap markers if available')
+    parser.add_argument('--custom_args_names', nargs='+', default=None, help='Names of custom arguments')
+    parser.add_argument('--custom_args_vals', nargs='+', default=None, help='Values of custom arguments')
+    parser.add_argument('--custom_args_dtype', nargs='+', default=None, help='Dtypes of custom arguments')
 
     args = parser.parse_args()
 
     syspaths = PathsGetter()
+    custom_xacro_args = extract_custom_xacro_args(generate_custom_arg_dict(args))
         
     urdf_generator = CentauroUrdfGen(robotname="centauro", 
                 big_wheels=True,
@@ -30,6 +35,7 @@ if __name__ == '__main__':
                 descr_path_dagana=args.dpath_dagana,
                 end_eff_left=args.end_eff_left,
                 end_eff_right=args.end_eff_right,
+                custom_args_xacro=custom_xacro_args,
                 name="centauroUrdf")
     
     mpc_viz= MPCViz(urdf_file_path=urdf_generator.urdf_path, 
